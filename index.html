@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Scripture Battle Royale</title>
+    <style>
+        :root {
+            --primary: #2b3990;
+            --secondary: #a2aad3;
+            --accent: #f9a61a;
+            --correct: #28a745;
+            --incorrect: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            touch-action: manipulation;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.1s;
+            margin: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        button:hover, button:active {
+            background-color: #1e2670;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        input[type="text"], select {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            margin: 8px;
+            width: 100%;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Login Screen */
+        #login-screen {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-top: 10px;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Game Screen */
+        #game-screen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--light);
+        }
+        
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        #game-canvas {
+            background-color: white;
+            display: block;
+            touch-action: none;
+        }
+        
+        /* UI Overlays */
+        #leaderboard {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            font-size: 0.9em;
+            z-index: 10;
+        }
+        
+        #game-timer {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+            z-index: 10;
+        }
+        
+        #player-stats {
+            position: absolute;
+            bottom: 270px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            font-size: 0.9em;
+        }
+        
+        /* Touch Controls */
+        #touch-controls {
+            position: absolute;
+            bottom: 120px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 20;
+        }
+        
+        #joystick-area {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            touch-action: none;
+        }
+        
+        #joystick-knob {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Battle Screen */
+        #battle-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .battle-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 95%;
+            margin: 15px;
+        }
+        
+        .battle-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .battle-player {
+            text-align: center;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .battle-question {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .battle-answers {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .answer-btn {
+            padding: 15px;
+            text-align: left;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: var(--light);
+            color: var(--dark);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .answer-btn:hover, .answer-btn:active {
+            border-color: var(--primary);
+            background-color: #e7f1ff;
+        }
+        
+        .answer-btn.correct {
+            background-color: var(--correct);
+            color: white;
+            border-color: var(--correct);
+        }
+        
+        .answer-btn.incorrect {
+            background-color: var(--incorrect);
+            color: white;
+            border-color: var(--incorrect);
+        }
+        
+        #battle-timer {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #result-message {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        #return-to-game {
+            display: block;
+            margin: 15px auto;
+        }
+        
+        /* Game Over Screen */
+        #game-over-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .game-over-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 95%;
+            text-align: center;
+        }
+        
+        .final-stats {
+            margin: 15px 0;
+            font-size: 18px;
+        }
+        
+        .final-leaderboard {
+            margin: 15px 0;
+        }
+        
+        .final-leaderboard ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .final-leaderboard li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: var(--light);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .final-leaderboard li:first-child {
+            background-color: var(--accent);
+        }
+        
+        #play-again-btn {
+            background-color: var(--accent);
+            font-size: 18px;
+            padding: 15px 30px;
+            margin-top: 20px;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            h2 {
+                font-size: 1.4em;
+            }
+            
+            h3 {
+                font-size: 1.2em;
+            }
+            
+            .battle-answers {
+                grid-template-columns: 1fr;
+            }
+            
+            #leaderboard, #player-stats {
+                font-size: 0.8em;
+            }
+            
+            #player-stats {
+                left: 5px;
+                bottom: 330px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <h1>Scripture Battle Royale</h1>
+        <p class="subtitle" style="text-align: center; margin-bottom: 15px;">D&C Scripture Mastery Game</p>
+        
+        <div class="login-form">
+            <div>
+                <label for="player-name">Your Name:</label>
+                <input type="text" id="player-name" placeholder="Enter your name">
+            </div>
+            
+            <div>
+                <label for="player-color">Choose Your Color:</label>
+                <select id="player-color">
+                    <option value="#FF5733">Red</option>
+                    <option value="#33FF57">Green</option>
+                    <option value="#3357FF">Blue</option>
+                    <option value="#FF33F5">Pink</option>
+                    <option value="#F5FF33">Yellow</option>
+                    <option value="#33FFF5">Cyan</option>
+                    <option value="#FF8333">Orange</option>
+                    <option value="#8333FF">Purple</option>
+                </select>
+            </div>
+            
+            <button id="join-game">Start Game</button>
+        </div>
+    </div>
+    
+    <!-- Game Screen -->
+    <div id="game-screen">
+        <div id="game-container">
+            <canvas id="game-canvas"></canvas>
+            
+            <div id="game-timer">60</div>
+            
+            <div id="leaderboard">
+                <h3>Leaderboard</h3>
+                <ol id="leaderboard-list">
+                    <!-- Leaderboard entries will be here -->
+                </ol>
+            </div>
+            
+            <div id="player-stats">
+                <h3 id="player-name-display">Player</h3>
+                <p>Points: <span id="player-points">10</span></p>
+                <p>Position: <span id="player-position">X: 0, Y: 0</span></p>
+            </div>
+            
+            <!-- Touch Controls -->
+            <div id="touch-controls">
+                <div id="joystick-area">
+                    <div id="joystick-knob"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Battle Screen -->
+    <div id="battle-screen">
+        <div class="battle-container">
+            <div class="battle-phase" id="battle-phase-1">
+                <h2>Scripture Battle!</h2>
+                <div class="battle-header">
+                    <div class="battle-player">
+                        <h3 id="player1-name">Player 1</h3>
+                        <p>Points: <span id="player1-points">10</span></p>
+                    </div>
+                    <div class="battle-player">
+                        <h3 id="player2-name">Player 2</h3>
+                        <p>Points: <span id="player2-points">10</span></p>
+                    </div>
+                </div>
+                
+                <div id="battle-timer">15</div>
+                
+                <div class="battle-question">
+                    <h3 id="question-text">Question text goes here</h3>
+                    <p id="scripture-reference" class="hidden">D&C 1:1</p>
+                </div>
+                
+                <div class="battle-answers" id="answers-container">
+                    <!-- Answer buttons will be generated here -->
+                </div>
+            </div>
+            
+            <div class="battle-phase hidden" id="battle-phase-2">
+                <h2>Battle Results</h2>
+                <div id="result-message">You won!</div>
+                <button id="return-to-game">Return to Game</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Over Screen -->
+    <div id="game-over-screen">
+        <div class="game-over-container">
+            <h1>Game Over!</h1>
+            <p>Time's up! Let's see how you did.</p>
+            
+            <div class="final-stats">
+                <p>Your final score: <span id="final-score">0</span> points</p>
+                <p>Battles won: <span id="battles-won">0</span></p>
+                <p>Battles lost: <span id="battles-lost">0</span></p>
+            </div>
+            
+            <div class="final-leaderboard">
+                <h3>Final Leaderboard</h3>
+                <ul id="final-leaderboard-list">
+                    <!-- Final leaderboard entries will be here -->
+                </ul>
+            </div>
+            
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        // Game Configuration
+        const CONFIG = {
+            playerSize: 15,
+            moveSpeed: 7,
+            worldWidth: 2000,
+            worldHeight: 2000,
+            battleRadius: 50,
+            initialPoints: 10,
+            respawnTime: 500,
+            battleCooldown: 5000,
+            questionTime: 12,     // Changed from 5 to 7 seconds
+            aiPlayerCount: 12,   // 12 AI players for the 12 scripture masteries
+            aiUpdateInterval: 500, // How often AI players update their positions (milliseconds)
+            aiMoveChance: 0.2,   // Probability that an AI will change direction each update
+            aiMoveSpeed: 7.0,    // Increased from 3.5 to 5.0
+            gameTime: 60         // Game time in seconds
+        };
+        
+        // Game State
+        const gameState = {
+            players: new Map(),
+            walls: [],
+            localPlayer: null,
+            canvas: null,
+            ctx: null,
+            keys: {
+                ArrowUp: false,
+                ArrowDown: false,
+                ArrowLeft: false,
+                ArrowRight: false,
+                w: false,
+                a: false,
+                s: false,
+                d: false
+            },
+            touchJoystick: {
+                active: false,
+                startX: 0,
+                startY: 0,
+                moveX: 0,
+                moveY: 0,
+                area: null,
+                knob: null
+            },
+            camera: {
+                x: 0,
+                y: 0
+            },
+            lastUpdate: 0,
+            inBattle: false,
+            currentOpponent: null,
+            battleCooldowns: new Map(),
+            leaderboard: [],
+            aiInterval: null,
+            gameTimer: CONFIG.gameTime,
+            gameTimerInterval: null,
+            gameOver: false,
+            answeredQuestions: {
+                correct: new Set(),
+                incorrect: new Set()
+            },
+            stats: {
+                battlesWon: 0,
+                battlesLost: 0
+            }
+        };
+        
+        // DOM Elements
+        const loginScreen = document.getElementById('login-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const battleScreen = document.getElementById('battle-screen');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const playerNameInput = document.getElementById('player-name');
+        const playerColorSelect = document.getElementById('player-color');
+        const joinGameBtn = document.getElementById('join-game');
+        const leaderboardList = document.getElementById('leaderboard-list');
+        const gameTimerDisplay = document.getElementById('game-timer');
+        const playerNameDisplay = document.getElementById('player-name-display');
+        const playerPointsDisplay = document.getElementById('player-points');
+        const playerPositionDisplay = document.getElementById('player-position');
+        const battlePhase1 = document.getElementById('battle-phase-1');
+        const battlePhase2 = document.getElementById('battle-phase-2');
+        const player1NameElem = document.getElementById('player1-name');
+        const player2NameElem = document.getElementById('player2-name');
+        const player1PointsElem = document.getElementById('player1-points');
+        const player2PointsElem = document.getElementById('player2-points');
+        const questionTextElem = document.getElementById('question-text');
+        const scriptureReferenceElem = document.getElementById('scripture-reference');
+        const answersContainerElem = document.getElementById('answers-container');
+        const battleTimerElem = document.getElementById('battle-timer');
+        const resultMessageElem = document.getElementById('result-message');
+        const returnToGameBtn = document.getElementById('return-to-game');
+        const finalScoreElem = document.getElementById('final-score');
+        const battlesWonElem = document.getElementById('battles-won');
+        const battlesLostElem = document.getElementById('battles-lost');
+        const finalLeaderboardListElem = document.getElementById('final-leaderboard-list');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const joystickArea = document.getElementById('joystick-area');
+        const joystickKnob = document.getElementById('joystick-knob');
+        
+        // Initialize canvas
+        gameState.canvas = canvas;
+        gameState.ctx = ctx;
+        
+        // Initialize joystick references
+        gameState.touchJoystick.area = joystickArea;
+        gameState.touchJoystick.knob = joystickKnob;
+        
+        // Doctrinal Mastery scriptures database - Using first 12 scriptures
+        const doctrinalMasteryScriptures = [
+            {
+                id: 1,
+                reference: "Joseph Smith—History 1:15–20",
+                content: "I saw a pillar of light exactly over my head, above the brightness of the sun, which descended gradually until it fell upon me... When the light rested upon me I saw two Personages, whose brightness and glory defy all description, standing above me in the air. One of them spake unto me, calling me by name and said, pointing to the other—This is My Beloved Son. Hear Him!",
+                doctrines: ["The Godhead", "First Vision"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which Doctrinal Mastery scripture contains Joseph Smith's account of seeing Heavenly Father and Jesus Christ?",
+                        answers: [
+                            "Joseph Smith—History 1:15–20",
+                            "D&C 76:22–24",
+                            "D&C 130:22–23",
+                            "D&C 135:3"
+                        ],
+                        correctAnswer: 0
+                    },
+                    {
+                        type: "content",
+                        question: "What did the first personage say to Joseph Smith during the First Vision?",
+                        answers: [
+                            "This is my servant, hear him.",
+                            "This is My Beloved Son. Hear Him!",
+                            "Joseph, thy sins are forgiven thee.",
+                            "I am the Lord thy God, fear not."
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "doctrine",
+                        question: "Which doctrine is taught in Joseph Smith—History 1:15–20?",
+                        answers: [
+                            "Word of Wisdom",
+                            "Plan of Salvation",
+                            "The Godhead",
+                            "Priesthood Authority"
+                        ],
+                        correctAnswer: 2
+                    }
+                ]
+            },
+            {
+                id: 2,
+                reference: "D&C 1:30",
+                content: "And also those to whom these commandments were given, might have power to lay the foundation of this church, and to bring it forth out of obscurity and out of darkness, the only true and living church upon the face of the whole earth, with which I, the Lord, am well pleased, speaking unto the church collectively and not individually.",
+                doctrines: ["The Church of Jesus Christ", "Restoration"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture describes the Church as 'the only true and living church upon the face of the whole earth'?",
+                        answers: [
+                            "D&C 1:30",
+                            "D&C 1:37–38",
+                            "D&C 6:36",
+                            "D&C 21:4–6"
+                        ],
+                        correctAnswer: 0
+                    },
+                    {
+                        type: "content",
+                        question: "In D&C 1:30, the Lord says He is well pleased with:",
+                        answers: [
+                            "Individual members of the Church",
+                            "The Church collectively, not individually",
+                            "The Prophet Joseph Smith",
+                            "Those who keep His commandments"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 1:30, the Lord brought forth His church out of:",
+                        answers: [
+                            "Obscurity and darkness",
+                            "Sin and transgression",
+                            "Apostasy and confusion",
+                            "Persecution and trials"
+                        ],
+                        correctAnswer: 0
+                    }
+                ]
+            },
+            {
+                id: 3,
+                reference: "D&C 1:37–38",
+                content: "Search these commandments, for they are true and faithful, and the prophecies and promises which are in them shall all be fulfilled. What I the Lord have spoken, I have spoken, and I excuse not myself; and though the heavens and the earth pass away, my word shall not pass away, but shall all be fulfilled, whether by mine own voice or by the voice of my servants, it is the same.",
+                doctrines: ["Scripture Study", "Prophets"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which Doctrinal Mastery scripture teaches that the Lord's word will not pass away?",
+                        answers: [
+                            "D&C 1:30",
+                            "D&C 1:37–38",
+                            "D&C 6:36",
+                            "D&C 8:2–3"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 1:37–38, how does the Lord view the words spoken by His servants?",
+                        answers: [
+                            "As suggestions that might be followed",
+                            "As less important than His own words",
+                            "As equal to His own voice",
+                            "As necessary only for church leaders"
+                        ],
+                        correctAnswer: 2
+                    },
+                    {
+                        type: "content",
+                        question: "Fill in the blank: 'What I the Lord have spoken, I have spoken, and I _____ not myself.'",
+                        answers: [
+                            "Excuse",
+                            "Contradict",
+                            "Deny",
+                            "Change"
+                        ],
+                        correctAnswer: 0
+                    }
+                ]
+            },
+            {
+                id: 4,
+                reference: "D&C 6:36",
+                content: "Look unto me in every thought; doubt not, fear not.",
+                doctrines: ["Faith", "Trust in God"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture contains the Lord's command to 'Look unto me in every thought; doubt not, fear not'?",
+                        answers: [
+                            "D&C 1:37–38",
+                            "D&C 6:36",
+                            "D&C 8:2–3",
+                            "D&C 18:10–11"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "Fill in the missing words: 'Look unto me in every _____; _____ not, _____ not.'",
+                        answers: [
+                            "thought; doubt; fear",
+                            "trial; worry; stress",
+                            "prayer; forget; fail",
+                            "day; falter; fall"
+                        ],
+                        correctAnswer: 0
+                    },
+                    {
+                        type: "doctrine",
+                        question: "What principle does D&C 6:36 teach about overcoming fear?",
+                        answers: [
+                            "Prayer alone will remove all fear",
+                            "Looking to Christ in every thought helps us overcome doubt and fear",
+                            "Scripture study is the only way to overcome fear",
+                            "Working hard eliminates all doubt"
+                        ],
+                        correctAnswer: 1
+                    }
+                ]
+            },
+            {
+                id: 5,
+                reference: "D&C 8:2–3",
+                content: "Yea, behold, I will tell you in your mind and in your heart, by the Holy Ghost, which shall come upon you and which shall dwell in your heart. Now, behold, this is the spirit of revelation; behold, this is the spirit by which Moses brought the children of Israel through the Red Sea on dry ground.",
+                doctrines: ["Holy Ghost", "Revelation"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture teaches how the Holy Ghost communicates with us?",
+                        answers: [
+                            "D&C 6:36",
+                            "D&C 8:2–3",
+                            "D&C 13:1",
+                            "D&C 18:10–11"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 8:2–3, where does the Holy Ghost speak to us?",
+                        answers: [
+                            "In our ears and eyes",
+                            "In our mind and heart",
+                            "In our dreams and visions",
+                            "In our homes and churches"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 8:2–3, what spirit parted the Red Sea?",
+                        answers: [
+                            "The spirit of power",
+                            "The spirit of prophecy",
+                            "The spirit of revelation",
+                            "The spirit of miracles"
+                        ],
+                        correctAnswer: 2
+                    }
+                ]
+            },
+            {
+                id: 6,
+                reference: "D&C 13:1",
+                content: "Upon you my fellow servants, in the name of Messiah I confer the Priesthood of Aaron, which holds the keys of the ministering of angels, and of the gospel of repentance, and of baptism by immersion for the remission of sins; and this shall never be taken again from the earth, until the sons of Levi do offer again an offering unto the Lord in righteousness.",
+                doctrines: ["Priesthood", "Aaronic Priesthood"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture describes the restoration of the Aaronic Priesthood?",
+                        answers: [
+                            "D&C 8:2–3",
+                            "D&C 13:1",
+                            "D&C 18:15–16",
+                            "D&C 107:8"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 13:1, what keys does the Aaronic Priesthood hold?",
+                        answers: [
+                            "Keys of salvation and eternal life",
+                            "Keys of the ministering of angels, the gospel of repentance, and baptism by immersion",
+                            "Keys of the kingdom of heaven",
+                            "Keys of revelation and prophecy"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "Complete the scripture: 'Upon you my fellow servants, in the name of Messiah I confer...'",
+                        answers: [
+                            "...the right to preach my gospel.",
+                            "...the Priesthood of Aaron, which holds the keys of the ministering of angels.",
+                            "...the power to heal the sick and raise the dead.",
+                            "...the authority to speak in my name."
+                        ],
+                        correctAnswer: 1
+                    }
+                ]
+            },
+            {
+                id: 7,
+                reference: "D&C 18:10–11",
+                content: "Remember the worth of souls is great in the sight of God; For, behold, the Lord your Redeemer suffered death in the flesh; wherefore he suffered the pain of all men, that all men might repent and come unto him.",
+                doctrines: ["Worth of Souls", "Atonement"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture teaches about the worth of souls in God's sight?",
+                        answers: [
+                            "D&C 13:1",
+                            "D&C 18:10–11",
+                            "D&C 18:15–16",
+                            "D&C 19:16–19"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 18:10–11, why did the Savior suffer death?",
+                        answers: [
+                            "To establish His church",
+                            "To fulfill prophecy",
+                            "That all men might repent and come unto Him",
+                            "To prove His power over death"
+                        ],
+                        correctAnswer: 2
+                    },
+                    {
+                        type: "content",
+                        question: "Fill in the blank: 'Remember the worth of souls is _____ in the sight of God.'",
+                        answers: [
+                            "precious",
+                            "great",
+                            "eternal",
+                            "important"
+                        ],
+                        correctAnswer: 1
+                    }
+                ]
+            },
+            {
+                id: 8,
+                reference: "D&C 18:15–16",
+                content: "And if it so be that you should labor all your days in crying repentance unto this people, and bring, save it be one soul unto me, how great shall be your joy with him in the kingdom of my Father! And now, if your joy will be great with one soul that you have brought unto me into the kingdom of my Father, how great will be your joy if you should bring many souls unto me!",
+                doctrines: ["Missionary Work", "Joy"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture discusses the joy of bringing souls unto Christ?",
+                        answers: [
+                            "D&C 18:10–11",
+                            "D&C 18:15–16",
+                            "D&C 19:16–19",
+                            "D&C 21:4–6"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 18:15–16, how many souls need to be brought to Christ to experience great joy?",
+                        answers: [
+                            "At least ten",
+                            "As many as possible",
+                            "Even one soul",
+                            "Your entire family"
+                        ],
+                        correctAnswer: 2
+                    },
+                    {
+                        type: "doctrine",
+                        question: "What principle is taught in D&C 18:15–16?",
+                        answers: [
+                            "Joy comes through serving in church callings",
+                            "Joy comes through bringing souls unto Christ",
+                            "Joy comes through temple attendance",
+                            "Joy comes through scripture study"
+                        ],
+                        correctAnswer: 1
+                    }
+                ]
+            },
+            {
+                id: 9,
+                reference: "D&C 19:16–19",
+                content: "For behold, I, God, have suffered these things for all, that they might not suffer if they would repent; But if they would not repent they must suffer even as I; Which suffering caused myself, even God, the greatest of all, to tremble because of pain, and to bleed at every pore, and to suffer both body and spirit—and would that I might not drink the bitter cup, and shrink—Nevertheless, glory be to the Father, and I partook and finished my preparations unto the children of men.",
+                doctrines: ["Atonement", "Repentance"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture describes Christ's suffering during the Atonement?",
+                        answers: [
+                            "D&C 18:15–16",
+                            "D&C 19:16–19",
+                            "D&C 21:4–6",
+                            "D&C 25:13"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 19:16–19, why did Christ suffer for all?",
+                        answers: [
+                            "To prove His divinity",
+                            "That they might not suffer if they would repent",
+                            "To fulfill the law of Moses",
+                            "Because His Father commanded Him"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 19:16–19, what physical manifestation occurred during Christ's suffering?",
+                        answers: [
+                            "He fell asleep from exhaustion",
+                            "His clothes became white as light",
+                            "He bled from every pore",
+                            "He was lifted up from the earth"
+                        ],
+                        correctAnswer: 2
+                    }
+                ]
+            },
+            {
+                id: 10,
+                reference: "D&C 21:4–6",
+                content: "Wherefore, meaning the church, thou shalt give heed unto all his words and commandments which he shall give unto you as he receiveth them, walking in all holiness before me; For his word ye shall receive, as if from mine own mouth, in all patience and faith. For by doing these things the gates of hell shall not prevail against you; yea, and the Lord God will disperse the powers of darkness from before you, and cause the heavens to shake for your good, and his name's glory.",
+                doctrines: ["Prophets", "Revelation"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture teaches about following the prophet?",
+                        answers: [
+                            "D&C 19:16–19",
+                            "D&C 21:4–6",
+                            "D&C 25:13",
+                            "D&C 58:42–43"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 21:4–6, how should we receive the prophet's words?",
+                        answers: [
+                            "After careful consideration and personal revelation",
+                            "As if from God's own mouth, in all patience and faith",
+                            "With skepticism until proven true",
+                            "Only if they align with our personal beliefs"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "doctrine",
+                        question: "What blessing comes from following the prophet according to D&C 21:4–6?",
+                        answers: [
+                            "Financial prosperity and security",
+                            "The gates of hell shall not prevail against you",
+                            "Leadership positions in the Church",
+                            "Freedom from all trials and tribulations"
+                        ],
+                        correctAnswer: 1
+                    }
+                ]
+            },
+            {
+                id: 11,
+                reference: "D&C 25:13",
+                content: "Wherefore, lift up thy heart and rejoice, and cleave unto the covenants which thou hast made.",
+                doctrines: ["Covenants", "Joy"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture commands us to 'cleave unto the covenants which thou hast made'?",
+                        answers: [
+                            "D&C 21:4–6",
+                            "D&C 25:13",
+                            "D&C 58:42–43",
+                            "D&C 76:22–24"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "Fill in the blanks: 'Wherefore, _____ up thy heart and _____, and cleave unto the _____ which thou hast made.'",
+                        answers: [
+                            "lift; rejoice; covenants",
+                            "open; pray; commandments",
+                            "give; sing; promises",
+                            "hold; believe; teachings"
+                        ],
+                        correctAnswer: 0
+                    },
+                    {
+                        type: "doctrine",
+                        question: "What principle is taught in D&C 25:13?",
+                        answers: [
+                            "We should be willing to share the gospel",
+                            "We should seek for spiritual gifts",
+                            "We should cleave to our covenants with joy",
+                            "We should support our church leaders"
+                        ],
+                        correctAnswer: 2
+                    }
+                ]
+            },
+            {
+                id: 12,
+                reference: "D&C 58:42–43",
+                content: "Behold, he who has repented of his sins, the same is forgiven, and I, the Lord, remember them no more. By this ye may know if a man repenteth of his sins—behold, he will confess them and forsake them.",
+                doctrines: ["Repentance", "Forgiveness"],
+                questions: [
+                    {
+                        type: "reference",
+                        question: "Which scripture teaches that the Lord remembers our sins no more when we repent?",
+                        answers: [
+                            "D&C 25:13",
+                            "D&C 58:42–43",
+                            "D&C 76:22–24",
+                            "D&C 82:10"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 58:42–43, how can we know if someone has truly repented?",
+                        answers: [
+                            "They will be baptized",
+                            "They will confess and forsake their sins",
+                            "They will serve a mission",
+                            "They will attend church regularly"
+                        ],
+                        correctAnswer: 1
+                    },
+                    {
+                        type: "content",
+                        question: "According to D&C 58:42–43, what happens to our sins when we repent?",
+                        answers: [
+                            "The Lord forgives them but still remembers them",
+                            "The Lord forgives them and remembers them no more",
+                            "The Lord forgives them but tests us again later",
+                            "The Lord forgives them but others may still remember"
+                        ],
+                        correctAnswer: 1
+                    }
+                ]
+            }
+        ];
+        
+        // When the document is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add additional questions to existing scriptures
+            addNewQuestions();
+            
+            initGame();
+            
+            // Add play again button handler
+            playAgainBtn.addEventListener('click', function() {
+                resetGame();
+                gameOverScreen.style.display = 'none';
+                loginScreen.style.display = 'block';
+            });
+        });
+        
+        // Function to add new questions to the doctrinalMasteryScriptures
+        function addNewQuestions() {
+            // Add to JSH 1:15-20 (First Vision)
+            doctrinalMasteryScriptures[0].questions.push(
+                {
+                    type: "content",
+                    question: "In Joseph Smith—History 1:15–20, what did Joseph Smith feel immediately before seeing the light?",
+                    answers: [
+                        "He felt a sense of peace",
+                        "He was seized by some power which bound his tongue",
+                        "He felt uplifted by the Spirit",
+                        "He felt intense joy"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    type: "content",
+                    question: "What prompted Joseph Smith to pray in the Sacred Grove?",
+                    answers: [
+                        "An angel appeared to him in a dream",
+                        "His family encouraged him to pray about which church to join",
+                        "He read James 1:5 which says to ask of God",
+                        "He was commanded by a voice"
+                    ],
+                    correctAnswer: 2
+                },
+                {
+                    type: "doctrine",
+                    question: "What important doctrine about God is clarified in Joseph Smith's First Vision?",
+                    answers: [
+                        "God doesn't answer personal prayers",
+                        "God and Jesus Christ are separate beings with physical bodies",
+                        "God no longer speaks to mankind",
+                        "God only speaks through the Bible"
+                    ],
+                    correctAnswer: 1
+                }
+            );
+
+            // Add to D&C 1:30
+            doctrinalMasteryScriptures[1].questions.push(
+                {
+                    type: "content",
+                    question: "In D&C 1:30, how does the Lord describe His church?",
+                    answers: [
+                        "As the most powerful church on earth",
+                        "As the wealthiest church on earth",
+                        "As the only true and living church upon the earth",
+                        "As the church that will save all mankind"
+                    ],
+                    correctAnswer: 2
+                },
+                {
+                    type: "doctrine",
+                    question: "What distinguishes the Lord's Church according to D&C 1:30?",
+                    answers: [
+                        "Its size and influence",
+                        "Its charitable work",
+                        "Being 'true' (having correct doctrine) and 'living' (having revelation)",
+                        "Its ancient origins"
+                    ],
+                    correctAnswer: 2
+                }
+            );
+
+            // Add to D&C 1:37-38
+            doctrinalMasteryScriptures[2].questions.push(
+                {
+                    type: "doctrine",
+                    question: "According to D&C 1:37-38, why should we study the commandments?",
+                    answers: [
+                        "Because they are difficult to understand",
+                        "Because they are true and faithful and will be fulfilled",
+                        "Because they are historically significant",
+                        "Because they contain hidden messages"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    type: "content",
+                    question: "In D&C 1:37-38, what does the Lord say about His word passing away?",
+                    answers: [
+                        "His word shall not pass away",
+                        "His word will change with the times",
+                        "His word will eventually be replaced",
+                        "His word is only valid for a generation"
+                    ],
+                    correctAnswer: 0
+                }
+            );
+
+            // Add to D&C 6:36
+            doctrinalMasteryScriptures[3].questions.push(
+                {
+                    type: "doctrine",
+                    question: "What principle does D&C 6:36 teach about our mindset?",
+                    answers: [
+                        "We should think about Christ occasionally",
+                        "We should doubt our abilities",
+                        "We should look to Christ in every thought",
+                        "We should fear future challenges"
+                    ],
+                    correctAnswer: 2
+                },
+                {
+                    type: "content",
+                    question: "What emotions does D&C 6:36 specifically tell us to avoid?",
+                    answers: [
+                        "Anger and jealousy",
+                        "Pride and vanity",
+                        "Doubt and fear",
+                        "Sadness and worry"
+                    ],
+                    correctAnswer: 2
+                }
+            );
+
+            // Add to D&C 8:2-3
+            doctrinalMasteryScriptures[4].questions.push(
+                {
+                    type: "content",
+                    question: "According to D&C 8:2-3, where does the Holy Ghost speak to us?",
+                    answers: [
+                        "In our ears only",
+                        "In our mind and heart",
+                        "In our dreams only",
+                        "In church buildings only"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    type: "content",
+                    question: "What Old Testament event is referenced in D&C 8:2-3?",
+                    answers: [
+                        "Creation of the world",
+                        "The Exodus from Egypt",
+                        "Moses parting the Red Sea",
+                        "The giving of the Ten Commandments"
+                    ],
+                    correctAnswer: 2
+                }
+            );
+
+            // Add to D&C 13:1
+            doctrinalMasteryScriptures[5].questions.push(
+                {
+                    type: "content",
+                    question: "Who restored the Aaronic Priesthood to Joseph Smith?",
+                    answers: [
+                        "Moroni",
+                        "Peter, James, and John",
+                        "John the Baptist",
+                        "Elijah"
+                    ],
+                    correctAnswer: 2
+                },
+                {
+                    type: "doctrine",
+                    question: "According to D&C 13:1, what ordinance is authorized by the Aaronic Priesthood?",
+                    answers: [
+                        "Eternal marriage",
+                        "Conferring the gift of the Holy Ghost",
+                        "Baptism by immersion for the remission of sins",
+                        "Patriarchal blessings"
+                    ],
+                    correctAnswer: 2
+                }
+            );
+
+            // Add to D&C 18:10-11
+            doctrinalMasteryScriptures[6].questions.push(
+                {
+                    type: "content",
+                    question: "In D&C 18:10, what does the Lord say about the worth of souls?",
+                    answers: [
+                        "The worth of souls is measured by their righteousness",
+                        "The worth of souls is great in the sight of God",
+                        "The worth of souls is determined by their works",
+                        "The worth of souls varies from person to person"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    type: "doctrine",
+                    question: "What does D&C 18:10-11 teach about why Jesus suffered and died?",
+                    answers: [
+                        "To establish His Church",
+                        "To prove His power",
+                        "That all might repent and come unto Him",
+                        "To create a legacy"
+                    ],
+                    correctAnswer: 2
+                }
+            );
+
+            // Add to D&C 18:15-16
+            doctrinalMasteryScriptures[7].questions.push(
+                {
+                    type: "content",
+                    question: "According to D&C 18:15-16, what brings great joy?",
+                    answers: [
+                        "Gaining worldly possessions",
+                        "Bringing souls unto Christ",
+                        "Being admired by others",
+                        "Living a long life"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    type: "doctrine",
+                    question: "What does D&C 18:15-16 teach about missionary work?",
+                    answers: [
+                        "It's only for full-time missionaries",
+                        "It brings great joy even if only one soul is brought to Christ",
+                        "It's only effective in foreign countries",
+                        "It's not as important as other Church work"
+                    ],
+                    correctAnswer: 1
+                }
+            );
+
+            // Add to D&C 19:16-19
+            doctrinalMasteryScriptures[8].questions.push(
+                {
+                    type: "content",
+                    question: "In D&C 19:16-19, who is speaking about suffering for sins?",
+                    answers: [
+                        "Joseph Smith",
+                        "God the Father",
+                        "Jesus Christ",
+                        "Martin Harris"
+                    ],
+                    correctAnswer: 2
+                },
+                {
+                    type: "doctrine",
+                    question: "According to D&C 19:16-19, what happens if people don't repent?",
+                    answers: [
+                        "They will immediately be punished",
+                        "They must suffer even as Christ suffered",
+                        "They will be banished from society",
+                        "They will lose their memory of God"
+                    ],
+                    correctAnswer: 1
+                }
+            );
+
+            // Add to D&C 21:4-6
+            doctrinalMasteryScriptures[9].questions.push(
+                {
+                    type: "content",
+                    question: "In D&C 21:4-6, how are we told to receive the prophet's words?",
+                    answers: [
+                        "With our own interpretation",
+                        "As if from God's own mouth",
+                        "Based on popular opinion",
+                        "If they match our personal views"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    type: "content",
+                    question: "What protection is promised in D&C 21:6 for following the prophet?",
+                    answers: [
+                        "Financial security",
+                        "The gates of hell shall not prevail against you",
+                        "Perfect health",
+                        "Academic success"
+                    ],
+                    correctAnswer: 1
+                }
+            );
+
+            // Add to D&C 25:13
+            doctrinalMasteryScriptures[10].questions.push(
+                {
+                    type: "content",
+                    question: "In D&C 25:13, what should we do with our covenants?",
+                    answers: [
+                        "Redefine them",
+                        "Cleave unto them",
+                        "Occasionally remember them",
+                        "Keep them private"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    type: "doctrine",
+                    question: "What emotions does D&C 25:13 encourage us to have?",
+                    answers: [
+                        "Solemn reverence",
+                        "Lift up our hearts and rejoice",
+                        "Serious meditation",
+                        "Quiet reflection"
+                    ],
+                    correctAnswer: 1
+                }
+            );
+
+            // Add to D&C 58:42-43
+            doctrinalMasteryScriptures[11].questions.push(
+                {
+                    type: "content",
+                    question: "According to D&C 58:42-43, what are the two essential elements of true repentance?",
+                    answers: [
+                        "Feeling sad and making restitution",
+                        "Praying and attending church",
+                        "Confessing and forsaking the sin",
+                        "Apologizing and promising to do better"
+                    ],
+                    correctAnswer: 2
+                },
+                {
+                    type: "doctrine",
+                    question: "What does D&C 58:42 teach about how completely God forgives?",
+                    answers: [
+                        "He forgives but maintains a record of sins",
+                        "He forgives and remembers our sins no more",
+                        "He forgives based on the severity of the sin",
+                        "He forgives but may bring up past sins later"
+                    ],
+                    correctAnswer: 1
+                }
+            );
+        }
+        
+        // Initialize the game
+        function initGame() {
+            // Set up canvas size
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Initialize walls
+            initWalls();
+            
+            // Set up joystick controls for touch devices
+            setupTouchControls();
+            
+            // Set up keyboard controls for desktop
+            setupKeyboardControls();
+            
+            // Set up the join game button
+            joinGameBtn.addEventListener('click', joinGame);
+            
+            // Return to game button
+            returnToGameBtn.addEventListener('click', function() {
+                battleScreen.style.display = 'none';
+                gameState.inBattle = false;
+            });
+        }
+        
+        // Setup keyboard controls
+        function setupKeyboardControls() {
+            window.addEventListener('keydown', function(e) {
+                if (gameState.keys.hasOwnProperty(e.key)) {
+                    gameState.keys[e.key] = true;
+                }
+            });
+            
+            window.addEventListener('keyup', function(e) {
+                if (gameState.keys.hasOwnProperty(e.key)) {
+                    gameState.keys[e.key] = false;
+                }
+            });
+        }
+        
+        // Setup touch controls
+        function setupTouchControls() {
+            // Setup joystick touch events
+            joystickArea.addEventListener('touchstart', handleJoystickStart, false);
+            joystickArea.addEventListener('touchmove', handleJoystickMove, false);
+            joystickArea.addEventListener('touchend', handleJoystickEnd, false);
+        }
+        
+        // Handle joystick touch start
+        function handleJoystickStart(event) {
+            event.preventDefault();
+            const touch = event.touches[0];
+            const rect = joystickArea.getBoundingClientRect();
+            
+            gameState.touchJoystick.active = true;
+            gameState.touchJoystick.startX = rect.left + rect.width / 2;
+            gameState.touchJoystick.startY = rect.top + rect.height / 2;
+            
+            updateJoystickPosition(touch.clientX, touch.clientY);
+        }
+        
+        // Handle joystick touch move
+        function handleJoystickMove(event) {
+            event.preventDefault();
+            if (gameState.touchJoystick.active) {
+                const touch = event.touches[0];
+                updateJoystickPosition(touch.clientX, touch.clientY);
+            }
+        }
+        
+        // Handle joystick touch end
+        function handleJoystickEnd(event) {
+            event.preventDefault();
+            resetJoystick();
+        }
+        
+        // Update joystick position
+        function updateJoystickPosition(clientX, clientY) {
+            const areaRect = joystickArea.getBoundingClientRect();
+            const centerX = areaRect.left + areaRect.width / 2;
+            const centerY = areaRect.top + areaRect.height / 2;
+            
+            // Calculate distance from center
+            let dx = clientX - centerX;
+            let dy = clientY - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Limit joystick movement to area bounds
+            const maxDistance = areaRect.width / 2;
+            if (distance > maxDistance) {
+                dx = dx * maxDistance / distance;
+                dy = dy * maxDistance / distance;
+            }
+            
+            // Update knob position
+            joystickKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+            
+            // Update movement values
+            gameState.touchJoystick.moveX = dx / maxDistance;
+            gameState.touchJoystick.moveY = dy / maxDistance;
+        }
+        
+        // Reset joystick position
+        function resetJoystick() {
+            gameState.touchJoystick.active = false;
+            gameState.touchJoystick.moveX = 0;
+            gameState.touchJoystick.moveY = 0;
+            joystickKnob.style.transform = 'translate(-50%, -50%)';
+        }
+        
+        // Reset the game
+        function resetGame() {
+            // Clear game state
+            gameState.players = new Map();
+            gameState.inBattle = false;
+            gameState.currentOpponent = null;
+            gameState.battleCooldowns = new Map();
+            gameState.gameOver = false;
+            gameState.gameTimer = CONFIG.gameTime;
+            gameState.answeredQuestions = {
+                correct: new Set(),
+                incorrect: new Set()
+            };
+            gameState.stats = {
+                battlesWon: 0,
+                battlesLost: 0
+            };
+            
+            // Reset keyboard state
+            Object.keys(gameState.keys).forEach(key => {
+                gameState.keys[key] = false;
+            });
+            
+            // Clear intervals
+            if (gameState.aiInterval) {
+                clearInterval(gameState.aiInterval);
+                gameState.aiInterval = null;
+            }
+            
+            if (gameState.gameTimerInterval) {
+                clearInterval(gameState.gameTimerInterval);
+                gameState.gameTimerInterval = null;
+            }
+            
+            // Reset joystick
+            resetJoystick();
+        }
+        
+        // Resize canvas to fit window
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        // Generate walls
+        function initWalls() {
+            // Border walls
+            gameState.walls = [
+                // Top border
+                { x: 0, y: 0, width: CONFIG.worldWidth, height: 20 },
+                // Bottom border
+                { x: 0, y: CONFIG.worldHeight - 20, width: CONFIG.worldWidth, height: 20 },
+                // Left border
+                { x: 0, y: 0, width: 20, height: CONFIG.worldHeight },
+                // Right border
+                { x: CONFIG.worldWidth - 20, y: 0, width: 20, height: CONFIG.worldHeight }
+            ];
+            
+            // Add some internal walls
+            gameState.walls.push(
+                // Horizontal walls
+                { x: 300, y: 300, width: 400, height: 20 },
+                { x: 1000, y: 500, width: 500, height: 20 },
+                { x: 500, y: 1200, width: 600, height: 20 },
+                { x: 1200, y: 1500, width: 400, height: 20 },
+                
+                // Vertical walls
+                { x: 800, y: 700, width: 20, height: 300 },
+                { x: 1500, y: 200, width: 20, height: 400 },
+                { x: 400, y: 1400, width: 20, height: 300 },
+                { x: 1300, y: 800, width: 20, height: 500 }
+            );
+        }
+        
+        // Join the game
+        function joinGame() {
+            const playerName = playerNameInput.value.trim() || 'Player';
+            const playerColor = playerColorSelect.value;
+            
+            // Create a random spawn position
+            const spawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
+            const spawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
+            
+            // Create local player with first 12 scriptures
+            gameState.localPlayer = {
+                id: 'player',
+                name: playerName,
+                x: spawnX,
+                y: spawnY,
+                color: playerColor,
+                points: CONFIG.initialPoints,
+                scriptures: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // First 12 scriptures
+                isDead: false,
+                respawnTime: 0
+            };
+            
+            // Add local player to players map
+            gameState.players.set('player', gameState.localPlayer);
+            
+            // Generate AI players
+            generateAIPlayers();
+            
+            // Update player stats display
+            playerNameDisplay.textContent = playerName;
+            playerPointsDisplay.textContent = CONFIG.initialPoints;
+            
+            // Switch to game screen
+            loginScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+            
+            // Update leaderboard
+            updateLeaderboard();
+            
+            // Start game timer
+            startGameTimer();
+            
+            // Start AI movement
+            startAIMovement();
+            
+            // Start game loop
+            gameState.lastUpdate = performance.now();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Start game timer
+        function startGameTimer() {
+            // Display initial time
+            gameTimerDisplay.textContent = gameState.gameTimer;
+            
+            // Clear previous interval if exists
+            if (gameState.gameTimerInterval) {
+                clearInterval(gameState.gameTimerInterval);
+            }
+            
+            // Set new interval
+            gameState.gameTimerInterval = setInterval(() => {
+                // Skip timer updates if in battle
+                if (gameState.inBattle) return;
+                
+                gameState.gameTimer--;
+                gameTimerDisplay.textContent = gameState.gameTimer;
+                
+                // Check if game is over
+                if (gameState.gameTimer <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+        
+        // End the game
+        function endGame() {
+            gameState.gameOver = true;
+            
+            // Clear intervals
+            if (gameState.aiInterval) {
+                clearInterval(gameState.aiInterval);
+            }
+            
+            if (gameState.gameTimerInterval) {
+                clearInterval(gameState.gameTimerInterval);
+            }
+            
+            // Update final stats
+            finalScoreElem.textContent = gameState.localPlayer.points;
+            battlesWonElem.textContent = gameState.stats.battlesWon;
+            battlesLostElem.textContent = gameState.stats.battlesLost;
+            
+            // Update final leaderboard
+            let leaderboardHTML = '';
+            gameState.leaderboard.forEach((player, index) => {
+                leaderboardHTML += `<li>${index+1}. ${player.name}: ${player.points} points</li>`;
+            });
+            finalLeaderboardListElem.innerHTML = leaderboardHTML;
+            
+            // Show game over screen
+            gameScreen.style.display = 'none';
+            battleScreen.style.display = 'none';
+            gameOverScreen.style.display = 'flex';
+            
+            // Save high score to localStorage if it's higher than previous
+            saveHighScore(gameState.localPlayer.name, gameState.localPlayer.points);
+        }
+        
+        // Save high score to localStorage
+        function saveHighScore(name, score) {
+            try {
+                let highScores = [];
+                const savedScores = localStorage.getItem('scriptureRoyaleHighScores');
+                
+                if (savedScores) {
+                    highScores = JSON.parse(savedScores);
+                }
+                
+                // Add new score
+                highScores.push({ name, score, date: new Date().toISOString() });
+                
+                // Sort by score (highest first)
+                highScores.sort((a, b) => b.score - a.score);
+                
+                // Keep only top 10
+                highScores = highScores.slice(0, 10);
+                
+                // Save back to localStorage
+                localStorage.setItem('scriptureRoyaleHighScores', JSON.stringify(highScores));
+            } catch (e) {
+                console.error('Error saving high score:', e);
+            }
+        }
+        
+        // Generate AI players
+        function generateAIPlayers() {
+            const names = [
+                'Joseph Smith', 'Emma Smith', 'Brigham Young', 'Lucy Mack Smith', 
+                'Martin Harris', 'Oliver Cowdery', 'Hyrum Smith', 'Moroni',
+                'Nephi', 'Alma', 'Sidney Rigdon', 'Parley P. Pratt'
+            ];
+            
+            const colors = [
+                '#FF5733', '#33FF57', '#3357FF', '#FF33F5', 
+                '#F5FF33', '#33FFF5', '#FF8333', '#8333FF'
+            ];
+            
+            // Create AI players - one for each of the first 12 scriptures
+            for (let i = 0; i < CONFIG.aiPlayerCount; i++) {
+                // Random position away from player
+                let x, y;
+                const minDistance = 300; // Minimum distance from player
+                
+                do {
+                    x = 100 + Math.random() * (CONFIG.worldWidth - 200);
+                    y = 100 + Math.random() * (CONFIG.worldHeight - 200);
+                    
+                    const dx = x - gameState.localPlayer.x;
+                    const dy = y - gameState.localPlayer.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance >= minDistance) break;
+                } while (true);
+                
+                // All AIs have access to all scriptures
+                // Create AI player
+                const aiPlayer = {
+                    id: 'ai-' + i,
+                    name: names[i], // Use name at index i for uniqueness
+                    x: x,
+                    y: y,
+                    color: colors[i % colors.length],
+                    points: CONFIG.initialPoints,
+                    scriptures: Array.from({length: 12}, (_, i) => i + 1), // All 12 scriptures
+                    isDead: false,
+                    respawnTime: 0,
+                    direction: {
+                        x: Math.random() * 2 - 1,
+                        y: Math.random() * 2 - 1
+                    }
+                };
+                
+                // Add to players map
+                gameState.players.set(aiPlayer.id, aiPlayer);
+            }
+        }
+        
+        // Start AI movement
+        function startAIMovement() {
+            // Clear previous interval if exists
+            if (gameState.aiInterval) {
+                clearInterval(gameState.aiInterval);
+            }
+            
+            // Set new interval
+            gameState.aiInterval = setInterval(updateAIPlayers, CONFIG.aiUpdateInterval);
+        }
+        
+        // Update AI players
+        function updateAIPlayers() {
+            for (const [id, player] of gameState.players.entries()) {
+                // Skip local player and dead AIs
+                if (id === 'player' || player.isDead) continue;
+                
+                // Handle respawn for dead AI
+                if (player.isDead) {
+                    player.respawnTime -= CONFIG.aiUpdateInterval;
+                    if (player.respawnTime <= 0) {
+                        // Respawn
+                        const spawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
+                        const spawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
+                        
+                        player.x = spawnX;
+                        player.y = spawnY;
+                        player.isDead = false;
+                        player.points = 1; // Respawn with 1 point
+                    }
+                    continue;
+                }
+                
+                // Possibly change direction
+                if (Math.random() < CONFIG.aiMoveChance) {
+                    player.direction = {
+                        x: Math.random() * 2 - 1,
+                        y: Math.random() * 2 - 1
+                    };
+                    
+                    // Normalize direction
+                    const length = Math.sqrt(player.direction.x * player.direction.x + player.direction.y * player.direction.y);
+                    if (length > 0) {
+                        player.direction.x /= length;
+                        player.direction.y /= length;
+                    }
+                }
+                
+                // Save old position for collision detection
+                const oldX = player.x;
+                const oldY = player.y;
+                
+                // Move the AI player
+                player.x += player.direction.x * CONFIG.aiMoveSpeed;
+                player.y += player.direction.y * CONFIG.aiMoveSpeed;
+                
+                // Check world boundaries
+                player.x = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldWidth - CONFIG.playerSize, player.x));
+                player.y = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldHeight - CONFIG.playerSize, player.y));
+                
+                // Check wall collisions
+                for (const wall of gameState.walls) {
+                    if (checkCollision(player, wall)) {
+                        // Revert to old position and pick new direction
+                        player.x = oldX;
+                        player.y = oldY;
+                        
+                        player.direction = {
+                            x: Math.random() * 2 - 1,
+                            y: Math.random() * 2 - 1
+                        };
+                        
+                        // Normalize direction
+                        const length = Math.sqrt(player.direction.x * player.direction.x + player.direction.y * player.direction.y);
+                        if (length > 0) {
+                            player.direction.x /= length;
+                            player.direction.y /= length;
+                        }
+                        
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Game Loop
+        function gameLoop(timestamp) {
+            // Check if game is over
+            if (gameState.gameOver) return;
+            
+            // Calculate delta time
+            const deltaTime = timestamp - gameState.lastUpdate;
+            gameState.lastUpdate = timestamp;
+            
+            // Update
+            update(deltaTime);
+            
+            // Render
+            render();
+            
+            // Loop
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Update game state
+        function update(deltaTime) {
+            // Skip updates if in battle
+            if (gameState.inBattle) return;
+            
+            // Handle player respawn if dead
+            if (gameState.localPlayer.isDead) {
+                gameState.localPlayer.respawnTime -= deltaTime;
+                if (gameState.localPlayer.respawnTime <= 0) {
+                    respawnPlayer();
+                }
+                return;
+            }
+            
+            // Calculate movement direction from joystick or keyboard
+            let moveX = 0;
+            let moveY = 0;
+            
+            // Check touch joystick input
+            if (gameState.touchJoystick.active) {
+                moveX = gameState.touchJoystick.moveX;
+                moveY = gameState.touchJoystick.moveY;
+            }
+            
+            // Check keyboard input (allows both control methods simultaneously)
+            if (gameState.keys.ArrowUp || gameState.keys.w) moveY -= 1;
+            if (gameState.keys.ArrowDown || gameState.keys.s) moveY += 1;
+            if (gameState.keys.ArrowLeft || gameState.keys.a) moveX -= 1;
+            if (gameState.keys.ArrowRight || gameState.keys.d) moveX += 1;
+            
+            // Apply movement speed
+            moveX *= CONFIG.moveSpeed;
+            moveY *= CONFIG.moveSpeed;
+            
+            // Save old position for collision detection
+            const oldX = gameState.localPlayer.x;
+            const oldY = gameState.localPlayer.y;
+            
+            // Update position
+            gameState.localPlayer.x += moveX;
+            gameState.localPlayer.y += moveY;
+            
+            // Check world boundaries
+            gameState.localPlayer.x = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldWidth - CONFIG.playerSize, gameState.localPlayer.x));
+            gameState.localPlayer.y = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldHeight - CONFIG.playerSize, gameState.localPlayer.y));
+            
+            // Check wall collisions
+            for (const wall of gameState.walls) {
+                if (checkCollision(gameState.localPlayer, wall)) {
+                    // Revert to old position
+                    gameState.localPlayer.x = oldX;
+                    gameState.localPlayer.y = oldY;
+                    break;
+                }
+            }
+            
+            // Update camera to follow player
+            gameState.camera.x = gameState.localPlayer.x - canvas.width / 2;
+            gameState.camera.y = gameState.localPlayer.y - canvas.height / 2;
+            
+            // Clamp camera to world bounds
+            gameState.camera.x = Math.max(0, Math.min(CONFIG.worldWidth - canvas.width, gameState.camera.x));
+            gameState.camera.y = Math.max(0, Math.min(CONFIG.worldHeight - canvas.height, gameState.camera.y));
+            
+            // Update player position display
+            playerPositionDisplay.textContent = `X: ${Math.round(gameState.localPlayer.x)}, Y: ${Math.round(gameState.localPlayer.y)}`;
+            
+            // Check for battles with other players
+            checkForBattles();
+        }
+        
+        // Check for potential battles with nearby players
+        function checkForBattles() {
+            if (gameState.inBattle) return;
+            
+            for (const [id, player] of gameState.players.entries()) {
+                // Skip self, dead players, and players on cooldown
+                if (id === 'player' || 
+                    player.isDead || 
+                    gameState.localPlayer.isDead || 
+                    (gameState.battleCooldowns.has(id) && 
+                     Date.now() - gameState.battleCooldowns.get(id) < CONFIG.battleCooldown)) {
+                    continue;
+                }
+                
+                // Calculate distance
+                const dx = player.x - gameState.localPlayer.x;
+                const dy = player.y - gameState.localPlayer.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance <= CONFIG.battleRadius) {
+                    // Initiate battle
+                    startBattle(id);
+                    break;
+                }
+            }
+        }
+        
+        // Start a battle with another player
+        function startBattle(opponentId) {
+            gameState.inBattle = true;
+            gameState.currentOpponent = opponentId;
+            
+            // Get opponent data
+            const opponent = gameState.players.get(opponentId);
+            
+            // Get all available questions (first 12 scriptures)
+            let allQuestions = [];
+            
+            for (let i = 0; i < 12; i++) {
+                const scripture = doctrinalMasteryScriptures[i];
+                
+                scripture.questions.forEach((question, qIndex) => {
+                    // Create a unique ID for each question
+                    const questionId = `${scripture.id}-${qIndex}`;
+                    
+                    // Only add questions that:
+                    // 1. Haven't been answered correctly, OR
+                    // 2. Have been answered incorrectly (these can repeat)
+                    if (!gameState.answeredQuestions.correct.has(questionId)) {
+                        allQuestions.push({
+                            question,
+                            scripture,
+                            questionId
+                        });
+                    }
+                });
+            }
+            
+            // If all questions have been answered correctly, reset the pool
+            if (allQuestions.length === 0) {
+                gameState.answeredQuestions.correct = new Set();
+                
+                // Rebuild the question pool
+                for (let i = 0; i < 12; i++) {
+                    const scripture = doctrinalMasteryScriptures[i];
+                    
+                    scripture.questions.forEach((question, qIndex) => {
+                        allQuestions.push({
+                            question,
+                            scripture,
+                            questionId: `${scripture.id}-${qIndex}`
+                        });
+                    });
+                }
+            }
+            
+            // Choose a random question from the pool
+            const randomIndex = Math.floor(Math.random() * allQuestions.length);
+            const { question, scripture, questionId } = allQuestions[randomIndex];
+            
+            // Store the current question ID for tracking
+            gameState.currentQuestionId = questionId;
+            
+            // Set up battle UI
+            setupBattleUI(gameState.localPlayer, opponent, question, scripture);
+            
+            // Show battle screen
+            battleScreen.style.display = 'flex';
+        }
+        
+        // Set up the battle UI
+        function setupBattleUI(player1, player2, question, scripture) {
+            // Display player names and points
+            player1NameElem.textContent = player1.name;
+            player2NameElem.textContent = player2.name;
+            player1PointsElem.textContent = player1.points;
+            player2PointsElem.textContent = player2.points;
+            
+            // Display question
+            questionTextElem.textContent = question.question;
+            
+            // Determine if we should show the scripture reference
+            // Hide for reference questions, show for content and doctrine questions
+            if (question.type === 'reference') {
+                scriptureReferenceElem.classList.add('hidden');
+            } else {
+                scriptureReferenceElem.classList.remove('hidden');
+                scriptureReferenceElem.textContent = scripture.reference;
+            }
+            
+            // Generate answer buttons
+            answersContainerElem.innerHTML = '';
+            question.answers.forEach((answer, index) => {
+                const answerBtn = document.createElement('button');
+                answerBtn.className = 'answer-btn';
+                answerBtn.textContent = answer;
+                answerBtn.dataset.index = index;
+                answerBtn.addEventListener('click', function() {
+                    handleAnswerSelection(parseInt(this.dataset.index), question.correctAnswer);
+                });
+                answersContainerElem.appendChild(answerBtn);
+            });
+            
+            // Reset battle phases
+            battlePhase1.classList.remove('hidden');
+            battlePhase2.classList.add('hidden');
+            
+            // Start timer
+            startBattleTimer();
+        }
+        
+        // Start the battle timer
+        let battleTimerInterval;
+        function startBattleTimer() {
+            let timeLeft = CONFIG.questionTime;
+            battleTimerElem.textContent = timeLeft;
+            
+            clearInterval(battleTimerInterval);
+            battleTimerInterval = setInterval(() => {
+                timeLeft--;
+                battleTimerElem.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(battleTimerInterval);
+                    // Time's up, count as incorrect
+                    handleAnswerSelection(-1, 0);
+                }
+            }, 1000);
+        }
+        
+        // Handle answer selection
+        function handleAnswerSelection(selectedIndex, correctIndex) {
+            clearInterval(battleTimerInterval);
+            
+            // Disable all buttons
+            const answerButtons = document.querySelectorAll('.answer-btn');
+            answerButtons.forEach(btn => {
+                btn.disabled = true;
+            });
+            
+            // Highlight correct and selected answers
+            answerButtons.forEach((btn, index) => {
+                if (index === correctIndex) {
+                    btn.classList.add('correct');
+                } else if (index === selectedIndex && selectedIndex !== correctIndex) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            // Determine if the answer was correct
+            const isCorrect = selectedIndex === correctIndex;
+            
+            // No longer need to simulate opponent's answer - player always wins if correct
+            
+            // Process battle results
+            setTimeout(() => {
+                processBattleResults(isCorrect);
+            }, 2000);
+        }
+        
+        // Process battle results
+        function processBattleResults(playerCorrect) {
+            const opponent = gameState.players.get(gameState.currentOpponent);
+            let resultMessage = '';
+            
+            // Track if this question was answered correctly or incorrectly
+            if (playerCorrect) {
+                gameState.answeredQuestions.correct.add(gameState.currentQuestionId);
+                // Remove from incorrect set if it was there
+                gameState.answeredQuestions.incorrect.delete(gameState.currentQuestionId);
+            } else {
+                gameState.answeredQuestions.incorrect.add(gameState.currentQuestionId);
+            }
+            
+            // Player correct - always wins
+            if (playerCorrect) {
+                resultMessage = 'You won! You answered correctly.';
+                // Get all points from opponent
+                gameState.localPlayer.points += opponent.points;
+                
+                // Update stats
+                gameState.stats.battlesWon++;
+                
+                // Instead of marking as dead, immediately move to new location
+                // Move opponent to a new location
+                const newX = 100 + Math.random() * (CONFIG.worldWidth - 200);
+                const newY = 100 + Math.random() * (CONFIG.worldHeight - 200);
+                opponent.x = newX;
+                opponent.y = newY;
+                
+                // Opponent respawns with 10 points
+                opponent.points = CONFIG.initialPoints;
+            }
+            // Player incorrect - always loses half points
+            else {
+                resultMessage = 'You lost! Your answer was incorrect.';
+                // Lose half points (rounded down) but keep at least 1
+                const pointsToLose = Math.floor(gameState.localPlayer.points / 2);
+                opponent.points += pointsToLose;
+                gameState.localPlayer.points -= pointsToLose;
+                if (gameState.localPlayer.points < 1) gameState.localPlayer.points = 1;
+                
+                gameState.localPlayer.isDead = true;
+                gameState.localPlayer.respawnTime = CONFIG.respawnTime;
+                
+                // Update stats
+                gameState.stats.battlesLost++;
+            }
+            
+            // Update UI
+            resultMessageElem.textContent = resultMessage;
+            battlePhase1.classList.add('hidden');
+            battlePhase2.classList.remove('hidden');
+            
+            // Update player stats
+            playerPointsDisplay.textContent = gameState.localPlayer.points;
+            
+            // Set cooldown for this opponent
+            gameState.battleCooldowns.set(gameState.currentOpponent, Date.now());
+            
+            // Update leaderboard
+            updateLeaderboard();
+        }
+        
+        // Respawn the player
+        function respawnPlayer() {
+            // Find a random spawn position
+            const spawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
+            const spawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
+            
+            // Update player
+            gameState.localPlayer.x = spawnX;
+            gameState.localPlayer.y = spawnY;
+            gameState.localPlayer.isDead = false;
+            gameState.localPlayer.points = 1; // Respawn with 1 point
+            
+            // Update UI
+            playerPointsDisplay.textContent = gameState.localPlayer.points;
+        }
+        
+        // Check collision between a circle (player) and a rectangle (wall)
+        function checkCollision(player, wall) {
+            // Find the closest point on the rectangle to the circle
+            const closestX = Math.max(wall.x, Math.min(player.x, wall.x + wall.width));
+            const closestY = Math.max(wall.y, Math.min(player.y, wall.y + wall.height));
+            
+            // Calculate the distance from the closest point to the circle's center
+            const distanceX = player.x - closestX;
+            const distanceY = player.y - closestY;
+            const distanceSquared = distanceX * distanceX + distanceY * distanceY;
+            
+            // Check if the distance is less than the circle's radius squared
+            return distanceSquared <= (CONFIG.playerSize * CONFIG.playerSize);
+        }
+        
+        // Update the leaderboard
+        function updateLeaderboard() {
+            // Sort players by points
+            const sortedPlayers = Array.from(gameState.players.values())
+                .sort((a, b) => b.points - a.points)
+                .slice(0, 3); // Top 3
+            
+            // Update leaderboard UI
+            let html = '';
+            sortedPlayers.forEach(player => {
+                html += `<li>${player.name}: ${player.points} points</li>`;
+            });
+            leaderboardList.innerHTML = html;
+            
+            // Store sorted leaderboard
+            gameState.leaderboard = sortedPlayers;
+        }
+        
+        // Render the game
+        function render() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Apply camera transform
+            ctx.save();
+            ctx.translate(-gameState.camera.x, -gameState.camera.y);
+            
+            // Draw world background
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, CONFIG.worldWidth, CONFIG.worldHeight);
+            
+            // Draw walls
+            ctx.fillStyle = '#333333';
+            for (const wall of gameState.walls) {
+                ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+            }
+            
+            // Draw players
+            for (const player of gameState.players.values()) {
+                // Skip dead players
+                if (player.isDead) continue;
+                
+                ctx.beginPath();
+                ctx.arc(player.x, player.y, CONFIG.playerSize, 0, Math.PI * 2);
+                ctx.fillStyle = player.color;
+                ctx.fill();
+                
+                // Draw player name
+                ctx.fillStyle = '#000000';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(player.name, player.x, player.y - CONFIG.playerSize - 5);
+                
+                // Draw points
+                ctx.fillText(player.points + ' pts', player.x, player.y - CONFIG.playerSize - 20);
+                
+                // Draw battle radius for local player
+                if (player.id === 'player') {
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y, CONFIG.battleRadius, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.3)';
+                    ctx.stroke();
+                }
+            }
+            
+            // Restore transform
+            ctx.restore();
+        }
+    </script>
+</body>
+</html>
