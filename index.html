@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Scripture Battle Royale</title>
+   
+    <!--
+    Scripture Battle Royale - P2P Multiplayer Game
+   
+    Requirements for multiplayer:
+    - Modern browser with ES modules support (Chrome 61+, Firefox 60+, Safari 11+)
+    - JavaScript enabled
+    - Allow third-party scripts from unpkg.com CDN
+   
+    If multiplayer doesn't work:
+    1. Try Chrome or Firefox (recommended)
+    2. Disable ad blockers temporarily
+    3. Check browser console for specific errors
+    4. Download and host the file locally
+    -->
+   
     <style>
         :root {
             --primary: #2b3990;
@@ -14,7 +30,7 @@
             --light: #f8f9fa;
             --dark: #343a40;
         }
-        
+       
         * {
             box-sizing: border-box;
             margin: 0;
@@ -22,7 +38,7 @@
             font-family: 'Arial', sans-serif;
             touch-action: manipulation;
         }
-        
+       
         body {
             background-color: var(--light);
             color: var(--dark);
@@ -34,13 +50,13 @@
             overflow-x: hidden;
             overflow-y: hidden;
         }
-        
+       
         h1, h2, h3 {
             text-align: center;
             margin-bottom: 15px;
             color: var(--primary);
         }
-        
+       
         button {
             background-color: var(--primary);
             color: white;
@@ -53,18 +69,18 @@
             margin: 8px;
             -webkit-tap-highlight-color: transparent;
         }
-        
+       
         button:hover, button:active {
             background-color: #1e2670;
             transform: translateY(-2px);
         }
-        
+       
         button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
             transform: none;
         }
-        
+       
         input[type="text"], select {
             padding: 15px;
             border: 1px solid #ddd;
@@ -73,7 +89,7 @@
             margin: 8px;
             width: 100%;
         }
-        
+       
         .container {
             width: 100%;
             max-width: 1000px;
@@ -82,7 +98,7 @@
             flex-direction: column;
             align-items: center;
         }
-        
+       
         /* Login Screen */
         #login-screen {
             background-color: white;
@@ -93,13 +109,122 @@
             max-width: 500px;
             margin-top: 10px;
         }
-        
+       
         .login-form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-        
+       
+        /* Multiplayer Styles */
+        .game-mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .mode-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .multiplayer-choice {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .multiplayer-choice button {
+            flex: 1;
+        }
+
+        #room-code-section, #join-room-section {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #room-code-display {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+
+        #copy-code-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        #room-code-input {
+            text-align: center;
+            font-size: 1.2em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #connected-players {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        #connected-players h3 {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        #player-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #player-list li {
+            padding: 8px;
+            background-color: white;
+            margin: 5px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-ready {
+            background-color: #d4edda !important;
+        }
+
+        .host-badge {
+            background-color: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+       
+        /* Connection Status */
+        #connection-status {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+       
         /* Game Screen */
         #game-screen {
             display: none;
@@ -110,26 +235,26 @@
             left: 0;
             background-color: var(--light);
         }
-        
+       
         #game-container {
             position: relative;
             width: 100%;
             height: 100%;
             overflow: hidden;
         }
-        
+       
         #game-canvas {
             background-color: white;
             display: block;
             touch-action: none;
         }
-        
+       
         /* UI Overlays */
         #leaderboard {
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -137,13 +262,13 @@
             font-size: 0.9em;
             z-index: 10;
         }
-        
+       
         #game-timer {
             position: absolute;
             top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 8px 15px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -152,19 +277,19 @@
             color: var(--primary);
             z-index: 10;
         }
-        
+       
         #player-stats {
             position: absolute;
             bottom: 270px;
             left: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 10;
             font-size: 0.9em;
         }
-        
+       
         /* Touch Controls */
         #touch-controls {
             position: absolute;
@@ -175,7 +300,7 @@
             justify-content: center;
             z-index: 20;
         }
-        
+       
         #joystick-area {
             position: relative;
             width: 150px;
@@ -185,7 +310,7 @@
             border: 2px solid rgba(0, 0, 0, 0.2);
             touch-action: none;
         }
-        
+       
         #joystick-knob {
             position: absolute;
             width: 60px;
@@ -197,7 +322,7 @@
             transform: translate(-50%, -50%);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
-        
+       
         /* Battle Screen */
         #battle-screen {
             display: none;
@@ -211,7 +336,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+       
         .battle-container {
             background-color: white;
             padding: 20px;
@@ -220,32 +345,32 @@
             width: 95%;
             margin: 15px;
         }
-        
+       
         .battle-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
         }
-        
+       
         .battle-player {
             text-align: center;
             padding: 8px;
             border-radius: 5px;
         }
-        
+       
         .battle-question {
             background-color: var(--light);
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
         }
-        
+       
         .battle-answers {
             display: grid;
             grid-template-columns: 1fr;
             gap: 10px;
         }
-        
+       
         .answer-btn {
             padding: 15px;
             text-align: left;
@@ -258,47 +383,47 @@
             color: var(--dark);
             -webkit-tap-highlight-color: transparent;
         }
-        
+       
         .answer-btn:hover, .answer-btn:active {
             border-color: var(--primary);
             background-color: #e7f1ff;
         }
-        
+       
         .answer-btn.correct {
             background-color: var(--correct);
             color: white;
             border-color: var(--correct);
         }
-        
+       
         .answer-btn.incorrect {
             background-color: var(--incorrect);
             color: white;
             border-color: var(--incorrect);
         }
-        
+       
         #battle-timer {
             font-size: 24px;
             font-weight: bold;
             text-align: center;
             margin-bottom: 10px;
         }
-        
+       
         .hidden {
             display: none;
         }
-        
+       
         #result-message {
             text-align: center;
             font-size: 20px;
             font-weight: bold;
             margin: 15px 0;
         }
-        
+       
         #return-to-game {
             display: block;
             margin: 15px auto;
         }
-        
+       
         /* Game Over Screen */
         #game-over-screen {
             display: none;
@@ -313,7 +438,7 @@
             justify-content: center;
             padding: 15px;
         }
-        
+       
         .game-over-container {
             background-color: white;
             padding: 20px;
@@ -322,21 +447,21 @@
             width: 95%;
             text-align: center;
         }
-        
+       
         .final-stats {
             margin: 15px 0;
             font-size: 18px;
         }
-        
+       
         .final-leaderboard {
             margin: 15px 0;
         }
-        
+       
         .final-leaderboard ul {
             list-style-type: none;
             padding: 0;
         }
-        
+       
         .final-leaderboard li {
             padding: 10px;
             margin: 5px 0;
@@ -344,40 +469,40 @@
             border-radius: 5px;
             font-weight: bold;
         }
-        
+       
         .final-leaderboard li:first-child {
             background-color: var(--accent);
         }
-        
+       
         #play-again-btn {
             background-color: var(--accent);
             font-size: 18px;
             padding: 15px 30px;
             margin-top: 20px;
         }
-        
+       
         /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.6em;
             }
-            
+           
             h2 {
                 font-size: 1.4em;
             }
-            
+           
             h3 {
                 font-size: 1.2em;
             }
-            
+           
             .battle-answers {
                 grid-template-columns: 1fr;
             }
-            
+           
             #leaderboard, #player-stats {
                 font-size: 0.8em;
             }
-            
+           
             #player-stats {
                 left: 5px;
                 bottom: 330px;
@@ -390,13 +515,79 @@
     <div id="login-screen">
         <h1>Scripture Battle Royale</h1>
         <p class="subtitle" style="text-align: center; margin-bottom: 15px;">D&C Scripture Mastery Game</p>
-        
+       
         <div class="login-form">
+            <!-- Game Mode Selection -->
+            <div>
+                <label>Game Mode:</label>
+                <div class="game-mode-buttons">
+                    <button type="button" id="single-player-btn" class="mode-btn active">Single Player</button>
+                    <button type="button" id="multiplayer-btn" class="mode-btn">Multiplayer</button>
+                </div>
+            </div>
+           
+            <!-- Multiplayer Options (hidden by default) -->
+            <div id="multiplayer-options" style="display: none;">
+                <div class="multiplayer-choice">
+                    <button type="button" id="create-room-btn">Create Room</button>
+                    <button type="button" id="join-room-btn">Join Room</button>
+                </div>
+               
+                <!-- Trystero info -->
+                <div style="margin: 10px 0; padding: 8px; background-color: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 4px; font-size: 0.85em; color: #2e7d32;">
+                    <strong>✨ Serverless P2P:</strong> Uses BitTorrent trackers - no central server needed!
+                    <br>Works across different networks, VPNs, mobile data, etc.
+                    <br><small style="color: #666;">Note: Requires modern browser (Chrome/Firefox recommended)</small>
+                </div>
+               
+                <!-- Loading issues help -->
+                <details style="margin: 10px 0; font-size: 0.85em;">
+                    <summary style="cursor: pointer; color: #1976d2;">Having trouble? Click here for help</summary>
+                    <div style="margin-top: 10px; padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
+                        <p><strong>If multiplayer isn't working:</strong></p>
+                        <ol style="margin: 5px 0; padding-left: 20px;">
+                            <li>Make sure you're using Chrome or Firefox (Safari may have issues)</li>
+                            <li>Try opening the game in a new incognito/private window</li>
+                            <li>Check if your browser blocks third-party scripts</li>
+                            <li>Disable any ad blockers temporarily</li>
+                            <li>If at school/work, the network may block P2P connections</li>
+                        </ol>
+                        <p style="margin-top: 10px;"><strong>Alternative:</strong> You can download this HTML file and run it locally!</p>
+                    </div>
+                </details>
+               
+                <div id="room-code-section" style="display: none;">
+                    <p>Share this code with friends:</p>
+                    <p id="room-code-display"></p>
+                    <button type="button" id="copy-code-btn">Copy Code</button>
+                </div>
+               
+                <div id="join-room-section" style="display: none;">
+                    <input type="text" id="room-code-input" placeholder="Enter room code" maxlength="6">
+                    <button type="button" id="connect-btn">Connect</button>
+                </div>
+               
+                <div id="connected-players" style="display: none;">
+                    <h3>Players in Room:</h3>
+                    <ul id="player-list"></ul>
+                </div>
+               
+                <div style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                    <p>Connection Tips:</p>
+                    <ul style="text-align: left; margin: 5px 0;">
+                        <li>Works across different networks (WiFi, mobile data, etc.)</li>
+                        <li>For best performance, use same WiFi network</li>
+                        <li>Connection may take 5-10 seconds to establish</li>
+                        <li>Use Chrome or Firefox for best compatibility</li>
+                    </ul>
+                </div>
+            </div>
+           
             <div>
                 <label for="player-name">Your Name:</label>
                 <input type="text" id="player-name" placeholder="Enter your name">
             </div>
-            
+           
             <div>
                 <label for="player-color">Choose Your Color:</label>
                 <select id="player-color">
@@ -410,31 +601,31 @@
                     <option value="#8333FF">Purple</option>
                 </select>
             </div>
-            
+           
             <button id="join-game">Start Game</button>
         </div>
     </div>
-    
+   
     <!-- Game Screen -->
     <div id="game-screen">
         <div id="game-container">
             <canvas id="game-canvas"></canvas>
-            
+           
             <div id="game-timer">60</div>
-            
+           
             <div id="leaderboard">
                 <h3>Leaderboard</h3>
                 <ol id="leaderboard-list">
                     <!-- Leaderboard entries will be here -->
                 </ol>
             </div>
-            
+           
             <div id="player-stats">
                 <h3 id="player-name-display">Player</h3>
                 <p>Points: <span id="player-points">10</span></p>
                 <p>Position: <span id="player-position">X: 0, Y: 0</span></p>
             </div>
-            
+           
             <!-- Touch Controls -->
             <div id="touch-controls">
                 <div id="joystick-area">
@@ -443,7 +634,7 @@
             </div>
         </div>
     </div>
-    
+   
     <!-- Battle Screen -->
     <div id="battle-screen">
         <div class="battle-container">
@@ -459,19 +650,19 @@
                         <p>Points: <span id="player2-points">10</span></p>
                     </div>
                 </div>
-                
+               
                 <div id="battle-timer">15</div>
-                
+               
                 <div class="battle-question">
                     <h3 id="question-text">Question text goes here</h3>
                     <p id="scripture-reference" class="hidden">D&C 1:1</p>
                 </div>
-                
+               
                 <div class="battle-answers" id="answers-container">
                     <!-- Answer buttons will be generated here -->
                 </div>
             </div>
-            
+           
             <div class="battle-phase hidden" id="battle-phase-2">
                 <h2>Battle Results</h2>
                 <div id="result-message">You won!</div>
@@ -479,31 +670,86 @@
             </div>
         </div>
     </div>
-    
+   
     <!-- Game Over Screen -->
     <div id="game-over-screen">
         <div class="game-over-container">
             <h1>Game Over!</h1>
             <p>Time's up! Let's see how you did.</p>
-            
+           
             <div class="final-stats">
                 <p>Your final score: <span id="final-score">0</span> points</p>
                 <p>Battles won: <span id="battles-won">0</span></p>
                 <p>Battles lost: <span id="battles-lost">0</span></p>
             </div>
-            
+           
             <div class="final-leaderboard">
                 <h3>Final Leaderboard</h3>
                 <ul id="final-leaderboard-list">
                     <!-- Final leaderboard entries will be here -->
                 </ul>
             </div>
-            
+           
             <button id="play-again-btn">Play Again</button>
         </div>
     </div>
-    
+   
+    <!-- Load Trystero for P2P multiplayer -->
+    <script type="module">
+        // Modern browsers - load Trystero as ES module with specific version
+        async function loadTrystero() {
+            try {
+                // Try specific version first
+                const {joinRoom} = await import('./trystero-torrent.min.js');
+                window.trysteroTorrent = {joinRoom};
+                window.trysteroLoaded = true;
+                console.log('Trystero v0.18.0 loaded successfully');
+                return true;
+            } catch (e1) {
+                console.warn('Failed to load Trystero v0.18.0, trying latest...', e1);
+                try {
+                    // Try latest version
+                    const {joinRoom} = await import('./trystero-torrent.min.js');
+                    window.trysteroTorrent = {joinRoom};
+                    window.trysteroLoaded = true;
+                    console.log('Trystero latest loaded successfully');
+                    return true;
+                } catch (e2) {
+                    console.error('Failed to load Trystero:', e2);
+                    window.trysteroLoadFailed = true;
+                    return false;
+                }
+            }
+        }
+       
+        // Load and initialize
+        loadTrystero().then(() => {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => window.initializeApp());
+            } else {
+                window.initializeApp();
+            }
+        });
+    </script>
+   
+    <!-- Fallback for older browsers -->
+    <script nomodule>
+        console.warn('Browser does not support ES modules. Multiplayer will not be available.');
+        window.trysteroLoadFailed = true;
+       
+        // Initialize when ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                if (window.initializeApp) window.initializeApp();
+            });
+        }
+    </script>
+   
     <script>
+        // IMPORTANT: This version uses Trystero for P2P multiplayer
+        // Trystero uses BitTorrent trackers for serverless peer discovery
+        // No central server needed - truly decentralized!
+       
         // Game Configuration
         const CONFIG = {
             playerSize: 15,
@@ -514,14 +760,14 @@
             initialPoints: 10,
             respawnTime: 500,
             battleCooldown: 5000,
-            questionTime: 12,     // Changed from 5 to 7 seconds
-            aiPlayerCount: 12,   // 12 AI players for the 12 scripture masteries
-            aiUpdateInterval: 500, // How often AI players update their positions (milliseconds)
-            aiMoveChance: 0.2,   // Probability that an AI will change direction each update
-            aiMoveSpeed: 7.0,    // Increased from 3.5 to 5.0
-            gameTime: 60         // Game time in seconds
+            questionTime: 12,
+            aiPlayerCount: 12,
+            aiUpdateInterval: 500,
+            aiMoveChance: 0.2,
+            aiMoveSpeed: 7.0,
+            gameTime: 60
         };
-        
+       
         // Game State
         const gameState = {
             players: new Map(),
@@ -568,9 +814,619 @@
             stats: {
                 battlesWon: 0,
                 battlesLost: 0
-            }
+            },
+            isMultiplayer: false,
+            isHost: false
         };
-        
+       
+        // Trystero Multiplayer Manager Class
+        class TrysteroMultiplayerManager {
+            constructor() {
+                this.room = null;
+                this.isHost = false;
+                this.roomCode = null;
+                this.localPlayerId = null;
+                this.connectedPlayers = new Map();
+                this.lastPositionUpdate = 0;
+                this.positionUpdateInterval = 50; // Send position updates every 50ms
+                this.connectionStatus = 'disconnected';
+                this.battleAnswers = new Map();
+               
+                // Trystero action functions (will be set when room is created)
+                this.sendPlayerData = null;
+                this.sendGameState = null;
+                this.sendPlayerMove = null;
+                this.sendBattleRequest = null;
+                this.sendBattleStart = null;
+                this.sendBattleAnswer = null;
+                this.sendBattleResult = null;
+                this.sendStartGame = null;
+            }
+           
+            generateRoomCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 6; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code;
+            }
+           
+            showConnectionStatus(status, message) {
+                this.connectionStatus = status;
+                console.log(`Connection status: ${status} - ${message}`);
+               
+                let statusDiv = document.getElementById('connection-status');
+                if (!statusDiv) {
+                    statusDiv = document.createElement('div');
+                    statusDiv.id = 'connection-status';
+                    document.body.appendChild(statusDiv);
+                }
+               
+                statusDiv.textContent = message;
+                statusDiv.style.display = 'block';
+               
+                switch(status) {
+                    case 'connecting':
+                        statusDiv.style.backgroundColor = '#ffa500';
+                        statusDiv.style.color = 'white';
+                        break;
+                    case 'connected':
+                        statusDiv.style.backgroundColor = '#28a745';
+                        statusDiv.style.color = 'white';
+                        setTimeout(() => {
+                            statusDiv.style.display = 'none';
+                        }, 3000);
+                        break;
+                    case 'error':
+                        statusDiv.style.backgroundColor = '#dc3545';
+                        statusDiv.style.color = 'white';
+                        break;
+                    case 'waiting':
+                        statusDiv.style.backgroundColor = '#17a2b8';
+                        statusDiv.style.color = 'white';
+                        break;
+                }
+            }
+           
+            createRoom(playerName, playerColor) {
+                // Check if Trystero is available
+                if (!window.trysteroTorrent || !window.trysteroTorrent.joinRoom) {
+                    this.showConnectionStatus('error', 'Multiplayer library not loaded.');
+                   
+                    // Show detailed help message
+                    const helpDiv = document.createElement('div');
+                    helpDiv.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                        z-index: 1001;
+                        max-width: 400px;
+                    `;
+                    helpDiv.innerHTML = `
+                        <h3>Multiplayer Not Available</h3>
+                        <p>The P2P library (Trystero) failed to load. This might be because:</p>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li>Your browser doesn't support ES modules (use Chrome/Firefox)</li>
+                            <li>Network/firewall is blocking unpkg.com CDN</li>
+                            <li>Ad blocker is interfering with script loading</li>
+                        </ul>
+                        <p><strong>Solutions:</strong></p>
+                        <ol style="text-align: left; margin: 10px 0;">
+                            <li>Try using Chrome or Firefox browser</li>
+                            <li>Disable ad blockers for this page</li>
+                            <li>Download the HTML file and run it locally</li>
+                            <li>Try accessing from a different network</li>
+                        </ol>
+                        <button onclick="this.parentElement.remove()" style="margin-top: 10px;">Close</button>
+                    `;
+                    document.body.appendChild(helpDiv);
+                    return;
+                }
+               
+                this.isHost = true;
+                this.roomCode = this.generateRoomCode();
+                this.localPlayerId = 'player-' + Math.random().toString(36).substr(2, 9);
+               
+                this.showConnectionStatus('connecting', 'Creating room...');
+               
+                // Create Trystero room with room code as namespace
+                try {
+                    // Use torrent strategy for completely serverless operation
+                    const config = {
+                        appId: 'scripture-battle-royale'
+                    };
+                   
+                    this.room = window.trysteroTorrent.joinRoom(config, this.roomCode);
+                   
+                    // Set up action functions
+                    const [sendPlayerData, getPlayerData] = this.room.makeAction('playerData');
+                    const [sendGameState, getGameState] = this.room.makeAction('gameState');
+                    const [sendPlayerMove, getPlayerMove] = this.room.makeAction('playerMove');
+                    const [sendBattleRequest, getBattleRequest] = this.room.makeAction('battleReq');
+                    const [sendBattleStart, getBattleStart] = this.room.makeAction('battleStart');
+                    const [sendBattleAnswer, getBattleAnswer] = this.room.makeAction('battleAnswer');
+                    const [sendBattleResult, getBattleResult] = this.room.makeAction('battleResult');
+                    const [sendStartGame, getStartGame] = this.room.makeAction('startGame');
+                   
+                    // Store send functions
+                    this.sendPlayerData = sendPlayerData;
+                    this.sendGameState = sendGameState;
+                    this.sendPlayerMove = sendPlayerMove;
+                    this.sendBattleRequest = sendBattleRequest;
+                    this.sendBattleStart = sendBattleStart;
+                    this.sendBattleAnswer = sendBattleAnswer;
+                    this.sendBattleResult = sendBattleResult;
+                    this.sendStartGame = sendStartGame;
+                   
+                    // Handle incoming connections
+                    this.room.onPeerJoin(peerId => {
+                        console.log('Peer joined:', peerId);
+                        this.showConnectionStatus('connected', 'Player joined!');
+                       
+                        // Send current players list to new peer
+                        const currentPlayers = Array.from(this.connectedPlayers.entries()).map(([id, player]) => ({
+                            id: id,
+                            ...player
+                        }));
+                       
+                        // Add host info
+                        currentPlayers.push({
+                            id: this.localPlayerId,
+                            name: playerName,
+                            color: playerColor,
+                            isHost: true,
+                            ready: false
+                        });
+                       
+                        this.sendPlayerData({
+                            type: 'currentPlayers',
+                            players: currentPlayers
+                        }, peerId);
+                    });
+                   
+                    this.room.onPeerLeave(peerId => {
+                        console.log('Peer left:', peerId);
+                        this.handlePeerDisconnect(peerId);
+                    });
+                   
+                    // Set up action handlers
+                    getPlayerData((data, peerId) => this.handlePlayerData(data, peerId));
+                    getPlayerMove((data, peerId) => this.handlePlayerMove(data, peerId));
+                    getBattleRequest((data, peerId) => this.handleBattleRequest(data, peerId));
+                    getBattleAnswer((data, peerId) => this.handleBattleAnswer(data, peerId));
+                   
+                    // Add self to connected players
+                    this.connectedPlayers.set(this.localPlayerId, {
+                        name: playerName,
+                        color: playerColor,
+                        isHost: true,
+                        ready: false
+                    });
+                   
+                    this.showConnectionStatus('waiting', 'Room created! Waiting for players...');
+                   
+                    document.getElementById('room-code-display').textContent = this.roomCode;
+                    document.getElementById('room-code-section').style.display = 'block';
+                    document.getElementById('connected-players').style.display = 'block';
+                   
+                    this.updatePlayerList();
+                   
+                } catch (error) {
+                    console.error('Error creating room:', error);
+                    this.showConnectionStatus('error', 'Failed to create room. Try again.');
+                }
+            }
+           
+            joinRoom(roomCode, playerName, playerColor) {
+                // Check if Trystero is available
+                if (!window.trysteroTorrent || !window.trysteroTorrent.joinRoom) {
+                    this.showConnectionStatus('error', 'Multiplayer library not loaded.');
+                   
+                    // Show same detailed help message
+                    const helpDiv = document.createElement('div');
+                    helpDiv.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                        z-index: 1001;
+                        max-width: 400px;
+                    `;
+                    helpDiv.innerHTML = `
+                        <h3>Multiplayer Not Available</h3>
+                        <p>The P2P library (Trystero) failed to load. This might be because:</p>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li>Your browser doesn't support ES modules (use Chrome/Firefox)</li>
+                            <li>Network/firewall is blocking unpkg.com CDN</li>
+                            <li>Ad blocker is interfering with script loading</li>
+                        </ul>
+                        <p><strong>Solutions:</strong></p>
+                        <ol style="text-align: left; margin: 10px 0;">
+                            <li>Try using Chrome or Firefox browser</li>
+                            <li>Disable ad blockers for this page</li>
+                            <li>Download the HTML file and run it locally</li>
+                            <li>Try accessing from a different network</li>
+                        </ol>
+                        <button onclick="this.parentElement.remove()" style="margin-top: 10px;">Close</button>
+                    `;
+                    document.body.appendChild(helpDiv);
+                    return;
+                }
+               
+                this.roomCode = roomCode.toUpperCase();
+                this.localPlayerId = 'player-' + Math.random().toString(36).substr(2, 9);
+               
+                this.showConnectionStatus('connecting', 'Joining room...');
+               
+                try {
+                    const config = {
+                        appId: 'scripture-battle-royale'
+                    };
+                   
+                    this.room = window.trysteroTorrent.joinRoom(config, this.roomCode);
+                   
+                    // Set up action functions
+                    const [sendPlayerData, getPlayerData] = this.room.makeAction('playerData');
+                    const [sendGameState, getGameState] = this.room.makeAction('gameState');
+                    const [sendPlayerMove, getPlayerMove] = this.room.makeAction('playerMove');
+                    const [sendBattleRequest, getBattleRequest] = this.room.makeAction('battleReq');
+                    const [sendBattleStart, getBattleStart] = this.room.makeAction('battleStart');
+                    const [sendBattleAnswer, getBattleAnswer] = this.room.makeAction('battleAnswer');
+                    const [sendBattleResult, getBattleResult] = this.room.makeAction('battleResult');
+                    const [sendStartGame, getStartGame] = this.room.makeAction('startGame');
+                   
+                    // Store send functions
+                    this.sendPlayerData = sendPlayerData;
+                    this.sendGameState = sendGameState;
+                    this.sendPlayerMove = sendPlayerMove;
+                    this.sendBattleRequest = sendBattleRequest;
+                    this.sendBattleStart = sendBattleStart;
+                    this.sendBattleAnswer = sendBattleAnswer;
+                    this.sendBattleResult = sendBattleResult;
+                    this.sendStartGame = sendStartGame;
+                   
+                    // Set up handlers
+                    this.room.onPeerJoin(peerId => {
+                        console.log('Connected to room, found peer:', peerId);
+                        this.showConnectionStatus('connected', 'Connected to room!');
+                       
+                        // Send join message
+                        this.sendPlayerData({
+                            type: 'join',
+                            playerName: playerName,
+                            playerColor: playerColor,
+                            playerId: this.localPlayerId
+                        });
+                       
+                        document.getElementById('connected-players').style.display = 'block';
+                        document.getElementById('join-room-section').style.display = 'none';
+                    });
+                   
+                    this.room.onPeerLeave(peerId => {
+                        console.log('Peer left:', peerId);
+                        this.handlePeerDisconnect(peerId);
+                    });
+                   
+                    // Set up action handlers
+                    getPlayerData((data, peerId) => this.handlePlayerData(data, peerId));
+                    getGameState((data, peerId) => this.handleGameState(data, peerId));
+                    getPlayerMove((data, peerId) => this.handlePlayerMove(data, peerId));
+                    getBattleStart((data, peerId) => this.handleBattleStart(data, peerId));
+                    getBattleResult((data, peerId) => this.handleBattleResult(data, peerId));
+                    getStartGame((data, peerId) => this.handleStartGame(data, peerId));
+                   
+                    // Add self to connected players
+                    this.connectedPlayers.set(this.localPlayerId, {
+                        name: playerName,
+                        color: playerColor,
+                        isHost: false,
+                        ready: false
+                    });
+                   
+                    // Timeout if no peers found
+                    setTimeout(() => {
+                        if (this.connectionStatus === 'connecting') {
+                            this.showConnectionStatus('error', 'No room found with that code. Check the code and try again.');
+                            this.handleDisconnect();
+                        }
+                    }, 10000);
+                   
+                } catch (error) {
+                    console.error('Error joining room:', error);
+                    this.showConnectionStatus('error', 'Failed to join room. Try again.');
+                }
+            }
+           
+            handlePlayerData(data, peerId) {
+                console.log('Received player data:', data, 'from:', peerId);
+               
+                switch (data.type) {
+                    case 'join':
+                        // New player joined
+                        this.connectedPlayers.set(data.playerId, {
+                            name: data.playerName,
+                            color: data.playerColor,
+                            isHost: false,
+                            ready: false,
+                            peerId: peerId
+                        });
+                       
+                        // Broadcast to all other players
+                        this.sendPlayerData({
+                            type: 'playerJoined',
+                            playerId: data.playerId,
+                            playerName: data.playerName,
+                            playerColor: data.playerColor
+                        });
+                       
+                        this.updatePlayerList();
+                        break;
+                       
+                    case 'currentPlayers':
+                        // Received list of current players from host
+                        this.connectedPlayers.clear();
+                        data.players.forEach(player => {
+                            this.connectedPlayers.set(player.id, {
+                                name: player.name,
+                                color: player.color,
+                                isHost: player.isHost,
+                                ready: player.ready
+                            });
+                        });
+                        this.updatePlayerList();
+                        break;
+                       
+                    case 'playerJoined':
+                        // Another player joined
+                        if (!this.connectedPlayers.has(data.playerId)) {
+                            this.connectedPlayers.set(data.playerId, {
+                                name: data.playerName,
+                                color: data.playerColor,
+                                isHost: false,
+                                ready: false
+                            });
+                            this.updatePlayerList();
+                        }
+                        break;
+                }
+            }
+           
+            handleGameState(data, peerId) {
+                // Sync game state from host
+                if (data.players) {
+                    data.players.forEach(playerData => {
+                        if (playerData.id !== gameState.localPlayer.id) {
+                            gameState.players.set(playerData.id, playerData);
+                        }
+                    });
+                }
+            }
+           
+            handlePlayerMove(data, peerId) {
+                // Update player position
+                if (gameState.players.has(data.playerId)) {
+                    const player = gameState.players.get(data.playerId);
+                    player.x = data.x;
+                    player.y = data.y;
+                }
+            }
+           
+            handleBattleRequest(data, peerId) {
+                if (!this.isHost) return;
+               
+                // Verify both players exist and are close enough
+                const player1 = gameState.players.get(data.player1Id);
+                const player2 = gameState.players.get(data.player2Id);
+               
+                if (!player1 || !player2) return;
+               
+                // Check if either player is already in battle
+                if (player1.inBattle || player2.inBattle) return;
+               
+                // Mark players as in battle
+                player1.inBattle = true;
+                player2.inBattle = true;
+               
+                // Select a question
+                const questionData = selectBattleQuestion();
+               
+                // Send battle start to all players
+                this.sendBattleStart({
+                    player1Id: data.player1Id,
+                    player2Id: data.player2Id,
+                    question: questionData.question,
+                    scripture: questionData.scripture,
+                    questionId: questionData.questionId,
+                    battleId: Date.now().toString()
+                });
+            }
+           
+            handleBattleStart(data, peerId) {
+                // Start battle if we're involved
+                if (data.player1Id === gameState.localPlayer.id || data.player2Id === gameState.localPlayer.id) {
+                    startMultiplayerBattle(data);
+                }
+            }
+           
+            handleBattleAnswer(data, peerId) {
+                if (!this.isHost) return;
+               
+                // Store answer and check if both players have answered
+                const battleKey = data.battleId;
+                if (!this.battleAnswers.has(battleKey)) {
+                    this.battleAnswers.set(battleKey, {});
+                }
+               
+                const battle = this.battleAnswers.get(battleKey);
+                battle[data.playerId] = {
+                    answer: data.answer,
+                    correct: data.correct,
+                    timestamp: Date.now()
+                };
+               
+                // Check if both players have answered
+                if (Object.keys(battle).length === 2) {
+                    // Determine winner
+                    const players = Object.keys(battle);
+                    const player1Result = battle[players[0]];
+                    const player2Result = battle[players[1]];
+                   
+                    let winnerId = null;
+                    if (player1Result.correct && !player2Result.correct) {
+                        winnerId = players[0];
+                    } else if (!player1Result.correct && player2Result.correct) {
+                        winnerId = players[1];
+                    } else if (player1Result.correct && player2Result.correct) {
+                        // Both correct, faster wins
+                        winnerId = player1Result.timestamp < player2Result.timestamp ? players[0] : players[1];
+                    }
+                   
+                    // Send result to all players
+                    this.sendBattleResult({
+                        battleId: battleKey,
+                        player1Id: players[0],
+                        player2Id: players[1],
+                        winnerId: winnerId,
+                        player1Correct: player1Result.correct,
+                        player2Correct: player2Result.correct
+                    });
+                   
+                    // Clean up
+                    this.battleAnswers.delete(battleKey);
+                }
+            }
+           
+            handleBattleResult(data, peerId) {
+                processBattleResultMultiplayer(data);
+            }
+           
+            handleStartGame(data, peerId) {
+                if (!this.isHost) {
+                    startMultiplayerGame(data.gameSettings);
+                }
+            }
+           
+            handlePeerDisconnect(peerId) {
+                // Find and remove disconnected player
+                let disconnectedPlayerId = null;
+                for (const [playerId, player] of this.connectedPlayers.entries()) {
+                    if (player.peerId === peerId) {
+                        disconnectedPlayerId = playerId;
+                        break;
+                    }
+                }
+               
+                if (disconnectedPlayerId) {
+                    this.connectedPlayers.delete(disconnectedPlayerId);
+                    if (gameState.players.has(disconnectedPlayerId)) {
+                        gameState.players.delete(disconnectedPlayerId);
+                    }
+                    this.updatePlayerList();
+                   
+                    // Notify others if host
+                    if (this.isHost) {
+                        this.sendPlayerData({
+                            type: 'playerDisconnected',
+                            playerId: disconnectedPlayerId
+                        });
+                    }
+                }
+            }
+           
+            sendPlayerPosition(player) {
+                if (!this.room || !this.sendPlayerMove) return;
+               
+                const now = Date.now();
+                if (now - this.lastPositionUpdate < this.positionUpdateInterval) return;
+               
+                this.lastPositionUpdate = now;
+               
+                this.sendPlayerMove({
+                    playerId: player.id,
+                    x: player.x,
+                    y: player.y
+                });
+            }
+           
+            updatePlayerList() {
+                const playerList = document.getElementById('player-list');
+                playerList.innerHTML = '';
+               
+                this.connectedPlayers.forEach((player, id) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${player.name}</span>
+                        ${player.isHost ? '<span class="host-badge">HOST</span>' : ''}
+                    `;
+                    if (player.ready) li.classList.add('player-ready');
+                    playerList.appendChild(li);
+                });
+            }
+           
+            startGame(gameSettings) {
+                if (this.isHost && this.sendStartGame) {
+                    // Broadcast game start to all players
+                    this.sendStartGame({
+                        gameSettings: gameSettings
+                    });
+                }
+            }
+           
+            requestBattle(player1Id, player2Id) {
+                if (this.sendBattleRequest) {
+                    this.sendBattleRequest({
+                        player1Id: player1Id,
+                        player2Id: player2Id
+                    });
+                }
+            }
+           
+            submitAnswer(battleId, playerId, answer, correct) {
+                if (this.sendBattleAnswer) {
+                    this.sendBattleAnswer({
+                        battleId: battleId,
+                        playerId: playerId,
+                        answer: answer,
+                        correct: correct
+                    });
+                }
+            }
+           
+            handleDisconnect() {
+                // Clean up and return to login
+                if (this.room) {
+                    this.room.leave();
+                    this.room = null;
+                }
+               
+                this.connectedPlayers.clear();
+               
+                // Reset UI
+                document.getElementById('game-screen').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'block';
+                document.getElementById('multiplayer-options').style.display = 'none';
+                document.getElementById('connected-players').style.display = 'none';
+                document.getElementById('room-code-section').style.display = 'none';
+                document.getElementById('join-room-section').style.display = 'none';
+               
+                // Reset game state
+                resetGame();
+            }
+        }
+       
+        // Initialize multiplayer manager
+        const multiplayer = new TrysteroMultiplayerManager();
+       
         // DOM Elements
         const loginScreen = document.getElementById('login-screen');
         const gameScreen = document.getElementById('game-screen');
@@ -605,15 +1461,30 @@
         const playAgainBtn = document.getElementById('play-again-btn');
         const joystickArea = document.getElementById('joystick-area');
         const joystickKnob = document.getElementById('joystick-knob');
-        
+       
+        // Multiplayer UI Elements
+        const singlePlayerBtn = document.getElementById('single-player-btn');
+        const multiplayerBtn = document.getElementById('multiplayer-btn');
+        const multiplayerOptions = document.getElementById('multiplayer-options');
+        const createRoomBtn = document.getElementById('create-room-btn');
+        const joinRoomBtn = document.getElementById('join-room-btn');
+        const roomCodeSection = document.getElementById('room-code-section');
+        const joinRoomSection = document.getElementById('join-room-section');
+        const roomCodeDisplay = document.getElementById('room-code-display');
+        const roomCodeInput = document.getElementById('room-code-input');
+        const copyCodeBtn = document.getElementById('copy-code-btn');
+        const connectBtn = document.getElementById('connect-btn');
+        const connectedPlayers = document.getElementById('connected-players');
+        const playerList = document.getElementById('player-list');
+       
         // Initialize canvas
         gameState.canvas = canvas;
         gameState.ctx = ctx;
-        
+       
         // Initialize joystick references
         gameState.touchJoystick.area = joystickArea;
         gameState.touchJoystick.knob = joystickKnob;
-        
+       
         // Doctrinal Mastery scriptures database - Using first 12 scriptures
         const doctrinalMasteryScriptures = [
             {
@@ -1109,22 +1980,61 @@
                 ]
             }
         ];
-        
+       
         // When the document is loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializeApp() {
+            // Check if Trystero loaded
+            if (window.trysteroLoadFailed || !window.trysteroLoaded) {
+                console.error('Trystero library failed to load. Multiplayer will not work.');
+                console.log('This might be due to:');
+                console.log('1. Browser blocking ES modules from CDN');
+                console.log('2. Network issues loading the library');
+                console.log('3. Browser not supporting modern JavaScript features');
+               
+                // Disable multiplayer button
+                const multiplayerBtn = document.getElementById('multiplayer-btn');
+                if (multiplayerBtn) {
+                    multiplayerBtn.disabled = true;
+                    multiplayerBtn.textContent = 'Multiplayer (Unavailable)';
+                    multiplayerBtn.title = 'Multiplayer requires modern browser features. Try Chrome or Firefox.';
+                }
+            } else {
+                console.log('Trystero loaded successfully!');
+            }
+           
             // Add additional questions to existing scriptures
             addNewQuestions();
-            
+           
             initGame();
-            
+           
+            // Add multiplayer event handlers
+            setupMultiplayerUI();
+           
             // Add play again button handler
-            playAgainBtn.addEventListener('click', function() {
-                resetGame();
-                gameOverScreen.style.display = 'none';
-                loginScreen.style.display = 'block';
-            });
-        });
-        
+            const playAgainBtn = document.getElementById('play-again-btn');
+            if (playAgainBtn) {
+                playAgainBtn.addEventListener('click', function() {
+                    resetGame();
+                    const gameOverScreen = document.getElementById('game-over-screen');
+                    const loginScreen = document.getElementById('login-screen');
+                    if (gameOverScreen) gameOverScreen.style.display = 'none';
+                    if (loginScreen) loginScreen.style.display = 'block';
+                });
+            }
+        }
+       
+        // Make initializeApp globally available
+        window.initializeApp = initializeApp;
+       
+        // Fallback initialization if script loading takes too long
+        setTimeout(() => {
+            if (!window.trysteroLoaded && !window.trysteroLoadFailed) {
+                console.warn('Trystero loading timeout - initializing anyway');
+                window.trysteroLoadFailed = true;
+                initializeApp();
+            }
+        }, 5000);
+       
         // Function to add new questions to the doctrinalMasteryScriptures
         function addNewQuestions() {
             // Add to JSH 1:15-20 (First Vision)
@@ -1450,32 +2360,199 @@
                 }
             );
         }
-        
+       
+        // Setup multiplayer UI handlers
+        function setupMultiplayerUI() {
+            // Mode selection
+            singlePlayerBtn.addEventListener('click', function() {
+                multiplayerBtn.classList.remove('active');
+                this.classList.add('active');
+                multiplayerOptions.style.display = 'none';
+                gameState.isMultiplayer = false;
+            });
+           
+            multiplayerBtn.addEventListener('click', function() {
+                singlePlayerBtn.classList.remove('active');
+                this.classList.add('active');
+                multiplayerOptions.style.display = 'block';
+                gameState.isMultiplayer = true;
+            });
+           
+            // Create room
+            createRoomBtn.addEventListener('click', function() {
+                const playerName = playerNameInput.value.trim() || 'Player';
+                const playerColor = playerColorSelect.value;
+               
+                joinRoomSection.style.display = 'none';
+                multiplayer.createRoom(playerName, playerColor);
+                gameState.isHost = true;
+            });
+           
+            // Join room
+            joinRoomBtn.addEventListener('click', function() {
+                roomCodeSection.style.display = 'none';
+                joinRoomSection.style.display = 'block';
+            });
+           
+            // Connect to room
+            connectBtn.addEventListener('click', function() {
+                const roomCode = roomCodeInput.value.trim().toUpperCase();
+                if (roomCode.length !== 6) {
+                    alert('Please enter a valid 6-character room code');
+                    return;
+                }
+               
+                const playerName = playerNameInput.value.trim() || 'Player';
+                const playerColor = playerColorSelect.value;
+               
+                multiplayer.joinRoom(roomCode, playerName, playerColor);
+            });
+           
+            // Auto-uppercase room code input
+            const roomCodeInputElement = document.getElementById('room-code-input');
+            if (roomCodeInputElement) {
+                roomCodeInputElement.addEventListener('input', function() {
+                    this.value = this.value.toUpperCase();
+                });
+            }
+           
+            // Copy room code
+            copyCodeBtn.addEventListener('click', function() {
+                const code = roomCodeDisplay.textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    this.textContent = 'Copied!';
+                    setTimeout(() => {
+                        this.textContent = 'Copy Code';
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback for mobile
+                    const textArea = document.createElement('textarea');
+                    textArea.value = code;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                   
+                    this.textContent = 'Copied!';
+                    setTimeout(() => {
+                        this.textContent = 'Copy Code';
+                    }, 2000);
+                });
+            });
+        }
+       
         // Initialize the game
         function initGame() {
             // Set up canvas size
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
-            
+           
             // Initialize walls
             initWalls();
-            
+           
             // Set up joystick controls for touch devices
             setupTouchControls();
-            
+           
             // Set up keyboard controls for desktop
             setupKeyboardControls();
-            
+           
             // Set up the join game button
-            joinGameBtn.addEventListener('click', joinGame);
-            
+            joinGameBtn.addEventListener('click', function() {
+                if (gameState.isMultiplayer) {
+                    startMultiplayerGame();
+                } else {
+                    joinGame();
+                }
+            });
+           
             // Return to game button
             returnToGameBtn.addEventListener('click', function() {
                 battleScreen.style.display = 'none';
                 gameState.inBattle = false;
+               
+                // Clear inBattle flag for multiplayer
+                if (gameState.isMultiplayer && gameState.localPlayer) {
+                    gameState.localPlayer.inBattle = false;
+                }
             });
         }
-        
+       
+        // Start multiplayer game
+        function startMultiplayerGame(gameSettings) {
+            const playerName = playerNameInput.value.trim() || 'Player';
+            const playerColor = playerColorSelect.value;
+           
+            // Generate spawn position
+            const spawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
+            const spawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
+           
+            // Create local player ID
+            const playerId = multiplayer.localPlayerId || 'player-' + Math.random().toString(36).substr(2, 9);
+           
+            // Create local player
+            gameState.localPlayer = {
+                id: playerId,
+                name: playerName,
+                x: spawnX,
+                y: spawnY,
+                color: playerColor,
+                points: CONFIG.initialPoints,
+                scriptures: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                isDead: false,
+                respawnTime: 0,
+                inBattle: false
+            };
+           
+            // Add local player to players map
+            gameState.players.set(playerId, gameState.localPlayer);
+           
+            // Add other connected players
+            multiplayer.connectedPlayers.forEach((player, id) => {
+                if (id !== playerId) {
+                    const otherSpawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
+                    const otherSpawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
+                   
+                    gameState.players.set(id, {
+                        id: id,
+                        name: player.name,
+                        x: otherSpawnX,
+                        y: otherSpawnY,
+                        color: player.color,
+                        points: CONFIG.initialPoints,
+                        scriptures: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                        isDead: false,
+                        respawnTime: 0,
+                        inBattle: false
+                    });
+                }
+            });
+           
+            // Update player stats display
+            playerNameDisplay.textContent = playerName;
+            playerPointsDisplay.textContent = CONFIG.initialPoints;
+           
+            // Switch to game screen
+            loginScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+           
+            // Update leaderboard
+            updateLeaderboard();
+           
+            // Start game timer
+            startGameTimer();
+           
+            // Start game loop
+            gameState.lastUpdate = performance.now();
+            requestAnimationFrame(gameLoop);
+           
+            // If host, notify others game has started
+            if (gameState.isHost) {
+                multiplayer.startGame({ gameTime: CONFIG.gameTime });
+            }
+        }
+       
         // Setup keyboard controls
         function setupKeyboardControls() {
             window.addEventListener('keydown', function(e) {
@@ -1483,14 +2560,14 @@
                     gameState.keys[e.key] = true;
                 }
             });
-            
+           
             window.addEventListener('keyup', function(e) {
                 if (gameState.keys.hasOwnProperty(e.key)) {
                     gameState.keys[e.key] = false;
                 }
             });
         }
-        
+       
         // Setup touch controls
         function setupTouchControls() {
             // Setup joystick touch events
@@ -1498,20 +2575,20 @@
             joystickArea.addEventListener('touchmove', handleJoystickMove, false);
             joystickArea.addEventListener('touchend', handleJoystickEnd, false);
         }
-        
+       
         // Handle joystick touch start
         function handleJoystickStart(event) {
             event.preventDefault();
             const touch = event.touches[0];
             const rect = joystickArea.getBoundingClientRect();
-            
+           
             gameState.touchJoystick.active = true;
             gameState.touchJoystick.startX = rect.left + rect.width / 2;
             gameState.touchJoystick.startY = rect.top + rect.height / 2;
-            
+           
             updateJoystickPosition(touch.clientX, touch.clientY);
         }
-        
+       
         // Handle joystick touch move
         function handleJoystickMove(event) {
             event.preventDefault();
@@ -1520,39 +2597,39 @@
                 updateJoystickPosition(touch.clientX, touch.clientY);
             }
         }
-        
+       
         // Handle joystick touch end
         function handleJoystickEnd(event) {
             event.preventDefault();
             resetJoystick();
         }
-        
+       
         // Update joystick position
         function updateJoystickPosition(clientX, clientY) {
             const areaRect = joystickArea.getBoundingClientRect();
             const centerX = areaRect.left + areaRect.width / 2;
             const centerY = areaRect.top + areaRect.height / 2;
-            
+           
             // Calculate distance from center
             let dx = clientX - centerX;
             let dy = clientY - centerY;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            
+           
             // Limit joystick movement to area bounds
             const maxDistance = areaRect.width / 2;
             if (distance > maxDistance) {
                 dx = dx * maxDistance / distance;
                 dy = dy * maxDistance / distance;
             }
-            
+           
             // Update knob position
             joystickKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-            
+           
             // Update movement values
             gameState.touchJoystick.moveX = dx / maxDistance;
             gameState.touchJoystick.moveY = dy / maxDistance;
         }
-        
+       
         // Reset joystick position
         function resetJoystick() {
             gameState.touchJoystick.active = false;
@@ -1560,7 +2637,7 @@
             gameState.touchJoystick.moveY = 0;
             joystickKnob.style.transform = 'translate(-50%, -50%)';
         }
-        
+       
         // Reset the game
         function resetGame() {
             // Clear game state
@@ -1578,33 +2655,53 @@
                 battlesWon: 0,
                 battlesLost: 0
             };
-            
+            gameState.isMultiplayer = false;
+            gameState.isHost = false;
+           
             // Reset keyboard state
             Object.keys(gameState.keys).forEach(key => {
                 gameState.keys[key] = false;
             });
-            
+           
             // Clear intervals
             if (gameState.aiInterval) {
                 clearInterval(gameState.aiInterval);
                 gameState.aiInterval = null;
             }
-            
+           
             if (gameState.gameTimerInterval) {
                 clearInterval(gameState.gameTimerInterval);
                 gameState.gameTimerInterval = null;
             }
-            
+           
             // Reset joystick
             resetJoystick();
+           
+            // Reset multiplayer
+            if (multiplayer.room) {
+                multiplayer.room.leave();
+                multiplayer.room = null;
+            }
+            multiplayer.connectedPlayers.clear();
+            multiplayer.isHost = false;
+            multiplayer.roomCode = null;
+           
+            // Reset UI
+            singlePlayerBtn.classList.add('active');
+            multiplayerBtn.classList.remove('active');
+            multiplayerOptions.style.display = 'none';
+            roomCodeSection.style.display = 'none';
+            joinRoomSection.style.display = 'none';
+            connectedPlayers.style.display = 'none';
+            roomCodeInput.value = '';
         }
-        
+       
         // Resize canvas to fit window
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-        
+       
         // Generate walls
         function initWalls() {
             // Border walls
@@ -1618,7 +2715,7 @@
                 // Right border
                 { x: CONFIG.worldWidth - 20, y: 0, width: 20, height: CONFIG.worldHeight }
             ];
-            
+           
             // Add some internal walls
             gameState.walls.push(
                 // Horizontal walls
@@ -1626,7 +2723,7 @@
                 { x: 1000, y: 500, width: 500, height: 20 },
                 { x: 500, y: 1200, width: 600, height: 20 },
                 { x: 1200, y: 1500, width: 400, height: 20 },
-                
+               
                 // Vertical walls
                 { x: 800, y: 700, width: 20, height: 300 },
                 { x: 1500, y: 200, width: 20, height: 400 },
@@ -1634,16 +2731,16 @@
                 { x: 1300, y: 800, width: 20, height: 500 }
             );
         }
-        
-        // Join the game
+       
+        // Join the game (single player)
         function joinGame() {
             const playerName = playerNameInput.value.trim() || 'Player';
             const playerColor = playerColorSelect.value;
-            
+           
             // Create a random spawn position
             const spawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
             const spawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
-            
+           
             // Create local player with first 12 scriptures
             gameState.localPlayer = {
                 id: 'player',
@@ -1656,150 +2753,150 @@
                 isDead: false,
                 respawnTime: 0
             };
-            
+           
             // Add local player to players map
             gameState.players.set('player', gameState.localPlayer);
-            
+           
             // Generate AI players
             generateAIPlayers();
-            
+           
             // Update player stats display
             playerNameDisplay.textContent = playerName;
             playerPointsDisplay.textContent = CONFIG.initialPoints;
-            
+           
             // Switch to game screen
             loginScreen.style.display = 'none';
             gameScreen.style.display = 'block';
-            
+           
             // Update leaderboard
             updateLeaderboard();
-            
+           
             // Start game timer
             startGameTimer();
-            
+           
             // Start AI movement
             startAIMovement();
-            
+           
             // Start game loop
             gameState.lastUpdate = performance.now();
             requestAnimationFrame(gameLoop);
         }
-        
+       
         // Start game timer
         function startGameTimer() {
             // Display initial time
             gameTimerDisplay.textContent = gameState.gameTimer;
-            
+           
             // Clear previous interval if exists
             if (gameState.gameTimerInterval) {
                 clearInterval(gameState.gameTimerInterval);
             }
-            
+           
             // Set new interval
             gameState.gameTimerInterval = setInterval(() => {
                 // Skip timer updates if in battle
                 if (gameState.inBattle) return;
-                
+               
                 gameState.gameTimer--;
                 gameTimerDisplay.textContent = gameState.gameTimer;
-                
+               
                 // Check if game is over
                 if (gameState.gameTimer <= 0) {
                     endGame();
                 }
             }, 1000);
         }
-        
+       
         // End the game
         function endGame() {
             gameState.gameOver = true;
-            
+           
             // Clear intervals
             if (gameState.aiInterval) {
                 clearInterval(gameState.aiInterval);
             }
-            
+           
             if (gameState.gameTimerInterval) {
                 clearInterval(gameState.gameTimerInterval);
             }
-            
+           
             // Update final stats
             finalScoreElem.textContent = gameState.localPlayer.points;
             battlesWonElem.textContent = gameState.stats.battlesWon;
             battlesLostElem.textContent = gameState.stats.battlesLost;
-            
+           
             // Update final leaderboard
             let leaderboardHTML = '';
             gameState.leaderboard.forEach((player, index) => {
                 leaderboardHTML += `<li>${index+1}. ${player.name}: ${player.points} points</li>`;
             });
             finalLeaderboardListElem.innerHTML = leaderboardHTML;
-            
+           
             // Show game over screen
             gameScreen.style.display = 'none';
             battleScreen.style.display = 'none';
             gameOverScreen.style.display = 'flex';
-            
+           
             // Save high score to localStorage if it's higher than previous
             saveHighScore(gameState.localPlayer.name, gameState.localPlayer.points);
         }
-        
+       
         // Save high score to localStorage
         function saveHighScore(name, score) {
             try {
                 let highScores = [];
                 const savedScores = localStorage.getItem('scriptureRoyaleHighScores');
-                
+               
                 if (savedScores) {
                     highScores = JSON.parse(savedScores);
                 }
-                
+               
                 // Add new score
                 highScores.push({ name, score, date: new Date().toISOString() });
-                
+               
                 // Sort by score (highest first)
                 highScores.sort((a, b) => b.score - a.score);
-                
+               
                 // Keep only top 10
                 highScores = highScores.slice(0, 10);
-                
+               
                 // Save back to localStorage
                 localStorage.setItem('scriptureRoyaleHighScores', JSON.stringify(highScores));
             } catch (e) {
                 console.error('Error saving high score:', e);
             }
         }
-        
+       
         // Generate AI players
         function generateAIPlayers() {
             const names = [
-                'Joseph Smith', 'Emma Smith', 'Brigham Young', 'Lucy Mack Smith', 
+                'Joseph Smith', 'Emma Smith', 'Brigham Young', 'Lucy Mack Smith',
                 'Martin Harris', 'Oliver Cowdery', 'Hyrum Smith', 'Moroni',
                 'Nephi', 'Alma', 'Sidney Rigdon', 'Parley P. Pratt'
             ];
-            
+           
             const colors = [
-                '#FF5733', '#33FF57', '#3357FF', '#FF33F5', 
+                '#FF5733', '#33FF57', '#3357FF', '#FF33F5',
                 '#F5FF33', '#33FFF5', '#FF8333', '#8333FF'
             ];
-            
+           
             // Create AI players - one for each of the first 12 scriptures
             for (let i = 0; i < CONFIG.aiPlayerCount; i++) {
                 // Random position away from player
                 let x, y;
                 const minDistance = 300; // Minimum distance from player
-                
+               
                 do {
                     x = 100 + Math.random() * (CONFIG.worldWidth - 200);
                     y = 100 + Math.random() * (CONFIG.worldHeight - 200);
-                    
+                   
                     const dx = x - gameState.localPlayer.x;
                     const dy = y - gameState.localPlayer.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    
+                   
                     if (distance >= minDistance) break;
                 } while (true);
-                
+               
                 // All AIs have access to all scriptures
                 // Create AI player
                 const aiPlayer = {
@@ -1817,29 +2914,29 @@
                         y: Math.random() * 2 - 1
                     }
                 };
-                
+               
                 // Add to players map
                 gameState.players.set(aiPlayer.id, aiPlayer);
             }
         }
-        
+       
         // Start AI movement
         function startAIMovement() {
             // Clear previous interval if exists
             if (gameState.aiInterval) {
                 clearInterval(gameState.aiInterval);
             }
-            
+           
             // Set new interval
             gameState.aiInterval = setInterval(updateAIPlayers, CONFIG.aiUpdateInterval);
         }
-        
+       
         // Update AI players
         function updateAIPlayers() {
             for (const [id, player] of gameState.players.entries()) {
                 // Skip local player and dead AIs
                 if (id === 'player' || player.isDead) continue;
-                
+               
                 // Handle respawn for dead AI
                 if (player.isDead) {
                     player.respawnTime -= CONFIG.aiUpdateInterval;
@@ -1847,7 +2944,7 @@
                         // Respawn
                         const spawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
                         const spawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
-                        
+                       
                         player.x = spawnX;
                         player.y = spawnY;
                         player.isDead = false;
@@ -1855,14 +2952,14 @@
                     }
                     continue;
                 }
-                
+               
                 // Possibly change direction
                 if (Math.random() < CONFIG.aiMoveChance) {
                     player.direction = {
                         x: Math.random() * 2 - 1,
                         y: Math.random() * 2 - 1
                     };
-                    
+                   
                     // Normalize direction
                     const length = Math.sqrt(player.direction.x * player.direction.x + player.direction.y * player.direction.y);
                     if (length > 0) {
@@ -1870,68 +2967,185 @@
                         player.direction.y /= length;
                     }
                 }
-                
+               
                 // Save old position for collision detection
                 const oldX = player.x;
                 const oldY = player.y;
-                
+               
                 // Move the AI player
                 player.x += player.direction.x * CONFIG.aiMoveSpeed;
                 player.y += player.direction.y * CONFIG.aiMoveSpeed;
-                
+               
                 // Check world boundaries
                 player.x = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldWidth - CONFIG.playerSize, player.x));
                 player.y = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldHeight - CONFIG.playerSize, player.y));
-                
+               
                 // Check wall collisions
                 for (const wall of gameState.walls) {
                     if (checkCollision(player, wall)) {
                         // Revert to old position and pick new direction
                         player.x = oldX;
                         player.y = oldY;
-                        
+                       
                         player.direction = {
                             x: Math.random() * 2 - 1,
                             y: Math.random() * 2 - 1
                         };
-                        
+                       
                         // Normalize direction
                         const length = Math.sqrt(player.direction.x * player.direction.x + player.direction.y * player.direction.y);
                         if (length > 0) {
                             player.direction.x /= length;
                             player.direction.y /= length;
                         }
-                        
+                       
                         break;
                     }
                 }
             }
         }
-        
+       
+        // Select battle question for multiplayer
+        function selectBattleQuestion() {
+            // Get all available questions (first 12 scriptures)
+            let allQuestions = [];
+           
+            for (let i = 0; i < 12; i++) {
+                const scripture = doctrinalMasteryScriptures[i];
+               
+                scripture.questions.forEach((question, qIndex) => {
+                    const questionId = `${scripture.id}-${qIndex}`;
+                   
+                    if (!gameState.answeredQuestions.correct.has(questionId)) {
+                        allQuestions.push({
+                            question,
+                            scripture,
+                            questionId
+                        });
+                    }
+                });
+            }
+           
+            // If all questions have been answered correctly, reset the pool
+            if (allQuestions.length === 0) {
+                gameState.answeredQuestions.correct = new Set();
+               
+                for (let i = 0; i < 12; i++) {
+                    const scripture = doctrinalMasteryScriptures[i];
+                   
+                    scripture.questions.forEach((question, qIndex) => {
+                        allQuestions.push({
+                            question,
+                            scripture,
+                            questionId: `${scripture.id}-${qIndex}`
+                        });
+                    });
+                }
+            }
+           
+            // Choose a random question
+            const randomIndex = Math.floor(Math.random() * allQuestions.length);
+            return allQuestions[randomIndex];
+        }
+       
+        // Start multiplayer battle
+        function startMultiplayerBattle(data) {
+            gameState.inBattle = true;
+            gameState.currentOpponent = data.player1Id === gameState.localPlayer.id ? data.player2Id : data.player1Id;
+            gameState.currentBattleId = data.battleId;
+           
+            const player1 = gameState.players.get(data.player1Id);
+            const player2 = gameState.players.get(data.player2Id);
+           
+            if (!player1 || !player2) return;
+           
+            // Set up battle UI
+            setupBattleUI(player1, player2, data.question, data.scripture);
+           
+            // Show battle screen
+            battleScreen.style.display = 'flex';
+        }
+       
+        // Process multiplayer battle result
+        function processBattleResultMultiplayer(data) {
+            const player1 = gameState.players.get(data.player1Id);
+            const player2 = gameState.players.get(data.player2Id);
+           
+            if (!player1 || !player2) return;
+           
+            // Update points based on winner
+            if (data.winnerId) {
+                const winner = data.winnerId === data.player1Id ? player1 : player2;
+                const loser = data.winnerId === data.player1Id ? player2 : player1;
+               
+                // Transfer points
+                winner.points += loser.points;
+                loser.points = 1;
+                loser.isDead = true;
+                loser.respawnTime = CONFIG.respawnTime;
+               
+                // Update local stats if involved
+                if (data.winnerId === gameState.localPlayer.id) {
+                    gameState.stats.battlesWon++;
+                } else if (gameState.localPlayer.id === data.player1Id || gameState.localPlayer.id === data.player2Id) {
+                    gameState.stats.battlesLost++;
+                }
+            }
+           
+            // Clear battle flags
+            player1.inBattle = false;
+            player2.inBattle = false;
+           
+            // Show results if local player was involved
+            if (gameState.localPlayer.id === data.player1Id || gameState.localPlayer.id === data.player2Id) {
+                const wonBattle = data.winnerId === gameState.localPlayer.id;
+                const correctAnswer = gameState.localPlayer.id === data.player1Id ? data.player1Correct : data.player2Correct;
+               
+                let resultMessage = '';
+                if (wonBattle) {
+                    resultMessage = 'You won! ';
+                    resultMessage += correctAnswer ? 'You answered correctly.' : 'Your opponent answered incorrectly.';
+                } else if (data.winnerId === null) {
+                    resultMessage = 'Draw! Both players answered incorrectly.';
+                } else {
+                    resultMessage = 'You lost! ';
+                    resultMessage += correctAnswer ? 'Your opponent was faster.' : 'Your answer was incorrect.';
+                }
+               
+                resultMessageElem.textContent = resultMessage;
+                battlePhase1.classList.add('hidden');
+                battlePhase2.classList.remove('hidden');
+               
+                // Update UI
+                playerPointsDisplay.textContent = gameState.localPlayer.points;
+                updateLeaderboard();
+            }
+        }
+       
         // Game Loop
         function gameLoop(timestamp) {
             // Check if game is over
             if (gameState.gameOver) return;
-            
+           
             // Calculate delta time
             const deltaTime = timestamp - gameState.lastUpdate;
             gameState.lastUpdate = timestamp;
-            
+           
             // Update
             update(deltaTime);
-            
+           
             // Render
             render();
-            
+           
             // Loop
             requestAnimationFrame(gameLoop);
         }
-        
+       
         // Update game state
         function update(deltaTime) {
             // Skip updates if in battle
             if (gameState.inBattle) return;
-            
+           
             // Handle player respawn if dead
             if (gameState.localPlayer.isDead) {
                 gameState.localPlayer.respawnTime -= deltaTime;
@@ -1940,39 +3154,39 @@
                 }
                 return;
             }
-            
+           
             // Calculate movement direction from joystick or keyboard
             let moveX = 0;
             let moveY = 0;
-            
+           
             // Check touch joystick input
             if (gameState.touchJoystick.active) {
                 moveX = gameState.touchJoystick.moveX;
                 moveY = gameState.touchJoystick.moveY;
             }
-            
+           
             // Check keyboard input (allows both control methods simultaneously)
             if (gameState.keys.ArrowUp || gameState.keys.w) moveY -= 1;
             if (gameState.keys.ArrowDown || gameState.keys.s) moveY += 1;
             if (gameState.keys.ArrowLeft || gameState.keys.a) moveX -= 1;
             if (gameState.keys.ArrowRight || gameState.keys.d) moveX += 1;
-            
+           
             // Apply movement speed
             moveX *= CONFIG.moveSpeed;
             moveY *= CONFIG.moveSpeed;
-            
+           
             // Save old position for collision detection
             const oldX = gameState.localPlayer.x;
             const oldY = gameState.localPlayer.y;
-            
+           
             // Update position
             gameState.localPlayer.x += moveX;
             gameState.localPlayer.y += moveY;
-            
+           
             // Check world boundaries
             gameState.localPlayer.x = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldWidth - CONFIG.playerSize, gameState.localPlayer.x));
             gameState.localPlayer.y = Math.max(CONFIG.playerSize, Math.min(CONFIG.worldHeight - CONFIG.playerSize, gameState.localPlayer.y));
-            
+           
             // Check wall collisions
             for (const wall of gameState.walls) {
                 if (checkCollision(gameState.localPlayer, wall)) {
@@ -1982,41 +3196,81 @@
                     break;
                 }
             }
-            
+           
             // Update camera to follow player
             gameState.camera.x = gameState.localPlayer.x - canvas.width / 2;
             gameState.camera.y = gameState.localPlayer.y - canvas.height / 2;
-            
+           
             // Clamp camera to world bounds
             gameState.camera.x = Math.max(0, Math.min(CONFIG.worldWidth - canvas.width, gameState.camera.x));
             gameState.camera.y = Math.max(0, Math.min(CONFIG.worldHeight - canvas.height, gameState.camera.y));
-            
+           
             // Update player position display
             playerPositionDisplay.textContent = `X: ${Math.round(gameState.localPlayer.x)}, Y: ${Math.round(gameState.localPlayer.y)}`;
-            
-            // Check for battles with other players
-            checkForBattles();
+           
+            // Send position update in multiplayer
+            if (gameState.isMultiplayer && multiplayer.room) {
+                multiplayer.sendPlayerPosition(gameState.localPlayer);
+            }
+           
+            // Check for battles
+            if (gameState.isMultiplayer) {
+                checkForMultiplayerBattles();
+            } else {
+                checkForBattles();
+            }
         }
-        
-        // Check for potential battles with nearby players
-        function checkForBattles() {
-            if (gameState.inBattle) return;
-            
+       
+        // Check for multiplayer battles
+        function checkForMultiplayerBattles() {
+            if (gameState.inBattle || gameState.localPlayer.inBattle) return;
+           
             for (const [id, player] of gameState.players.entries()) {
-                // Skip self, dead players, and players on cooldown
-                if (id === 'player' || 
-                    player.isDead || 
-                    gameState.localPlayer.isDead || 
-                    (gameState.battleCooldowns.has(id) && 
+                // Skip self, dead players, or players in battle
+                if (id === gameState.localPlayer.id ||
+                    player.isDead ||
+                    gameState.localPlayer.isDead ||
+                    player.inBattle ||
+                    (gameState.battleCooldowns.has(id) &&
                      Date.now() - gameState.battleCooldowns.get(id) < CONFIG.battleCooldown)) {
                     continue;
                 }
-                
+               
                 // Calculate distance
                 const dx = player.x - gameState.localPlayer.x;
                 const dy = player.y - gameState.localPlayer.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                
+               
+                if (distance <= CONFIG.battleRadius) {
+                    // Request battle
+                    multiplayer.requestBattle(gameState.localPlayer.id, id);
+                   
+                    // Set cooldown immediately to prevent multiple requests
+                    gameState.battleCooldowns.set(id, Date.now());
+                    break;
+                }
+            }
+        }
+       
+        // Check for potential battles with nearby players
+        function checkForBattles() {
+            if (gameState.inBattle) return;
+           
+            for (const [id, player] of gameState.players.entries()) {
+                // Skip self, dead players, and players on cooldown
+                if (id === 'player' ||
+                    player.isDead ||
+                    gameState.localPlayer.isDead ||
+                    (gameState.battleCooldowns.has(id) &&
+                     Date.now() - gameState.battleCooldowns.get(id) < CONFIG.battleCooldown)) {
+                    continue;
+                }
+               
+                // Calculate distance
+                const dx = player.x - gameState.localPlayer.x;
+                const dy = player.y - gameState.localPlayer.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+               
                 if (distance <= CONFIG.battleRadius) {
                     // Initiate battle
                     startBattle(id);
@@ -2024,25 +3278,25 @@
                 }
             }
         }
-        
+       
         // Start a battle with another player
         function startBattle(opponentId) {
             gameState.inBattle = true;
             gameState.currentOpponent = opponentId;
-            
+           
             // Get opponent data
             const opponent = gameState.players.get(opponentId);
-            
+           
             // Get all available questions (first 12 scriptures)
             let allQuestions = [];
-            
+           
             for (let i = 0; i < 12; i++) {
                 const scripture = doctrinalMasteryScriptures[i];
-                
+               
                 scripture.questions.forEach((question, qIndex) => {
                     // Create a unique ID for each question
                     const questionId = `${scripture.id}-${qIndex}`;
-                    
+                   
                     // Only add questions that:
                     // 1. Haven't been answered correctly, OR
                     // 2. Have been answered incorrectly (these can repeat)
@@ -2055,15 +3309,15 @@
                     }
                 });
             }
-            
+           
             // If all questions have been answered correctly, reset the pool
             if (allQuestions.length === 0) {
                 gameState.answeredQuestions.correct = new Set();
-                
+               
                 // Rebuild the question pool
                 for (let i = 0; i < 12; i++) {
                     const scripture = doctrinalMasteryScriptures[i];
-                    
+                   
                     scripture.questions.forEach((question, qIndex) => {
                         allQuestions.push({
                             question,
@@ -2073,21 +3327,21 @@
                     });
                 }
             }
-            
+           
             // Choose a random question from the pool
             const randomIndex = Math.floor(Math.random() * allQuestions.length);
             const { question, scripture, questionId } = allQuestions[randomIndex];
-            
+           
             // Store the current question ID for tracking
             gameState.currentQuestionId = questionId;
-            
+           
             // Set up battle UI
             setupBattleUI(gameState.localPlayer, opponent, question, scripture);
-            
+           
             // Show battle screen
             battleScreen.style.display = 'flex';
         }
-        
+       
         // Set up the battle UI
         function setupBattleUI(player1, player2, question, scripture) {
             // Display player names and points
@@ -2095,10 +3349,10 @@
             player2NameElem.textContent = player2.name;
             player1PointsElem.textContent = player1.points;
             player2PointsElem.textContent = player2.points;
-            
+           
             // Display question
             questionTextElem.textContent = question.question;
-            
+           
             // Determine if we should show the scripture reference
             // Hide for reference questions, show for content and doctrine questions
             if (question.type === 'reference') {
@@ -2107,7 +3361,7 @@
                 scriptureReferenceElem.classList.remove('hidden');
                 scriptureReferenceElem.textContent = scripture.reference;
             }
-            
+           
             // Generate answer buttons
             answersContainerElem.innerHTML = '';
             question.answers.forEach((answer, index) => {
@@ -2120,26 +3374,26 @@
                 });
                 answersContainerElem.appendChild(answerBtn);
             });
-            
+           
             // Reset battle phases
             battlePhase1.classList.remove('hidden');
             battlePhase2.classList.add('hidden');
-            
+           
             // Start timer
             startBattleTimer();
         }
-        
+       
         // Start the battle timer
         let battleTimerInterval;
         function startBattleTimer() {
             let timeLeft = CONFIG.questionTime;
             battleTimerElem.textContent = timeLeft;
-            
+           
             clearInterval(battleTimerInterval);
             battleTimerInterval = setInterval(() => {
                 timeLeft--;
                 battleTimerElem.textContent = timeLeft;
-                
+               
                 if (timeLeft <= 0) {
                     clearInterval(battleTimerInterval);
                     // Time's up, count as incorrect
@@ -2147,17 +3401,17 @@
                 }
             }, 1000);
         }
-        
+       
         // Handle answer selection
         function handleAnswerSelection(selectedIndex, correctIndex) {
             clearInterval(battleTimerInterval);
-            
+           
             // Disable all buttons
             const answerButtons = document.querySelectorAll('.answer-btn');
             answerButtons.forEach(btn => {
                 btn.disabled = true;
             });
-            
+           
             // Highlight correct and selected answers
             answerButtons.forEach((btn, index) => {
                 if (index === correctIndex) {
@@ -2166,23 +3420,26 @@
                     btn.classList.add('incorrect');
                 }
             });
-            
+           
             // Determine if the answer was correct
             const isCorrect = selectedIndex === correctIndex;
-            
-            // No longer need to simulate opponent's answer - player always wins if correct
-            
-            // Process battle results
-            setTimeout(() => {
-                processBattleResults(isCorrect);
-            }, 2000);
+           
+            // In multiplayer, send answer to host
+            if (gameState.isMultiplayer) {
+                multiplayer.submitAnswer(gameState.currentBattleId, gameState.localPlayer.id, selectedIndex, isCorrect);
+            } else {
+                // Single player - process results after delay
+                setTimeout(() => {
+                    processBattleResults(isCorrect);
+                }, 2000);
+            }
         }
-        
-        // Process battle results
+       
+        // Process battle results (single player)
         function processBattleResults(playerCorrect) {
             const opponent = gameState.players.get(gameState.currentOpponent);
             let resultMessage = '';
-            
+           
             // Track if this question was answered correctly or incorrectly
             if (playerCorrect) {
                 gameState.answeredQuestions.correct.add(gameState.currentQuestionId);
@@ -2191,23 +3448,23 @@
             } else {
                 gameState.answeredQuestions.incorrect.add(gameState.currentQuestionId);
             }
-            
+           
             // Player correct - always wins
             if (playerCorrect) {
                 resultMessage = 'You won! You answered correctly.';
                 // Get all points from opponent
                 gameState.localPlayer.points += opponent.points;
-                
+               
                 // Update stats
                 gameState.stats.battlesWon++;
-                
+               
                 // Instead of marking as dead, immediately move to new location
                 // Move opponent to a new location
                 const newX = 100 + Math.random() * (CONFIG.worldWidth - 200);
                 const newY = 100 + Math.random() * (CONFIG.worldHeight - 200);
                 opponent.x = newX;
                 opponent.y = newY;
-                
+               
                 // Opponent respawns with 10 points
                 opponent.points = CONFIG.initialPoints;
             }
@@ -2219,125 +3476,125 @@
                 opponent.points += pointsToLose;
                 gameState.localPlayer.points -= pointsToLose;
                 if (gameState.localPlayer.points < 1) gameState.localPlayer.points = 1;
-                
+               
                 gameState.localPlayer.isDead = true;
                 gameState.localPlayer.respawnTime = CONFIG.respawnTime;
-                
+               
                 // Update stats
                 gameState.stats.battlesLost++;
             }
-            
+           
             // Update UI
             resultMessageElem.textContent = resultMessage;
             battlePhase1.classList.add('hidden');
             battlePhase2.classList.remove('hidden');
-            
+           
             // Update player stats
             playerPointsDisplay.textContent = gameState.localPlayer.points;
-            
+           
             // Set cooldown for this opponent
             gameState.battleCooldowns.set(gameState.currentOpponent, Date.now());
-            
+           
             // Update leaderboard
             updateLeaderboard();
         }
-        
+       
         // Respawn the player
         function respawnPlayer() {
             // Find a random spawn position
             const spawnX = 100 + Math.random() * (CONFIG.worldWidth - 200);
             const spawnY = 100 + Math.random() * (CONFIG.worldHeight - 200);
-            
+           
             // Update player
             gameState.localPlayer.x = spawnX;
             gameState.localPlayer.y = spawnY;
             gameState.localPlayer.isDead = false;
             gameState.localPlayer.points = 1; // Respawn with 1 point
-            
+           
             // Update UI
             playerPointsDisplay.textContent = gameState.localPlayer.points;
         }
-        
+       
         // Check collision between a circle (player) and a rectangle (wall)
         function checkCollision(player, wall) {
             // Find the closest point on the rectangle to the circle
             const closestX = Math.max(wall.x, Math.min(player.x, wall.x + wall.width));
             const closestY = Math.max(wall.y, Math.min(player.y, wall.y + wall.height));
-            
+           
             // Calculate the distance from the closest point to the circle's center
             const distanceX = player.x - closestX;
             const distanceY = player.y - closestY;
             const distanceSquared = distanceX * distanceX + distanceY * distanceY;
-            
+           
             // Check if the distance is less than the circle's radius squared
             return distanceSquared <= (CONFIG.playerSize * CONFIG.playerSize);
         }
-        
+       
         // Update the leaderboard
         function updateLeaderboard() {
             // Sort players by points
             const sortedPlayers = Array.from(gameState.players.values())
                 .sort((a, b) => b.points - a.points)
-                .slice(0, 3); // Top 3
-            
+                .slice(0, 5); // Top 5
+           
             // Update leaderboard UI
             let html = '';
             sortedPlayers.forEach(player => {
                 html += `<li>${player.name}: ${player.points} points</li>`;
             });
             leaderboardList.innerHTML = html;
-            
+           
             // Store sorted leaderboard
             gameState.leaderboard = sortedPlayers;
         }
-        
+       
         // Render the game
         function render() {
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+           
             // Apply camera transform
             ctx.save();
             ctx.translate(-gameState.camera.x, -gameState.camera.y);
-            
+           
             // Draw world background
             ctx.fillStyle = '#f0f0f0';
             ctx.fillRect(0, 0, CONFIG.worldWidth, CONFIG.worldHeight);
-            
+           
             // Draw walls
             ctx.fillStyle = '#333333';
             for (const wall of gameState.walls) {
                 ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
             }
-            
+           
             // Draw players
             for (const player of gameState.players.values()) {
                 // Skip dead players
                 if (player.isDead) continue;
-                
+               
                 ctx.beginPath();
                 ctx.arc(player.x, player.y, CONFIG.playerSize, 0, Math.PI * 2);
                 ctx.fillStyle = player.color;
                 ctx.fill();
-                
+               
                 // Draw player name
                 ctx.fillStyle = '#000000';
                 ctx.font = '12px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText(player.name, player.x, player.y - CONFIG.playerSize - 5);
-                
+               
                 // Draw points
                 ctx.fillText(player.points + ' pts', player.x, player.y - CONFIG.playerSize - 20);
-                
+               
                 // Draw battle radius for local player
-                if (player.id === 'player') {
+                if (player.id === gameState.localPlayer.id) {
                     ctx.beginPath();
                     ctx.arc(player.x, player.y, CONFIG.battleRadius, 0, Math.PI * 2);
                     ctx.strokeStyle = 'rgba(255, 0, 0, 0.3)';
                     ctx.stroke();
                 }
             }
-            
+           
             // Restore transform
             ctx.restore();
         }
