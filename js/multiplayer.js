@@ -118,7 +118,30 @@ class TrysteroMultiplayerManager {
         try {
             // Use torrent strategy for completely serverless operation
             const config = {
-                appId: 'scripture-battle-royale'
+                appId: 'scripture-battle-royale',
+                rtcConfig: {
+                    iceServers: [
+                        // Existing STUN servers (Trystero adds these automatically but we'll be explicit)
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        { urls: 'stun:stun.cloudflare.com:3478' },
+                        // Free TURN servers
+                        {
+                            urls: 'turn:openrelay.metered.ca:80',
+                            username: 'openrelayproject',
+                            credential: 'openrelayproject'
+                        },
+                        {
+                            urls: 'turn:openrelay.metered.ca:443',
+                            username: 'openrelayproject',
+                            credential: 'openrelayproject'
+                        },
+                        {
+                            urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+                            username: 'openrelayproject',
+                            credential: 'openrelayproject'
+                        }
+                    ]
+                }
             };
             
             this.room = window.trysteroTorrent.joinRoom(config, this.roomCode);
