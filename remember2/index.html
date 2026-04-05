@@ -3,135 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FHE • Remember, Remember • Lukasa & Easter</title>
+  <title>FHE • Remember, Remember</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
     .cloud-container { font-family: 'Playfair Display', serif; }
-    #lukasaCanvas { touch-action: none; border: 3px solid #fcd34d; }
+    #lukasaCanvas { touch-action: none; border: 3px solid #fcd34d; background: #1e2937; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen">
-  <div class="max-w-6xl mx-auto p-6">
+  <div class="max-w-5xl mx-auto p-6">
+    <!-- Header -->
     <div class="text-center py-8 border-b border-amber-300">
-      <h1 class="text-5xl font-bold tracking-tight text-amber-300 flex items-center justify-center gap-3">
-        📖 Remember, Remember
-      </h1>
-      <p class="text-xl mt-2 text-slate-400">LDS FHE • Post-Easter & April 2026 General Conference</p>
+      <h1 class="text-5xl font-bold tracking-tight text-amber-300">📖 Remember, Remember</h1>
+      <p class="text-xl mt-2 text-slate-400">LDS Family Home Evening • Post-Easter & April 2026 General Conference</p>
       <p class="text-sm text-amber-400">Elder Chi Hong (Sam) Wong – “Remember, remember” the resurrected Savior</p>
     </div>
 
-    <!-- Input -->
+    <!-- Text Input -->
     <div class="mt-8 bg-slate-900 rounded-3xl p-6">
-      <h2 class="text-2xl font-semibold mb-4 text-amber-200">Paste Text</h2>
-      <textarea id="inputText" rows="8" class="w-full p-4 rounded-2xl bg-slate-800 text-slate-200 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
+      <h2 class="text-2xl font-semibold mb-3 text-amber-200">Paste Scriptures or Notes</h2>
+      <textarea id="inputText" rows="6" class="w-full p-4 rounded-2xl bg-slate-800 text-slate-200 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Paste Helaman 5 or any text..."></textarea>
       
       <div class="flex flex-wrap gap-2 mt-4">
-        <button onclick="loadSample(0)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Helaman 5</button>
-        <button onclick="loadSample(1)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Alma 37</button>
-        <button onclick="loadSample(2)" class="px-5 py-2 bg-slate-700 rounded-2xl text-sm font-medium hover:bg-slate-600">Clear</button>
-      </div>
-      
-      <button onclick="analyzeText()" id="analyzeBtn"
-              class="mt-6 w-full py-4 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-semibold text-lg rounded-3xl shadow-lg hover:scale-[1.02] active:scale-95 transition">
-        ✨ Analyze • Create Word Cloud & Stats
-      </button>
-    </div>
-
-    <!-- Visuals -->
-    <div class="mt-10 grid md:grid-cols-2 gap-8">
-      <div class="bg-slate-900 rounded-3xl p-6">
-        <h3 class="font-semibold text-xl mb-4">Word Cloud</h3>
-        <div id="cloud" class="cloud-container flex flex-wrap justify-center gap-x-4 gap-y-3 min-h-[340px] bg-slate-800 rounded-2xl p-8 text-center"></div>
-      </div>
-      <div class="bg-slate-900 rounded-3xl p-6">
-        <h3 class="font-semibold text-xl mb-4">Top Words Bar Chart <span class="text-xs text-slate-500">(Y capped for smoothness)</span></h3>
-        <canvas id="barChart" height="300"></canvas>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div id="statTotal" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300">0</div><div class="text-sm text-slate-400">Total Words</div></div>
-      <div id="statUnique" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300">0</div><div class="text-sm text-slate-400">Unique Words</div></div>
-      <div id="statRemember" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300">0</div><div class="text-sm text-slate-400">“Remember” Count</div></div>
-      <div id="statTop" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300" id="topWord">—</div><div class="text-sm text-slate-400">Top Word</div></div>
-    </div>
-
-    <!-- Lukasa -->
-    <div class="mt-12 bg-slate-900 rounded-3xl p-8">
-      <h2 class="text-3xl font-bold text-amber-200 mb-4">🪵 Lukasa Memory Board</h2>
-      <p class="text-slate-400 mb-6">Click the board or buttons to place symbols. Remember the Savior — “Christ is risen, truly risen!”</p>
-      
-      <div class="grid md:grid-cols-2 gap-8">
-        <div>
-          <h4 class="font-semibold mb-3">Digital Lukasa (click to add beads)</h4>
-          <canvas id="lukasaCanvas" width="440" height="320" class="bg-slate-800 rounded-2xl cursor-crosshair"></canvas>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <button onclick="addBead('🪨 Rock of Redeemer','red')" class="px-4 py-2 bg-red-600 rounded-xl text-xs">🪨 Rock</button>
-            <button onclick="addBead('🪦 Empty Tomb','gray')" class="px-4 py-2 bg-gray-600 rounded-xl text-xs">🪦 Tomb</button>
-            <button onclick="addBead('✝️ Cross','brown')" class="px-4 py-2 bg-amber-800 rounded-xl text-xs">✝️ Cross</button>
-            <button onclick="addBead('🌅 Risen!','gold')" class="px-4 py-2 bg-yellow-500 text-slate-950 rounded-xl text-xs">🌅 Risen</button>
-            <button onclick="clearCanvas()" class="px-4 py-2 bg-slate-700 rounded-xl text-xs">Clear</button>
-          </div>
-        </div>
-        
-        <div>
-          <h4 class="font-semibold mb-3">Secret Code • Christ Symbols</h4>
-          <div id="codeOutput" class="bg-slate-800 p-5 rounded-2xl min-h-[140px] font-mono text-amber-200 text-sm"></div>
-          <button onclick="generateSecretCode()" class="mt-4 px-6 py-3 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Generate Code</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Scriptures -->
-    <div class="mt-12 grid md:grid-cols-3 gap-6">
-      <a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/hel/5?lang=eng&id=p6-p12#p6" target="_blank" class="bg-slate-900 p-6 rounded-3xl hover:ring-2 hover:ring-amber-300 transition block">
-        <strong>Helaman 5:6–12</strong><br><span class="text-amber-400 text-sm">O remember, remember... rock of our Redeemer</span>
-      </a>
-      <a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/alma/37?lang=eng&id=p13#p13" target="_blank" class="bg-slate-900 p-6 rounded-3xl hover:ring-2 hover:ring-amber-300 transition block">
-        <strong>Alma 37:13</strong><br><span class="text-amber-400 text-sm">O remember, remember, my son...</span>
-      </a>
-      <a href="https://www.thechurchnews.com/general-conference/2026/04/05/elder-chi-hong-sam-wong-april-2026-general-conference-remember-remember-remember/" target="_blank" class="bg-slate-900 p-6 rounded-3xl hover:ring-2 hover:ring-amber-300 transition block">
-        <strong>Elder Chi Hong Wong – April 2026 GC</strong><br><span class="text-amber-400 text-sm">Remember, remember the resurrected Savior</span>
-      </a>
-    </div>
-
-    <footer class="text-center text-xs text-slate-500 mt-16 py-8 border-t border-slate-800">
-      Static FHE Tool – GitHub Pages
-    </footer>
-  </div>
-
-  <script>
-    const stopWords = new Set(["the","and","of","to","in","a","is","that","it","for","on","with","as","be","this","are","was","were","you","your","ye","my","i","me","he","him","his","she","her","they","them","their","we","us","our","from","by","but","not","no","or","if","shall","will","can","upon","which","who","behold","yea","verily","o","oh"]);
-
-    const samples = {
-      0: `O remember, remember that it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation.`,
-      1: `O remember, remember, my son Helaman, how strict are the commandments of God.`,
-      2: ``
-    };
-
-    let chartInstance = null;
-    let beads = [];
-
-    function loadSample(n) {
-      document.getElementById('inputText').value = samples[n];
-      if (n !== 2) analyzeText();
-    }
-
-    function analyzeText() {
-      const btn = document.getElementById('analyzeBtn');
-      const originalText = btn.textContent;
-      btn.textContent = "Processing...";
-      btn.disabled = true;
-
-      let text = document.getElementById('inputText').value.trim();
-      if (!text) {
-        alert("Please paste text or use a sample button.");
-        resetBtn();
-        return;
-      }
-
-      text = text.toLowerCase();
-      const words = text.replace(/[^a-z\s]/g, ' ').split(/\s
+        <button onclick="loadSample(0)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text
