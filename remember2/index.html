@@ -3,172 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FHE • Remember, Remember • Post-Easter & GC 2026</title>
+  <title>FHE • Remember, Remember • Lukasa & Easter</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
     .cloud-container { font-family: 'Playfair Display', serif; }
+    canvas { max-width: 100%; height: 300px !important; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen">
-  <div class="max-w-5xl mx-auto p-6">
+  <div class="max-w-6xl mx-auto p-6">
     <!-- Header -->
     <div class="text-center py-8 border-b border-amber-300">
       <h1 class="text-5xl font-bold tracking-tight text-amber-300 flex items-center justify-center gap-3">
-        <span class="text-4xl">📖</span> Remember, Remember
+        📖 Remember, Remember
       </h1>
       <p class="text-xl mt-2 text-slate-400">LDS FHE • Post-Easter & April 2026 General Conference</p>
-      <p class="text-sm text-slate-500 mt-1">Helaman 5:12 • “Remember, remember that it is upon the rock of our Redeemer…”</p>
-      <p class="text-xs text-slate-500">Inspired by Elder Chi Hong Wong’s GC message</p>
+      <p class="text-sm text-slate-500">Helaman 5:12 • “It is upon the rock of our Redeemer…”</p>
     </div>
 
-    <div class="grid md:grid-cols-12 gap-8 mt-8">
-      <!-- Left: Controls + Text Input -->
-      <div class="md:col-span-5 bg-slate-900 rounded-3xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4 text-amber-200">Analyze Any Text</h2>
-        <p class="text-sm text-slate-400 mb-3">Paste scriptures, General Conference talks, or your lesson notes</p>
-        
-        <textarea id="inputText" rows="10" class="w-full p-4 rounded-2xl bg-slate-800 text-slate-200 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-300"></textarea>
-        
+    <div class="mt-8">
+      <!-- Text Input -->
+      <div class="bg-slate-900 rounded-3xl p-6">
+        <h2 class="text-2xl font-semibold mb-4 text-amber-200">Paste Scriptures or Notes</h2>
+        <textarea id="inputText" rows="8" class="w-full p-4 rounded-2xl bg-slate-800 text-slate-200 font-mono text-sm"></textarea>
         <div class="flex flex-wrap gap-2 mt-4">
-          <button onclick="loadSample(0)" class="px-4 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Helaman 5 (full “remember, remember”)</button>
-          <button onclick="loadSample(1)" class="px-4 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Alma 37 • “O remember, remember”</button>
-          <button onclick="loadSample(2)" class="px-4 py-2 bg-slate-700 rounded-2xl text-sm font-medium hover:bg-slate-600">Clear</button>
+          <button onclick="loadSample(0)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Helaman 5 (Remember)</button>
+          <button onclick="loadSample(1)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Alma 37</button>
+          <button onclick="loadSample(2)" class="px-5 py-2 bg-slate-700 rounded-2xl text-sm font-medium hover:bg-slate-600">Clear</button>
         </div>
+        <button onclick="analyzeText()" class="mt-6 w-full py-4 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-semibold text-lg rounded-3xl">Analyze & Visualize</button>
+      </div>
+    </div>
 
-        <button onclick="analyzeText()" 
-                class="mt-6 w-full py-4 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-semibold text-lg rounded-3xl shadow-lg hover:scale-105 transition">
-          ✨ Generate Word Cloud & Stats
-        </button>
+    <!-- Visualizations -->
+    <div class="mt-10 grid md:grid-cols-2 gap-8">
+      <!-- Word Cloud -->
+      <div class="bg-slate-900 rounded-3xl p-6">
+        <h3 class="font-semibold text-xl mb-4">Word Cloud</h3>
+        <div id="cloud" class="cloud-container flex flex-wrap justify-center gap-3 min-h-[320px] bg-slate-800 rounded-2xl p-8"></div>
       </div>
 
-      <!-- Right: Word Cloud -->
-      <div class="md:col-span-7 bg-slate-900 rounded-3xl p-6 shadow-xl flex flex-col">
-        <h2 class="text-2xl font-semibold mb-4 text-amber-200">Word Cloud</h2>
-        <div id="cloud" class="cloud-container flex flex-wrap justify-center items-center gap-x-6 gap-y-4 min-h-[340px] bg-gradient-to-br from-slate-800 to-slate-950 rounded-2xl p-8 overflow-hidden"></div>
+      <!-- Bar Chart -->
+      <div class="bg-slate-900 rounded-3xl p-6">
+        <h3 class="font-semibold text-xl mb-4">Top Words Chart</h3>
+        <canvas id="barChart"></canvas>
       </div>
     </div>
 
     <!-- Stats -->
     <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div id="statTotal" class="bg-slate-900 rounded-3xl p-6 text-center">
-        <div class="text-4xl font-bold text-amber-300">0</div>
-        <div class="text-sm text-slate-400">Total Words</div>
-      </div>
-      <div id="statUnique" class="bg-slate-900 rounded-3xl p-6 text-center">
-        <div class="text-4xl font-bold text-amber-300">0</div>
-        <div class="text-sm text-slate-400">Unique Words</div>
-      </div>
-      <div id="statRemember" class="bg-slate-900 rounded-3xl p-6 text-center">
-        <div class="text-4xl font-bold text-amber-300">0</div>
-        <div class="text-sm text-slate-400">“Remember” Count</div>
-      </div>
-      <div id="statTop" class="bg-slate-900 rounded-3xl p-6 text-center">
-        <div class="text-4xl font-bold text-amber-300" id="topWord">—</div>
-        <div class="text-sm text-slate-400">Most Frequent Word</div>
-      </div>
+      <div id="statTotal" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300">0</div><div class="text-sm text-slate-400">Total Words</div></div>
+      <div id="statUnique" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300">0</div><div class="text-sm text-slate-400">Unique Words</div></div>
+      <div id="statRemember" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300">0</div><div class="text-sm text-slate-400">“Remember” Count</div></div>
+      <div id="statTop" class="bg-slate-900 rounded-3xl p-6 text-center"><div class="text-4xl font-bold text-amber-300" id="topWord">—</div><div class="text-sm text-slate-400">Top Word</div></div>
     </div>
 
-    <!-- Top Words Table + Citation Index -->
-    <div class="mt-8 grid md:grid-cols-2 gap-8">
-      <!-- Top Words -->
-      <div class="bg-slate-900 rounded-3xl p-6">
-        <h3 class="font-semibold text-lg mb-4">Top Words</h3>
-        <table id="topWordsTable" class="w-full text-sm"></table>
-      </div>
-
-      <!-- Citation Index -->
-      <div class="bg-slate-900 rounded-3xl p-6">
-        <h3 class="font-semibold text-lg mb-4">Scripture Citation Index • “Remember”</h3>
-        <ul class="space-y-3 text-sm">
-          <li><a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/hel/5?lang=eng#5" target="_blank" class="flex justify-between hover:text-amber-300"><span>Helaman 5:6–12</span><span class="text-amber-400">“O remember, remember…”</span></a></li>
-          <li><a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/alma/37?lang=eng#13" target="_blank" class="flex justify-between hover:text-amber-300"><span>Alma 37:13</span><span class="text-amber-400">“O remember, remember, my son Helaman…”</span></a></li>
-          <li><a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/hel/14?lang=eng#30" target="_blank" class="flex justify-between hover:text-amber-300"><span>Helaman 14:30</span><span class="text-amber-400">“And now remember, remember, my brethren…”</span></a></li>
-          <li><a href="https://www.churchofjesuschrist.org/study/general-conference/2007/10/o-remember-remember?lang=eng" target="_blank" class="flex justify-between hover:text-amber-300"><span>President Henry B. Eyring (2007)</span><span class="text-amber-400">“O Remember, Remember”</span></a></li>
-          <li><a href="https://www.churchofjesuschrist.org/study/general-conference/2026/04" target="_blank" class="flex justify-between hover:text-amber-300"><span>Elder Chi Hong Wong (April 2026 GC)</span><span class="text-amber-400">“Remember, remember” theme</span></a></li>
-        </ul>
-        <p class="text-xs text-slate-500 mt-6">Great for FHE discussion: How does remembering Christ protect us like the “rock” in Helaman 5:12?</p>
-      </div>
-    </div>
-
-    <footer class="text-center text-xs text-slate-500 mt-12 py-6 border-t border-slate-800">
-      Built as a free FHE tool • Static HTML • Deploy instantly on GitHub Pages<br>
-      “Always remember Him” — Moroni 4:3 • Post-Easter 2026
-    </footer>
-  </div>
-
-  <script>
-    const stopWords = new Set(["the","and","of","to","in","a","is","that","it","for","on","with","as","be","this","are","was","were","you","your","ye","my","i","me","he","him","his","she","her","they","them","their","we","us","our","from","by","but","not","no","or","if","shall","will","can","upon","that","which","who","whom","whose","where","when","then","now","so","thus","therefore","behold","yea","verily","o","oh","remember"]);
-
-    const samples = {
-      0: `5 For they remembered the words which their father Helaman spake unto them. ... 6 Behold, my sons, I desire that ye should remember to keep the commandments of God... 9 O remember, remember, my sons, the words which king Benjamin spake unto his people... 12 And now, my sons, remember, remember that it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation...`,
-      1: `13 O remember, remember, my son Helaman, how strict are the commandments of God... 35 O, remember, my son, and learn wisdom in thy youth...`,
-      2: ``
-    };
-
-    function loadSample(n) {
-      document.getElementById('inputText').value = samples[n];
-    }
-
-    function analyzeText() {
-      let text = document.getElementById('inputText').value.toLowerCase().trim();
-      if (!text) {
-        alert("Paste some text first!");
-        return;
-      }
-
-      // Clean and tokenize
-      const words = text.replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w));
+    <!-- Lukasa Memory Board Activity -->
+    <div class="mt-12 bg-slate-900 rounded-3xl p-8">
+      <h2 class="text-3xl font-bold text-amber-200 mb-4">🪵 Lukasa Memory Board Activity</h2>
+      <p class="text-slate-400 mb-6">The ancient Luba people (Central Africa) used <strong>Lukasa</strong> — handheld wooden boards covered in colored beads and symbols — as a "memory map" to remember history, kings, migrations, and sacred stories without writing. Touch the beads to recall!</p>
       
-      // Frequency map
-      const freq = {};
-      words.forEach(w => freq[w] = (freq[w] || 0) + 1);
-      
-      const sorted = Object.entries(freq).sort((a,b) => b[1] - a[1]);
-      
-      // Stats
-      document.getElementById('statTotal').querySelector('div').textContent = words.length;
-      document.getElementById('statUnique').querySelector('div').textContent = sorted.length;
-      const rememberCount = (text.match(/\bremember\b/g) || []).length;
-      document.getElementById('statRemember').querySelector('div').textContent = rememberCount;
-      document.getElementById('topWord').textContent = sorted[0] ? sorted[0][0] : '—';
+      <p class="mb-6">For FHE: Create your own **Christ-centered Lukasa Treasure Map** on paper or here digitally. Each "bead" symbolizes something to <strong>remember</strong> about the Savior — especially His Resurrection ("Christ is risen, truly risen!").</p>
 
-      // Top words table
-      let tableHTML = `<thead><tr><th class="text-left py-2">Word</th><th class="text-right py-2">Count</th></tr></thead><tbody>`;
-      sorted.slice(0, 12).forEach(([word, count]) => {
-        tableHTML += `<tr><td class="py-1">${word}</td><td class="text-right font-medium">${count}</td></tr>`;
-      });
-      tableHTML += `</tbody>`;
-      document.getElementById('topWordsTable').innerHTML = tableHTML;
-
-      // Word cloud (simple divs)
-      const cloud = document.getElementById('cloud');
-      cloud.innerHTML = '';
-      
-      const maxFreq = sorted[0] ? sorted[0][1] : 1;
-      const colors = ['#fcd34d', '#f59e0b', '#d97706', '#b45309', '#854d0e'];
-      
-      sorted.slice(0, 40).forEach(([word, count]) => {
-        const size = Math.max(18, Math.round((count / maxFreq) * 58));
-        const rot = Math.random() * 40 - 20;
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        
-        const span = document.createElement('span');
-        span.className = 'inline-block px-3 py-1 mx-1 my-2 cursor-default transition hover:scale-110';
-        span.style.fontSize = `${size}px`;
-        span.style.color = color;
-        span.style.transform = `rotate(${rot}deg)`;
-        span.textContent = word;
-        cloud.appendChild(span);
-      });
-    }
-
-    // Auto-load Helaman 5 on first visit
-    window.onload = () => {
-      document.getElementById('inputText').value = samples[0];
-      // Optional: auto-analyze on load
-      // analyzeText();
-    };
-  </script>
-</body>
-</html>
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Digital Map -->
+        <div>
+          <h4 class="font-semibold mb-3">Digital Lukasa Map Creator</h4>
+          <canvas id="lukasaCanvas" width="400" height="300" class="border border-amber-300 rounded-2xl bg-slate-800 cursor-crosshair"></canvas>
+          <div class="mt-
