@@ -15,7 +15,6 @@
 <body class="bg-slate-950 text-slate-200 min-h-screen">
   <div class="max-w-5xl mx-auto p-6">
 
-    <!-- Header -->
     <div class="text-center py-8 border-b border-amber-300">
       <h1 class="text-5xl font-bold tracking-tight text-amber-300">📖 Remember, Remember</h1>
       <p class="text-xl mt-2 text-slate-400">LDS FHE • Post-Easter & April 2026 General Conference</p>
@@ -46,7 +45,7 @@
         <div id="cloud" class="cloud-container flex flex-wrap justify-center gap-x-6 gap-y-4 min-h-[300px] bg-slate-800 rounded-2xl p-8"></div>
       </div>
       <div class="bg-slate-900 rounded-3xl p-6">
-        <h3 class="font-semibold text-xl mb-4">Top Words</h3>
+        <h3 class="font-semibold text-xl mb-4">Top Words <span class="text-xs text-slate-500">(bars safely capped)</span></h3>
         <canvas id="barChart" height="280"></canvas>
       </div>
     </div>
@@ -84,7 +83,7 @@
       </div>
     </div>
 
-    <!-- Scriptures -->
+    <!-- Scripture Links -->
     <div class="mt-12 grid md:grid-cols-3 gap-6">
       <a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/hel/5?lang=eng&id=p6-p12#p6" target="_blank" class="bg-slate-900 p-6 rounded-3xl hover:ring-2 hover:ring-amber-300 transition block">
         <strong>Helaman 5:6–12</strong><br><span class="text-amber-400 text-sm">O remember, remember... rock of our Redeemer</span>
@@ -169,22 +168,32 @@
         cloud.appendChild(span);
       });
 
-      // Stable Bar Chart
+      // Safe Bar Chart - hard cap at 60
       const ctx = document.getElementById('barChart');
       if (chartInstance) chartInstance.destroy();
       const top8 = sorted.slice(0, 8);
-      const maxY = Math.max(50, ...top8.map(i => i[1])) * 1.2;
+      const maxY = 60;
 
       chartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: top8.map(i => i[0]),
-          datasets: [{ label: 'Frequency', data: top8.map(i => i[1]), backgroundColor: '#fcd34d' }]
+          datasets: [{ 
+            label: 'Frequency', 
+            data: top8.map(i => Math.min(i[1], maxY)), 
+            backgroundColor: '#fcd34d' 
+          }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          scales: { y: { beginAtZero: true, max: Math.ceil(maxY) } },
+          scales: { 
+            y: { 
+              beginAtZero: true, 
+              max: maxY,
+              ticks: { stepSize: 10 }
+            } 
+          },
           plugins: { legend: { display: false } }
         }
       });
@@ -193,7 +202,7 @@
       btn.disabled = false;
     }
 
-    // Lukasa Canvas
+    // Lukasa
     const canvas = document.getElementById('lukasaCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -248,11 +257,11 @@
       const words = ['Christ','risen','truly','rock','redeemer','remember','Easter','atonement','resurrection'];
       let html = '<strong>Easter Secret Code:</strong><br>';
       words.forEach((w, i) => html += `${w} → ${symbols[i % symbols.length]}<br>`);
-      html += '<br><small>Draw these symbols on your Lukasa while saying “Christ is risen, truly risen!”</small>';
+      html += '<br><small>Draw these on your Lukasa while saying “Christ is risen, truly risen!”</small>';
       document.getElementById('codeOutput').innerHTML = html;
     }
 
-    // Initialize with sample
+    // Start
     window.onload = () => {
       document.getElementById('inputText').value = samples[0];
       analyzeText();
