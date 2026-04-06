@@ -9,22 +9,278 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
     .cloud-container { font-family: 'Playfair Display', serif; }
-    #lukasaCanvas { touch-action: none; border: 3px solid #fcd34d; background: #1e2937; }
+    #lukasaCanvas { touch-action: none; border: 3px solid #fcd34d; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen">
   <div class="max-w-5xl mx-auto p-6">
+
     <!-- Header -->
     <div class="text-center py-8 border-b border-amber-300">
       <h1 class="text-5xl font-bold tracking-tight text-amber-300">📖 Remember, Remember</h1>
-      <p class="text-xl mt-2 text-slate-400">LDS Family Home Evening • Post-Easter & April 2026 General Conference</p>
-      <p class="text-sm text-amber-400">Elder Chi Hong (Sam) Wong – “Remember, remember” the resurrected Savior</p>
+      <p class="text-xl mt-2 text-slate-400">LDS Family Home Evening Tool</p>
+      <p class="text-sm text-amber-400">Post-Easter & April 2026 General Conference • Elder Chi Hong (Sam) Wong</p>
     </div>
 
-    <!-- Text Input -->
+    <!-- Input -->
     <div class="mt-8 bg-slate-900 rounded-3xl p-6">
-      <h2 class="text-2xl font-semibold mb-3 text-amber-200">Paste Scriptures or Notes</h2>
-      <textarea id="inputText" rows="6" class="w-full p-4 rounded-2xl bg-slate-800 text-slate-200 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Paste Helaman 5 or any text..."></textarea>
+      <h2 class="text-2xl font-semibold mb-3 text-amber-200">Paste Text to Analyze</h2>
+      <textarea id="inputText" rows="6" class="w-full p-4 rounded-2xl bg-slate-800 text-slate-200 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
       
       <div class="flex flex-wrap gap-2 mt-4">
-        <button onclick="loadSample(0)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text
+        <button onclick="loadSample(0)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400 transition">Helaman 5 Sample</button>
+        <button onclick="loadSample(1)" class="px-5 py-2 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400 transition">Alma 37 Sample</button>
+        <button onclick="loadSample(2)" class="px-5 py-2 bg-slate-700 rounded-2xl text-sm font-medium hover:bg-slate-600 transition">Clear</button>
+      </div>
+      
+      <button onclick="analyzeText()" id="analyzeBtn"
+              class="mt-6 w-full py-4 bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-semibold text-lg rounded-3xl hover:scale-[1.02] transition">
+        ✨ Analyze • Word Cloud + Stats
+      </button>
+    </div>
+
+    <!-- Results -->
+    <div class="mt-10 grid md:grid-cols-2 gap-8">
+      <div class="bg-slate-900 rounded-3xl p-6">
+        <h3 class="font-semibold text-xl mb-4">Word Cloud</h3>
+        <div id="cloud" class="cloud-container flex flex-wrap justify-center gap-x-6 gap-y-4 min-h-[300px] bg-slate-800 rounded-2xl p-8"></div>
+      </div>
+      <div class="bg-slate-900 rounded-3xl p-6">
+        <h3 class="font-semibold text-xl mb-4">Top Words</h3>
+        <canvas id="barChart" height="280"></canvas>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div id="statTotal" class="bg-slate-900 rounded-3xl p-6 text-center">
+        <div class="text-4xl font-bold text-amber-300">0</div>
+        <div class="text-sm text-slate-400">Total Words</div>
+      </div>
+      <div id="statUnique" class="bg-slate-900 rounded-3xl p-6 text-center">
+        <div class="text-4xl font-bold text-amber-300">0</div>
+        <div class="text-sm text-slate-400">Unique Words</div>
+      </div>
+      <div id="statRemember" class="bg-slate-900 rounded-3xl p-6 text-center">
+        <div class="text-4xl font-bold text-amber-300">0</div>
+        <div class="text-sm text-slate-400">“Remember” Count</div>
+      </div>
+      <div id="statTop" class="bg-slate-900 rounded-3xl p-6 text-center">
+        <div class="text-4xl font-bold text-amber-300" id="topWord">—</div>
+        <div class="text-sm text-slate-400">Most Frequent</div>
+      </div>
+    </div>
+
+    <!-- Lukasa -->
+    <div class="mt-12 bg-slate-900 rounded-3xl p-8">
+      <h2 class="text-3xl font-bold text-amber-200 mb-4">🪵 Lukasa Memory Board</h2>
+      <p class="text-slate-400 mb-6">Click the board or buttons to add symbols. Remember Christ — “Christ is risen, truly risen!”</p>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h4 class="font-semibold mb-3">Digital Lukasa (click to add beads)</h4>
+          <canvas id="lukasaCanvas" width="440" height="300" class="rounded-2xl cursor-crosshair"></canvas>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button onclick="addBead('🪨 Rock','red')" class="px-4 py-2 bg-red-600 rounded-xl text-xs">🪨 Rock of Redeemer</button>
+            <button onclick="addBead('🪦 Tomb','gray')" class="px-4 py-2 bg-gray-600 rounded-xl text-xs">🪦 Empty Tomb</button>
+            <button onclick="addBead('✝️ Cross','brown')" class="px-4 py-2 bg-amber-800 rounded-xl text-xs">✝️ Cross</button>
+            <button onclick="addBead('🌅 Risen','gold')" class="px-4 py-2 bg-yellow-500 text-slate-950 rounded-xl text-xs">🌅 Risen!</button>
+            <button onclick="clearCanvas()" class="px-4 py-2 bg-slate-700 rounded-xl text-xs">Clear</button>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-3">Secret Code • Symbolism of Christ</h4>
+          <div id="codeOutput" class="bg-slate-800 p-5 rounded-2xl min-h-[140px] font-mono text-amber-200 text-sm"></div>
+          <button onclick="generateSecretCode()" class="mt-4 px-6 py-3 bg-amber-300 text-slate-950 rounded-2xl text-sm font-medium hover:bg-amber-400">Generate Easter Secret Code</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripture Links -->
+    <div class="mt-12 grid md:grid-cols-3 gap-6">
+      <a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/hel/5?lang=eng&id=p6-p12#p6" target="_blank" class="bg-slate-900 p-6 rounded-3xl hover:ring-2 hover:ring-amber-300 transition block">
+        <strong>Helaman 5:6–12</strong><br><span class="text-amber-400 text-sm">O remember, remember... rock of our Redeemer</span>
+      </a>
+      <a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/alma/37?lang=eng&id=p13#p13" target="_blank" class="bg-slate-900 p-6 rounded-3xl hover:ring-2 hover:ring-amber-300 transition block">
+        <strong>Alma 37:13</strong><br><span class="text-amber-400 text-sm">O remember, remember, my son...</span>
+      </a>
+      <a href="https://www.thechurchnews.com/general-conference/2026/04/05/elder-chi-hong-sam-wong-april-2026-general-conference-remember-remember-remember/" target="_blank" class="bg-slate-900 p-6 rounded-3xl hover:ring-2 hover:ring-amber-300 transition block">
+        <strong>Elder Chi Hong (Sam) Wong – April 2026 GC</strong><br><span class="text-amber-400 text-sm">Remember, remember the resurrected Savior</span>
+      </a>
+    </div>
+
+    <footer class="text-center text-xs text-slate-500 mt-16 py-8 border-t border-slate-800">
+      Static FHE Tool • GitHub Pages
+    </footer>
+  </div>
+
+  <script>
+    const stopWords = new Set(["the","and","of","to","in","a","is","that","it","for","on","with","as","be","this","are","was","were","you","your","ye","my","i","me","he","him","his","she","her","they","them","their","we","us","our","from","by","but","not","no","or","if","shall","will","can","upon","which","who","behold","yea","verily","o","oh"]);
+
+    const samples = {
+      0: `O remember, remember that it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation.`,
+      1: `O remember, remember, my son Helaman, how strict are the commandments of God.`,
+      2: ``
+    };
+
+    let chartInstance = null;
+    let beads = [];
+
+    function loadSample(n) {
+      document.getElementById('inputText').value = samples[n];
+      if (n !== 2) analyzeText();
+    }
+
+    function analyzeText() {
+      const btn = document.getElementById('analyzeBtn');
+      const original = btn.textContent;
+      btn.textContent = "Processing...";
+      btn.disabled = true;
+
+      let text = document.getElementById('inputText').value.trim();
+      if (!text) {
+        alert("Please paste some text first.");
+        btn.textContent = original;
+        btn.disabled = false;
+        return;
+      }
+
+      text = text.toLowerCase();
+      const words = text.replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w));
+
+      if (words.length === 0) {
+        alert("No valid words found.");
+        btn.textContent = original;
+        btn.disabled = false;
+        return;
+      }
+
+      const freq = {};
+      words.forEach(w => freq[w] = (freq[w] || 0) + 1);
+      const sorted = Object.entries(freq).sort((a,b) => b[1] - a[1]);
+
+      // Stats
+      document.getElementById('statTotal').querySelector('div').textContent = words.length;
+      document.getElementById('statUnique').querySelector('div').textContent = sorted.length;
+      const remCount = (text.match(/\bremember\b/g) || []).length;
+      document.getElementById('statRemember').querySelector('div').textContent = remCount;
+      document.getElementById('topWord').textContent = sorted[0] ? sorted[0][0] : '—';
+
+      // Word Cloud
+      const cloud = document.getElementById('cloud');
+      cloud.innerHTML = '';
+      const maxFreq = sorted[0] ? sorted[0][1] : 1;
+      const colors = ['#fcd34d', '#f59e0b', '#d97706', '#b45309'];
+      sorted.slice(0, 35).forEach(([word, count]) => {
+        const size = Math.max(16, Math.round((count / maxFreq) * 55));
+        const span = document.createElement('span');
+        span.style.fontSize = `${size}px`;
+        span.style.color = colors[Math.floor(Math.random() * colors.length)];
+        span.style.margin = '4px 6px';
+        span.textContent = word;
+        cloud.appendChild(span);
+      });
+
+      // Stable Bar Chart
+      const ctx = document.getElementById('barChart');
+      if (chartInstance) chartInstance.destroy();
+      const top8 = sorted.slice(0, 8);
+      const maxY = Math.max(50, ...top8.map(i => i[1])) * 1.15;
+
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: top8.map(i => i[0]),
+          datasets: [{
+            label: 'Frequency',
+            data: top8.map(i => i[1]),
+            backgroundColor: '#fcd34d'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: Math.ceil(maxY)
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+
+    // Lukasa
+    const canvas = document.getElementById('lukasaCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawBeads() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#1e2937';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      beads.forEach(b => {
+        ctx.fillStyle = b.color;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(b.label, b.x, b.y + 26);
+      });
+    }
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      beads.push({x, y, label: 'Remember', color: '#eab308'});
+      drawBeads();
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+      beads.push({x, y, label: 'Remember', color: '#eab308'});
+      drawBeads();
+    });
+
+    function addBead(label, color) {
+      const x = 70 + Math.random() * 300;
+      const y = 50 + Math.random() * 200;
+      beads.push({x, y, label, color});
+      drawBeads();
+    }
+
+    function clearCanvas() {
+      beads = [];
+      drawBeads();
+    }
+
+    function generateSecretCode() {
+      const symbols = ['✝️','🪦','🌅','🪨','🐑','🍞','❤️','🔥','🌟'];
+      const words = ['Christ','risen','truly','rock','redeemer','remember','Easter','atonement','resurrection'];
+      let html = '<strong>Easter Secret Code:</strong><br>';
+      words.forEach((w, i) => html += `${w} → ${symbols[i % symbols.length]}<br>`);
+      html += '<br><small>Draw these on your Lukasa while saying “Christ is risen, truly risen!”</small>';
+      document.getElementById('codeOutput').innerHTML = html;
+    }
+
+    // Initialize
+    window.onload = () => {
+      document.getElementById('inputText').value = samples[0];
+      analyzeText();
+      drawBeads();
+    };
+  </script>
+</body>
+</html>
