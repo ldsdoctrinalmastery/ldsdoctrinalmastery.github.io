@@ -30,7 +30,157 @@
             --seal-soft: rgba(141, 53, 48, 0.85);
             --gold: #b89968;
             --indigo: #2f4a55;
+            --moss: #5d6f4c;
+            --bamboo: #a08a72;
+            /* Washi paper grain — subtle SVG turbulence noise */
+            --washi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.36 0 0 0 0 0.30 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+            /* Calligraphic brush stroke — tapered horizontal mark */
+            --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8'%3E%3Cpath d='M2 5 Q 25 3 50 4 T 96 5' stroke='%238d3530' stroke-width='2.5' stroke-linecap='round' fill='none' opacity='0.55'/%3E%3Cpath d='M8 4 Q 30 5 60 4 T 92 4' stroke='%238d3530' stroke-width='1' stroke-linecap='round' fill='none' opacity='0.35'/%3E%3C/svg%3E");
+            /* Maple leaf — stylized momiji silhouette */
+            --maple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 6 L36 18 L48 14 L42 26 L56 28 L46 34 L52 46 L40 42 L42 56 L32 48 L22 56 L24 42 L12 46 L18 34 L8 28 L22 26 L16 14 L28 18 Z' fill='%238d3530' opacity='0.32'/%3E%3Cpath d='M32 50 L32 6' stroke='%238d3530' stroke-width='1' opacity='0.28'/%3E%3C/svg%3E");
+            /* Koi silhouette */
+            --koi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 60'%3E%3Cpath d='M10 30 Q 25 14 55 22 Q 80 26 90 22 L 100 12 L 96 30 L 100 48 L 90 38 Q 80 34 55 38 Q 25 46 10 30 Z' fill='%238d3530' opacity='0.5'/%3E%3Ccircle cx='80' cy='26' r='1.6' fill='%231f1a16' opacity='0.7'/%3E%3Cpath d='M50 22 Q 55 30 50 38' stroke='%23fbf5e6' stroke-width='1' fill='none' opacity='0.6'/%3E%3C/svg%3E");
         }
+        /* === Zen flourishes ============================================== */
+        /* Washi paper grain on all paper-cream surfaces */
+        .title-card,
+        .lesson-section .section-head,
+        .toc,
+        .card,
+        .qr-frame,
+        .scripture,
+        .truth,
+        .more-than-phones,
+        .principle,
+        .quiz-cat,
+        .quiz-key,
+        .quiz-intro,
+        .quiz-summary,
+        .topic-intro,
+        .topic-cloud-flat,
+        .topic-chip,
+        .reflective-library,
+        .composer-single,
+        .wall-head,
+        .audit-col,
+        .note,
+        .speech-box,
+        .speech-beats li,
+        .speech-example,
+        .lib-scripture,
+        .opening-card,
+        .lovingkindness-mantra,
+        .opening-action,
+        .bednar-talk,
+        .bednar-feature,
+        .bednar-practice,
+        .bednar-questions,
+        .church-ai-links,
+        .closing,
+        footer {
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+        }
+
+        /* Stone-textured number badges (radial gradient, inset shadow) */
+        .opening-num,
+        .bednar-questions li::before,
+        .speech-beats li::before {
+            background: radial-gradient(circle at 30% 28%, #c25b53 0%, #8d3530 52%, #5a1f1c 100%) !important;
+            box-shadow:
+                inset 0 1px 2px rgba(255, 230, 220, 0.32),
+                inset 0 -2px 3px rgba(0, 0, 0, 0.32),
+                0 2px 4px rgba(31, 26, 22, 0.32) !important;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.18);
+        }
+
+        /* Brush-stroke flourish under section H2 headings */
+        .lesson-section .section-head h2,
+        h2 {
+            position: relative;
+        }
+        .lesson-section .section-head h2::after {
+            content: '';
+            display: block;
+            width: 92px;
+            height: 8px;
+            margin-top: 6px;
+            background-image: var(--brush);
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.85;
+        }
+
+        /* Maple-leaf accent on key cards (low opacity, decorative) */
+        .title-card,
+        .bednar-feature,
+        .closing {
+            position: relative;
+        }
+        .title-card::after,
+        .bednar-feature::after,
+        .closing::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background-image: var(--maple);
+            background-repeat: no-repeat;
+            background-size: contain;
+            pointer-events: none;
+            transform: rotate(8deg);
+        }
+        /* Title card already has a hanko-style red square via ::before; keep it but make the maple slightly farther in */
+        .title-card::after { right: 60px; transform: rotate(-12deg); opacity: 0.7; }
+
+        /* Koi swimming in the empty wall state */
+        .empty-wall {
+            position: relative;
+            padding-top: 70px !important;
+        }
+        .empty-wall::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 50px;
+            background-image: var(--koi);
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        /* Subtle moss accent: re-tint hover states on chips */
+        .topic-chip:hover {
+            background: #e9efd9 !important;
+            border-color: var(--moss) !important;
+        }
+
+        /* Soft seigaiha micro-divider between collapsed sections (decorative) */
+        .lesson-section + .lesson-section {
+            position: relative;
+        }
+        .lesson-section + .lesson-section::before {
+            content: '';
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 8px;
+            background-image:
+                radial-gradient(circle at 50% 100%, transparent 5px, rgba(45, 74, 85, 0.35) 5px, rgba(45, 74, 85, 0.35) 6px, transparent 6px),
+                radial-gradient(circle at 0% 100%, transparent 5px, rgba(45, 74, 85, 0.35) 5px, rgba(45, 74, 85, 0.35) 6px, transparent 6px),
+                radial-gradient(circle at 100% 100%, transparent 5px, rgba(45, 74, 85, 0.35) 5px, rgba(45, 74, 85, 0.35) 6px, transparent 6px);
+            background-size: 16px 8px;
+            background-repeat: repeat-x;
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
             color: var(--ink);
