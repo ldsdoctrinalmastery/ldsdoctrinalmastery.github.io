@@ -1186,6 +1186,58 @@
             text-decoration: none;
             border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
         }
+        /* Second feature card (no large quote glyph, simpler frame) */
+        .bednar-feature.feature-secondary {
+            margin-top: 16px;
+            padding: 26px 32px 22px;
+            border-left: 3px solid var(--seal);
+        }
+        .bednar-feature.feature-secondary::before { display: none; }
+        .bednar-feature.feature-secondary blockquote p {
+            font-size: 1.15rem;
+        }
+
+        /* Bednar's own practice (modeling healthy AI use) */
+        .bednar-practice {
+            margin-top: 16px;
+            background: var(--paper-deep);
+            padding: 22px 28px 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .bednar-practice h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 12px;
+        }
+        .bednar-practice p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            font-style: italic;
+            color: var(--ink);
+        }
+        .bednar-practice p + p { margin-top: 10px; }
+        .bednar-practice .practice-note {
+            margin-top: 14px;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            color: var(--muted);
+            padding-top: 12px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.3);
+            line-height: 1.55;
+        }
+        .bednar-practice .practice-note em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
         .bednar-questions-label {
             font-family: 'Inter', sans-serif;
             font-weight: 600;
@@ -1531,6 +1583,21 @@
                     <p>Artificial intelligence cannot simulate, imitate, or replace the influence of the Holy Ghost in our lives. No matter how sophisticated and elegant AI technology ultimately may become, it simply can never bear witness of the Father and the Son, reveal the truth of all things, or sanctify those who have repented and been baptized.</p>
                 </blockquote>
                 <cite>— Elder Bednar, <a href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener"><em>Things as They Really Are 2.0</em></a></cite>
+            </div>
+
+            <div class="bednar-feature feature-secondary">
+                <blockquote>
+                    <p>One of my great concerns is that overreliance on AI technology will cause us to become <em>spiritually slothful and shallow</em> — and to forfeit the blessings made possible through righteous work.</p>
+                    <p>A simple command spoken into your digital device, wait a few seconds or minutes, and you have what you need. <em>But do you really have what you need?</em></p>
+                </blockquote>
+                <cite>— Elder Bednar, <a href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener"><em>Things as They Really Are 2.0</em></a></cite>
+            </div>
+
+            <div class="bednar-practice">
+                <h4>Bednar's own practice</h4>
+                <p>"I personally do not use this technology to generate or draft my talks, articles, or content for other projects. This must be my diligent effort, my creative work, and, most importantly, my seeking to be open to inspiration from the Holy Ghost."</p>
+                <p>"I do use this technology to critique my work."</p>
+                <p class="practice-note">He used AI to analyze the tone of <em>this very talk</em> after writing it — and made several changes based on the feedback. The model: AI as a coach or editor, never as a ghostwriter.</p>
             </div>
 
             <div class="bednar-questions">
