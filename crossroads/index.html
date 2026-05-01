@@ -66,57 +66,56 @@
             background-repeat: no-repeat;
         }
 
-        /* === QR card (self-referencing, for students to scan) ============= */
-        .qr-block {
-            margin: 28px auto 0;
-            max-width: 360px;
-            background: var(--paper-card);
-            padding: 22px 22px 20px;
-            text-align: center;
-            border: 1px solid var(--rule);
-            box-shadow:
-                0 1px 0 rgba(255,255,255,0.6) inset,
-                0 12px 24px -14px rgba(31, 26, 22, 0.4),
-                0 4px 8px -4px rgba(31, 26, 22, 0.15);
-        }
-        .qr-label {
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            color: var(--seal);
-            margin-bottom: 14px;
-        }
-        .qr-frame {
-            background: #fdfaf0;
-            padding: 14px;
-            display: inline-block;
-            line-height: 0;
-            border-radius: 2px;
-            box-shadow: 0 4px 10px -4px rgba(31, 26, 22, 0.25);
-        }
-        #qrcode { width: 200px; height: 200px; }
-        #qrcode canvas, #qrcode img { display: block; width: 200px; height: 200px; }
-        .qr-url {
-            margin-top: 12px;
-            font-family: 'Inter', ui-monospace, monospace;
-            font-weight: 400;
-            font-size: 0.74rem;
-            color: var(--muted);
-            word-break: break-all;
-        }
-
-        /* === Title card (now in normal flow) =============================== */
+        /* === Title card with inline QR =================================== */
         .title-card {
+            display: flex;
+            gap: 32px;
+            align-items: center;
             background: var(--paper-card);
-            padding: 28px 36px 26px;
+            padding: 26px 32px 24px;
             border: 1px solid var(--rule);
+            margin-bottom: 28px;
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
                 0 18px 36px -22px rgba(31, 26, 22, 0.4),
                 0 4px 8px -4px rgba(31, 26, 22, 0.18);
         }
+        .title-card .title-text { flex: 1; min-width: 0; }
+        .title-card .title-qr {
+            flex-shrink: 0;
+            text-align: center;
+            border-left: 1px solid var(--rule);
+            padding-left: 28px;
+        }
+        .title-qr .qr-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.24em;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .title-qr .qr-frame {
+            background: #fdfaf0;
+            padding: 8px;
+            display: inline-block;
+            line-height: 0;
+            border-radius: 2px;
+            box-shadow: 0 4px 8px -4px rgba(31, 26, 22, 0.25);
+        }
+        .title-qr #qrcode { width: 130px; height: 130px; }
+        .title-qr #qrcode canvas, .title-qr #qrcode img { display: block; width: 130px; height: 130px; }
+        .title-qr .qr-url {
+            margin-top: 8px;
+            font-family: 'Inter', monospace;
+            font-size: 0.66rem;
+            color: var(--muted);
+            max-width: 130px;
+            word-break: break-all;
+            line-height: 1.3;
+        }
+
         .eyebrow {
             font-family: 'Inter', sans-serif;
             font-weight: 500;
@@ -1333,7 +1332,21 @@
         footer a:hover { text-decoration: underline; }
 
         @media (max-width: 720px) {
-            .title-card { padding: 22px 22px 18px; }
+            .title-card {
+                flex-direction: column;
+                gap: 18px;
+                padding: 22px 22px 20px;
+                align-items: stretch;
+            }
+            .title-card .title-qr {
+                border-left: none;
+                border-top: 1px solid var(--rule);
+                padding-left: 0;
+                padding-top: 18px;
+            }
+            .title-qr #qrcode { width: 160px; height: 160px; }
+            .title-qr #qrcode canvas, .title-qr #qrcode img { width: 160px; height: 160px; }
+            .title-qr .qr-url { max-width: none; }
             .page { padding: 36px 18px 20px; }
             .principles { grid-template-columns: 1fr; }
             .audit { grid-template-columns: 1fr; }
@@ -1345,19 +1358,20 @@
 
     <main class="page">
         <header class="title-card">
-            <div class="eyebrow">For the Strength of Youth · Lesson 174</div>
-            <h1>Crossroads</h1>
-            <p class="subtitle">"Let us be careful and not casual in our use of technology." Reading, reflection, and a class question wall.</p>
-            <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/old-testament-seminary-student-manual-2026/63-for-the-strength-of-youth/634-taking-charge-of-technology?lang=eng" target="_blank" rel="noopener">Read the lesson on ChurchofJesusChrist.org</a>
-        </header>
-
-        <div class="qr-block">
-            <div class="qr-label">Scan to follow along</div>
-            <div class="qr-frame">
-                <div id="qrcode" role="img" aria-label="QR code for this lesson page"></div>
+            <div class="title-text">
+                <div class="eyebrow">For the Strength of Youth · Lesson 174</div>
+                <h1>Crossroads</h1>
+                <p class="subtitle">"Let us be careful and not casual in our use of technology." Reading, reflection, and a class question wall.</p>
+                <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/old-testament-seminary-student-manual-2026/63-for-the-strength-of-youth/634-taking-charge-of-technology?lang=eng" target="_blank" rel="noopener">Read the lesson on ChurchofJesusChrist.org</a>
             </div>
-            <div class="qr-url" id="qr-url"></div>
-        </div>
+            <div class="title-qr">
+                <div class="qr-label">Scan to follow</div>
+                <div class="qr-frame">
+                    <div id="qrcode" role="img" aria-label="QR code for this lesson page"></div>
+                </div>
+                <div class="qr-url" id="qr-url"></div>
+            </div>
+        </header>
 
         <!-- Opening: warm-ups before Section I -->
         <section class="opening">
@@ -1639,8 +1653,8 @@
         document.getElementById('qr-url').textContent = qrUrl;
         new QRCode(document.getElementById('qrcode'), {
             text: qrUrl,
-            width: 200,
-            height: 200,
+            width: 130,
+            height: 130,
             colorDark: '#1f1a16',
             colorLight: '#fdfaf0',
             correctLevel: QRCode.CorrectLevel.M
