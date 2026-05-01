@@ -42,11 +42,12 @@
             line-height: 1.5;
         }
 
-        /* === Hero: forest path crossroads ================================== */
+        /* === Hero: dawn sky (drop /assets/hero-crossroads.jpg to override) === */
         .hero {
             position: relative;
             height: 380px;
-            background: linear-gradient(
+            background-color: var(--sky-low);
+            background-image: linear-gradient(
                 180deg,
                 var(--sky-top) 0%,
                 #d4cfc0 35%,
@@ -55,19 +56,21 @@
             );
             overflow: hidden;
         }
-        .hero-svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
+        .hero.has-image {
+            background-image:
+                linear-gradient(180deg, rgba(243, 234, 212, 0) 55%, rgba(243, 234, 212, 0.45) 100%),
+                url('/assets/hero-crossroads.jpg'),
+                linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 60%, var(--sky-low) 100%);
+            background-size: cover, cover, auto;
+            background-position: center, center 30%, center;
+            background-repeat: no-repeat;
         }
         .hero-overlay {
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse at 50% 78%, rgba(245, 220, 180, 0.35) 0%, transparent 55%),
-                radial-gradient(ellipse at 25% 25%, rgba(220, 215, 200, 0.3) 0%, transparent 55%);
+                radial-gradient(ellipse at 50% 78%, rgba(245, 220, 180, 0.22) 0%, transparent 60%),
+                radial-gradient(ellipse at 25% 25%, rgba(220, 215, 200, 0.18) 0%, transparent 60%);
             pointer-events: none;
         }
 
@@ -179,6 +182,47 @@
             color: var(--seal);
             margin-bottom: 8px;
         }
+        .scripture .ref a, .composer .ref a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .scripture .ref a:hover, .composer .ref a:hover {
+            border-bottom-color: var(--seal);
+            color: var(--ink);
+        }
+        .scripture .ref a::after, .composer .ref a::after {
+            content: '↗';
+            display: inline-block;
+            margin-left: 4px;
+            font-size: 0.75em;
+            opacity: 0.6;
+        }
+        .lesson-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            padding-bottom: 2px;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .lesson-link:hover { border-bottom-color: var(--seal); color: var(--ink); }
+        .lesson-link::after { content: '↗'; font-size: 0.85em; opacity: 0.7; }
+        .closing cite a {
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        .closing cite a:hover { color: var(--ink); border-bottom-color: var(--seal); }
         .scripture .verse {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 400;
@@ -515,76 +559,7 @@
     </style>
 </head>
 <body>
-    <div class="hero" aria-hidden="true">
-        <svg class="hero-svg" viewBox="0 0 1200 380" preserveAspectRatio="xMidYMax slice">
-            <!-- distant misty pines -->
-            <g opacity="0.45" fill="#6e8478">
-                <path d="M 0,260 L 0,200 L 30,160 L 60,180 L 90,140 L 120,170 L 150,130 L 180,160 L 220,150 L 250,170 L 290,140 L 320,180 L 360,150 L 400,170 L 440,160 L 480,180 L 520,150 L 560,170 L 600,160 L 640,150 L 680,180 L 720,160 L 760,170 L 800,140 L 840,170 L 880,160 L 920,180 L 960,150 L 1000,170 L 1040,160 L 1080,180 L 1120,150 L 1160,170 L 1200,160 L 1200,260 Z"/>
-            </g>
-            <!-- mid pines (left and right walls of trees, framing the path) -->
-            <!-- Left wall of pines -->
-            <g fill="#28403a">
-                <rect x="0" y="180" width="160" height="200"/>
-                <path d="M 0,180 L 30,140 L 60,180 Z"/>
-                <path d="M 30,180 L 60,150 L 90,180 Z"/>
-                <path d="M 70,180 L 100,135 L 130,180 Z"/>
-                <path d="M 110,180 L 140,150 L 160,180 Z"/>
-                <!-- tall trunks rising further -->
-                <path d="M 30,180 L 30,90 L 70,90 L 70,180 Z"/>
-                <path d="M 90,180 L 90,70 L 130,70 L 130,180 Z"/>
-                <!-- canopy at top -->
-                <path d="M 0,90 L 50,40 L 100,80 L 60,30 L 110,70 L 70,20 L 130,60 L 90,15 L 150,55 L 160,40 L 160,180 L 0,180 Z" opacity="0.95"/>
-            </g>
-            <!-- Right wall of pines -->
-            <g fill="#28403a">
-                <rect x="1040" y="170" width="160" height="210"/>
-                <path d="M 1040,170 L 1070,130 L 1100,170 Z"/>
-                <path d="M 1080,170 L 1110,140 L 1140,170 Z"/>
-                <path d="M 1120,170 L 1150,130 L 1180,170 Z"/>
-                <path d="M 1160,170 L 1190,150 L 1200,170 Z"/>
-                <path d="M 1080,170 L 1080,80 L 1120,80 L 1120,170 Z"/>
-                <path d="M 1140,170 L 1140,60 L 1180,60 L 1180,170 Z"/>
-                <path d="M 1040,80 L 1090,30 L 1140,70 L 1100,20 L 1150,60 L 1110,10 L 1170,50 L 1130,5 L 1190,45 L 1200,30 L 1200,170 L 1040,170 Z" opacity="0.95"/>
-            </g>
-            <!-- foreground darker pine clusters -->
-            <g fill="#15201d">
-                <path d="M 130,380 L 130,200 L 200,200 L 200,380 Z"/>
-                <path d="M 110,210 L 165,170 L 220,210 Z"/>
-                <path d="M 130,180 L 165,150 L 200,180 Z"/>
-                <path d="M 1000,380 L 1000,210 L 1070,210 L 1070,380 Z"/>
-                <path d="M 980,220 L 1035,180 L 1090,220 Z"/>
-                <path d="M 1000,190 L 1035,160 L 1070,190 Z"/>
-            </g>
-            <!-- the path -->
-            <path d="M 600,200 L 540,300 L 380,380 L 820,380 L 660,300 Z"
-                  fill="#d6bc8a"/>
-            <path d="M 600,200 L 580,260 L 540,300 L 480,340 L 440,360 L 380,380"
-                  stroke="#ad9362" stroke-width="2" fill="none" opacity="0.5"/>
-            <path d="M 600,200 L 620,260 L 660,300 L 720,340 L 760,360 L 820,380"
-                  stroke="#ad9362" stroke-width="2" fill="none" opacity="0.5"/>
-            <!-- path forks (visible crossroads) -->
-            <path d="M 590,290 L 480,330 L 460,380 L 380,380 L 540,300 Z" fill="#cdb37e" opacity="0.6"/>
-            <path d="M 610,290 L 720,330 L 740,380 L 820,380 L 660,300 Z" fill="#cdb37e" opacity="0.6"/>
-            <!-- distant glow at vanishing point -->
-            <ellipse cx="600" cy="190" rx="120" ry="22" fill="#f4dba8" opacity="0.7"/>
-            <ellipse cx="600" cy="190" rx="60" ry="14" fill="#fbeac0" opacity="0.85"/>
-            <!-- a small wayfarer figure -->
-            <g fill="#1a1410">
-                <ellipse cx="600" cy="332" rx="6" ry="4" opacity="0.3"/>
-                <path d="M 596,316 L 596,330 L 604,330 L 604,316 Z"/>
-                <circle cx="600" cy="312" r="4"/>
-                <path d="M 593,318 Q 600,310 607,318 L 605,323 Q 600,318 595,323 Z" fill="#b89968"/>
-            </g>
-            <!-- subtle haze -->
-            <rect x="0" y="170" width="1200" height="40" fill="url(#haze)" opacity="0.5"/>
-            <defs>
-                <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stop-color="#e6d4ad" stop-opacity="0"/>
-                    <stop offset="0.5" stop-color="#e6d4ad" stop-opacity="0.7"/>
-                    <stop offset="1" stop-color="#e6d4ad" stop-opacity="0"/>
-                </linearGradient>
-            </defs>
-        </svg>
+    <div class="hero has-image" aria-hidden="true">
         <div class="hero-overlay"></div>
     </div>
 
@@ -593,6 +568,7 @@
             <div class="eyebrow">For the Strength of Youth · Lesson 174</div>
             <h1>Crossroads</h1>
             <p class="subtitle">"Let us be careful and not casual in our use of technology." Reading, reflection, and a class question wall.</p>
+            <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/old-testament-seminary-student-manual-2026/63-for-the-strength-of-youth/634-taking-charge-of-technology?lang=eng" target="_blank" rel="noopener">Read the lesson on ChurchofJesusChrist.org</a>
         </div>
     </div>
 
@@ -610,15 +586,15 @@
 
             <div class="scripture-list">
                 <div class="scripture">
-                    <div class="ref">Exodus 13:21–22</div>
+                    <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ex/13?lang=eng&id=p21-p22#p21" target="_blank" rel="noopener">Exodus 13:21–22</a></div>
                     <p class="verse">"And the Lord went before them by day in a <em>pillar of a cloud,</em> to lead them the way; and by night in a <em>pillar of fire,</em> to give them light; to go by day and night."</p>
                 </div>
                 <div class="scripture">
-                    <div class="ref">Psalm 119:105</div>
+                    <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ps/119?lang=eng&id=p105#p105" target="_blank" rel="noopener">Psalm 119:105</a></div>
                     <p class="verse">"Thy word is a <em>lamp unto my feet,</em> and a light unto my path."</p>
                 </div>
                 <div class="scripture">
-                    <div class="ref">Isaiah 2:3, 5</div>
+                    <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/isa/2?lang=eng&id=p3,p5#p3" target="_blank" rel="noopener">Isaiah 2:3, 5</a></div>
                     <p class="verse">"…he will teach us of his ways, and we will <em>walk in his paths</em>… O house of Jacob, come ye, and let us walk in the light of the Lord."</p>
                 </div>
             </div>
@@ -711,7 +687,7 @@
             <blockquote>
                 "Technological advances are amazing, but if we are not careful, they can distract us from fulfilling our divine potential. Using these appropriately can bring forth the power of heaven. Let us be careful and not casual in our use of technology."
             </blockquote>
-            <cite>— Elder Peter M. Johnson, "Power to Overcome the Adversary," Nov. 2019</cite>
+            <cite>— Elder Peter M. Johnson, <a href="https://www.churchofjesuschrist.org/study/general-conference/2019/10/54johnson?lang=eng" target="_blank" rel="noopener">"Power to Overcome the Adversary,"</a> Nov. 2019</cite>
         </div>
 
     </div>
@@ -726,35 +702,50 @@
         const passages = [
             {
                 ref: 'Isaiah 55:2 · 2 Nephi 9:51',
+                links: [
+                    ['Isaiah 55:2', 'https://www.churchofjesuschrist.org/study/scriptures/ot/isa/55?lang=eng&id=p2#p2'],
+                    ['2 Nephi 9:51', 'https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/9?lang=eng&id=p51#p51']
+                ],
                 verse: '"Wherefore do ye spend money for that which is not bread? and your labour for that which satisfieth not?…"',
                 example: 'e.g. Will using technology this way bring me satisfaction or leave me feeling empty?'
             },
             {
                 ref: 'Matthew 22:36–39',
+                links: [['Matthew 22:36–39', 'https://www.churchofjesuschrist.org/study/scriptures/nt/matt/22?lang=eng&id=p36-p39#p36']],
                 verse: '"Thou shalt love the Lord thy God with all thy heart… and thy neighbour as thyself."',
                 example: 'e.g. Is my use of technology distracting me from showing love for God or others?'
             },
             {
                 ref: 'Moroni 7:45',
+                links: [['Moroni 7:45', 'https://www.churchofjesuschrist.org/study/scriptures/bofm/moro/7?lang=eng&id=p45#p45']],
                 verse: '"And charity… envieth not, is not puffed up, seeketh not her own…"',
                 example: 'e.g. Will this lead me to envy others or compare myself to them?'
             },
             {
                 ref: 'Doctrine and Covenants 50:23–25',
+                links: [['Doctrine and Covenants 50:23–25', 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/50?lang=eng&id=p23-p25#p23']],
                 verse: '"That which doth not edify is not of God, and is darkness. That which is of God is light…"',
                 example: 'e.g. Does this use bring more light into my life?'
             },
             {
                 ref: 'Doctrine and Covenants 63:16',
+                links: [['Doctrine and Covenants 63:16', 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/63?lang=eng&id=p16#p16']],
                 verse: '"He that looketh on a woman to lust after her… shall not have the Spirit, but shall deny the faith."',
                 example: 'e.g. Does this use foster lustful desires?'
             },
             {
                 ref: 'For the Strength of Youth · "Walk in God\'s light"',
+                links: [['For the Strength of Youth · "Walk in God\'s light"', 'https://www.churchofjesuschrist.org/study/manual/for-the-strength-of-youth/walk-in-gods-light?lang=eng']],
                 verse: 'Read one paragraph under "Invitations" in this section.',
                 example: 'e.g. Is my use of technology helping or hurting my relationships?'
             }
         ];
+
+        function renderRefLinks(p) {
+            return p.links.map(([label, url]) =>
+                `<a href="${url}" target="_blank" rel="noopener">${label}</a>`
+            ).join(' · ');
+        }
 
         // ============ Storage ============
         const STORE_QUESTIONS = 'crossroads.questions.v1';
@@ -775,7 +766,7 @@
             const wrap = document.createElement('div');
             wrap.className = 'composer';
             wrap.innerHTML = `
-                <div class="ref">${p.ref}</div>
+                <div class="ref">${renderRefLinks(p)}</div>
                 <p class="verse">${p.verse}</p>
                 <textarea data-idx="${i}" placeholder="${p.example}"></textarea>
                 <div class="composer-row">

@@ -37,11 +37,12 @@
         }
         a { color: inherit; }
 
-        /* === Hero: dawn sky + layered landscape ============================ */
+        /* === Hero: dawn sky (drop a Hasui print into /assets/ to override) === */
         .hero {
             position: relative;
             height: 360px;
-            background: linear-gradient(
+            background-color: var(--sky-low);
+            background-image: linear-gradient(
                 180deg,
                 var(--sky-top) 0%,
                 #e1b39e 22%,
@@ -51,32 +52,23 @@
             );
             overflow: hidden;
         }
-        .hero-svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
+        /* If /assets/hero-landing.jpg exists, layer it on top of the gradient.
+           If it doesn't (404), the gradient stays visible underneath. */
+        .hero.has-image {
+            background-image:
+                linear-gradient(180deg, rgba(243, 234, 212, 0) 60%, rgba(243, 234, 212, 0.45) 100%),
+                url('/assets/hero-landing.jpg'),
+                linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-low) 100%);
+            background-size: cover, cover, auto;
+            background-position: center, center 35%, center;
+            background-repeat: no-repeat;
         }
         .hero-overlay {
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse at 65% 30%, rgba(255, 230, 210, 0.35) 0%, transparent 50%),
-                radial-gradient(ellipse at 20% 60%, rgba(143, 165, 180, 0.18) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        /* Subtle paper grain */
-        .hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(circle at 12% 18%, rgba(255,255,255,0.04) 0 1px, transparent 1px),
-                radial-gradient(circle at 78% 60%, rgba(0,0,0,0.04) 0 1px, transparent 1px),
-                radial-gradient(circle at 32% 82%, rgba(255,255,255,0.03) 0 1px, transparent 1px);
-            background-size: 4px 4px, 5px 5px, 6px 6px;
-            mix-blend-mode: overlay;
+                radial-gradient(ellipse at 65% 30%, rgba(255, 230, 210, 0.22) 0%, transparent 55%),
+                radial-gradient(ellipse at 20% 80%, rgba(143, 165, 180, 0.16) 0%, transparent 60%);
             pointer-events: none;
         }
 
@@ -287,58 +279,7 @@
     </style>
 </head>
 <body>
-    <div class="hero" aria-hidden="true">
-        <svg class="hero-svg" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice">
-            <!-- distant misty mountains -->
-            <path d="M0,360 L0,210
-                     C 90,195 180,205 280,190
-                     C 360,178 430,188 520,178
-                     C 600,170 680,182 770,176
-                     C 860,170 950,182 1040,176
-                     C 1110,172 1170,180 1200,178
-                     L1200,360 Z"
-                  fill="#95a3aa" opacity="0.5"/>
-            <!-- mid hills -->
-            <path d="M0,360 L0,250
-                     C 110,238 220,248 320,242
-                     C 420,236 510,250 610,242
-                     C 720,234 820,250 920,244
-                     C 1020,238 1120,250 1200,246
-                     L1200,360 Z"
-                  fill="#5b7281" opacity="0.78"/>
-            <!-- nearer hills (front island silhouette, centered) -->
-            <path d="M0,360 L0,288
-                     C 60,282 130,286 200,284
-                     C 240,282 270,278 285,272
-                     L 295,266
-                     L 305,260 L 320,256 L 335,250 L 355,244 L 380,240 L 410,238
-                     L 440,242 L 470,250 L 495,256 L 515,262 L 530,268
-                     L 545,274
-                     C 600,278 660,280 720,282
-                     C 800,284 880,280 960,284
-                     C 1060,288 1140,286 1200,288
-                     L1200,360 Z"
-                  fill="#2f4a55"/>
-            <!-- pine silhouettes on near hill -->
-            <g fill="#18272d">
-                <!-- left grove -->
-                <path d="M 360,260 l -8 0 l 4 -10 l -6 0 l 4 -12 l -5 0 l 7 -16 l 7 16 l -5 0 l 4 12 l -6 0 l 4 10 z"/>
-                <path d="M 380,254 l -7 0 l 3 -8 l -5 0 l 3 -10 l -4 0 l 6 -14 l 6 14 l -4 0 l 3 10 l -5 0 l 3 8 z"/>
-                <path d="M 398,258 l -7 0 l 3 -9 l -5 0 l 4 -11 l -4 0 l 5 -13 l 5 13 l -4 0 l 4 11 l -5 0 l 3 9 z"/>
-                <path d="M 418,252 l -8 0 l 3 -10 l -5 0 l 4 -13 l -5 0 l 6 -16 l 6 16 l -5 0 l 4 13 l -5 0 l 3 10 z"/>
-                <!-- foreground accent pine -->
-                <path d="M 440,262 l -10 0 l 4 -12 l -7 0 l 5 -15 l -5 0 l 7 -20 l 7 20 l -5 0 l 5 15 l -7 0 l 4 12 z"/>
-                <path d="M 460,256 l -8 0 l 3 -10 l -6 0 l 4 -12 l -4 0 l 6 -16 l 6 16 l -4 0 l 4 12 l -6 0 l 3 10 z"/>
-            </g>
-            <!-- soft cloud bands -->
-            <g opacity="0.55">
-                <path d="M 80,80 C 160,72 240,86 340,80 C 420,76 480,90 560,82 C 480,108 360,108 280,104 C 200,100 130,98 80,92 Z" fill="#f5dac6"/>
-                <path d="M 700,60 C 780,55 860,70 960,64 C 1040,60 1100,72 1180,68 C 1100,90 1000,90 920,86 C 840,82 770,82 700,76 Z" fill="#f5dac6" opacity="0.85"/>
-                <path d="M 380,140 C 460,134 540,148 640,142 C 720,138 780,150 860,144 C 780,164 680,164 600,160 C 520,156 450,156 380,152 Z" fill="#fcebd6" opacity="0.7"/>
-            </g>
-            <!-- subtle horizon glow -->
-            <ellipse cx="780" cy="200" rx="280" ry="36" fill="#f6d4b6" opacity="0.4"/>
-        </svg>
+    <div class="hero has-image" aria-hidden="true">
         <div class="hero-overlay"></div>
     </div>
 
