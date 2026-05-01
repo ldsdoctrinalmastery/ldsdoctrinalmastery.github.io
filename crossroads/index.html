@@ -280,6 +280,46 @@
         }
         .scripture .verse em { color: var(--seal); font-style: italic; }
 
+        /* === "More than phones" callout =================================== */
+        .more-than-phones {
+            margin-top: 22px;
+            background: var(--paper-card);
+            padding: 22px 26px 20px;
+            border-left: 3px solid var(--indigo);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .more-than-phones .label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--indigo);
+            margin-bottom: 10px;
+        }
+        .more-than-phones h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 600;
+            font-size: 1.35rem;
+            line-height: 1.2;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+        .more-than-phones p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.94rem;
+            line-height: 1.6;
+            color: #2c2620;
+        }
+        .more-than-phones em {
+            color: var(--indigo);
+            font-weight: 600;
+            font-style: italic;
+        }
+
         /* === Truth pulled out ============================================== */
         .truth {
             margin-top: 28px;
@@ -321,6 +361,8 @@
                 0 1px 0 rgba(255,255,255,0.6) inset,
                 0 6px 14px -8px rgba(31, 26, 22, 0.25);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         .principle.focused {
             background: #fff8e5;
@@ -331,25 +373,63 @@
         }
         .principle h3 {
             font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-            font-size: 1.4rem;
+            font-weight: 700;
+            font-size: 1.5rem;
             margin-bottom: 6px;
         }
-        .principle p {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.88rem;
-            color: var(--muted);
-            line-height: 1.55;
+        .principle .motto {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--ink);
+            line-height: 1.45;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.3);
         }
         .principle .focus-mark {
             position: absolute;
             top: 14px; right: 16px;
             font-family: 'Inter', sans-serif;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.62rem;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--seal);
+        }
+        .principle-block { margin-top: 14px; }
+        .principle-block:first-of-type { margin-top: 0; }
+        .principle-block h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.66rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .principle-block ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .principle-block li {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            line-height: 1.45;
+            color: #2c2620;
+            padding: 4px 0 4px 14px;
+            position: relative;
+        }
+        .principle-block li + li { border-top: 1px dashed rgba(120, 102, 80, 0.18); }
+        .principle-block li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: var(--seal);
+            font-size: 1.4rem;
+            line-height: 1;
         }
 
         /* === Self-quiz (sliders) ========================================== */
@@ -1002,6 +1082,22 @@
             color: var(--ink);
             line-height: 1.5;
         }
+        .lovingkindness-mantra em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 700;
+        }
+        .lovingkindness-seed {
+            margin-top: 10px;
+            font-size: 0.86rem;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+        .lovingkindness-seed em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
 
         .opening-question {
             margin: 12px 0 6px;
@@ -1237,6 +1333,61 @@
             font-style: italic;
             font-weight: 600;
         }
+
+        /* === Where the Church stands on AI (links) ======================== */
+        .church-ai-links {
+            margin-top: 16px;
+            background: var(--paper-card);
+            padding: 22px 28px 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .church-ai-links h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .church-ai-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        .church-ai-links li + li {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.25);
+        }
+        .church-ai-links a {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .church-ai-links a:hover strong { color: var(--seal); }
+        .church-ai-links strong {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.12rem;
+            color: var(--ink);
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            align-self: flex-start;
+            transition: color 0.15s;
+        }
+        .church-ai-links span {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        .church-ai-links span em {
+            font-style: italic;
+            color: var(--seal);
+        }
         .bednar-questions-label {
             font-family: 'Inter', sans-serif;
             font-weight: 600;
@@ -1407,7 +1558,8 @@
                         <li>To <strong>someone you barely know</strong></li>
                         <li>To <strong>someone who has been hard to love</strong></li>
                     </ol>
-                    <p class="lovingkindness-mantra">"May they be happy. May they be safe. May they be loved. May they be at peace."</p>
+                    <p class="lovingkindness-mantra">"May they be safe. May they be loved. May they be at peace. May they be <em>truly happy</em>."</p>
+                    <p class="lovingkindness-seed"><em>Stuck?</em> Picture someone whose love for you is uncomplicated — a sleeping puppy, a small child, a mentor smiling — and let that warmth be the place you wish from.</p>
                 </div>
 
                 <div class="opening-card">
@@ -1423,7 +1575,8 @@
                             <li><strong>1950s</strong> — Comic books were said to cause juvenile delinquency (Senate hearings, public burnings).</li>
                             <li><strong>1960s–80s</strong> — Television, then rock music, then video arcades.</li>
                             <li><strong>1990s</strong> — The Internet, AOL, chat rooms.</li>
-                            <li><strong>2000s–10s</strong> — Halo, World of Warcraft, Facebook, smartphones, TikTok.</li>
+                            <li><strong>2000s–10s</strong> — Halo<button class="footnote-mark" data-comic="halo-panic" aria-label="Show related comic">¹</button>, World of Warcraft, Facebook, smartphones, TikTok.</li>
+                            <li><strong>2020s</strong> — Screentime studies<button class="footnote-mark" data-comic="screentime-panic" aria-label="Show related comic">²</button>, AI companions, neural implants.</li>
                         </ul>
                         <p style="margin-top:8px;">Every generation has its tech panic. Some panics turned out warranted; some did not. <em>Discuss:</em> how do we tell the difference?</p>
                     </details>
@@ -1459,6 +1612,12 @@
                 <div class="label">A truth</div>
                 <div class="statement">The Lord provides help to guide us in our lives.</div>
             </div>
+
+            <div class="more-than-phones">
+                <div class="label">And one more thing</div>
+                <h3>This isn't just about phones.</h3>
+                <p>Today's lesson uses "technology" loosely. <em>Phones, social media, scrolling</em> are the obvious examples — but the same principles apply to <em>VR goggles</em>, <em>smart glasses</em>, <em>large language models</em>, <em>AI companions</em>, <em>neural brain implants</em>, <em>robot friends</em>, <em>virtual buddies</em>, and whatever's coming next that we haven't even named yet. The question stays the same regardless of the medium: <em>does it bring you closer to God and to other people, or further away?</em></p>
+            </div>
         </section>
 
         <!-- Section 2 -->
@@ -1466,22 +1625,78 @@
             <div class="section-head">
                 <div class="section-num">II · Three Principles</div>
                 <h2>Purpose. Plan. Pause.</h2>
-                <p class="lead">From the Church's <em>Taking Charge of Technology</em> resource. Today we'll focus on the first.</p>
+                <p class="lead">From the Church's <em>Taking Charge of Technology</em> guide. Today we'll focus on the first — but each card below has questions and practical suggestions for all three.</p>
+                <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/taking-charge-of-technology/youth-lesson-taking-charge-of-technology-use?lang=eng" target="_blank" rel="noopener">Read the full guide</a>
             </div>
 
             <div class="principles">
                 <div class="principle focused">
                     <div class="focus-mark">Today</div>
                     <h3>Purpose</h3>
-                    <p>I can use technology with a purpose. It doesn't control me.</p>
+                    <p class="motto">"I can use technology with a purpose. It doesn't control me."</p>
+                    <div class="principle-block">
+                        <h4>Questions to ask</h4>
+                        <ul>
+                            <li>Why am I using technology right now?</li>
+                            <li>Do I feel good about what I'm doing?</li>
+                            <li>How long will I be using technology?</li>
+                            <li>What is my plan for using technology?</li>
+                            <li>What am I showing God by how I use my time?</li>
+                        </ul>
+                    </div>
+                    <div class="principle-block">
+                        <h4>Try it</h4>
+                        <ul>
+                            <li>Send a positive message to someone.</li>
+                            <li>Listen to music that brings peace.</li>
+                            <li>Create your own content.</li>
+                            <li>Use it to learn something on purpose.</li>
+                        </ul>
+                    </div>
                 </div>
+
                 <div class="principle">
                     <h3>Plan</h3>
-                    <p>When I plan ahead, I feel better and make better choices.</p>
+                    <p class="motto">"When I plan ahead, I feel better and make better choices."</p>
+                    <div class="principle-block">
+                        <h4>Questions to ask</h4>
+                        <ul>
+                            <li>Am I avoiding content I know isn't right or purposeful?</li>
+                            <li>Do my filters and limits match what I actually want?</li>
+                            <li>Am I spending time with people, or with feeds about people?</li>
+                        </ul>
+                    </div>
+                    <div class="principle-block">
+                        <h4>Try it</h4>
+                        <ul>
+                            <li>Set a daily limit for screen time.</li>
+                            <li>"Follow" only close family and friends.</li>
+                            <li>Make a device-free area at home.</li>
+                            <li>Set up a family charging station out of bedrooms.</li>
+                            <li>Use a content filter.</li>
+                        </ul>
+                    </div>
                 </div>
+
                 <div class="principle">
                     <h3>Pause</h3>
-                    <p>It's OK for me to pause and take a break.</p>
+                    <p class="motto">"It's OK for me to pause and take a break."</p>
+                    <div class="principle-block">
+                        <h4>Questions to ask</h4>
+                        <ul>
+                            <li>Am I feeling the Spirit leave?</li>
+                            <li>Is what I'm seeing making me feel bad, lonely, or weird?</li>
+                            <li>Have I stopped enjoying this and just kept going?</li>
+                        </ul>
+                    </div>
+                    <div class="principle-block">
+                        <h4>Try it</h4>
+                        <ul>
+                            <li>Put the device down and step away.</li>
+                            <li>Pray for strength.</li>
+                            <li>Talk to someone — in person if you can.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1495,7 +1710,7 @@
             </div>
 
             <div class="quiz-intro">
-                <p>We may sometimes struggle to use technology appropriately, and we may feel guilty when that happens. It's helpful to be aware of influences that encourage harmful technology use — profit-driven companies use tactics designed to foster addictive behaviors if we let them, and excessive use of social media has been shown to trigger depression and other emotional health challenges.<button class="footnote-mark" data-comic="halo" aria-label="Show related comic">1</button></p>
+                <p>We may sometimes struggle to use technology appropriately, and we may feel guilty when that happens. It's helpful to be aware of influences that encourage harmful technology use — profit-driven companies use tactics designed to foster addictive behaviors if we let them, and excessive use of social media has been shown to trigger depression and other emotional health challenges.</p>
                 <p>There are things we can do to evaluate our technology use and seek Heavenly Father's help to ensure we are using it appropriately and safely.</p>
             </div>
 
@@ -1547,7 +1762,7 @@
             <div class="section-head">
                 <div class="section-num">VI · My Tech Audit</div>
                 <h2>Evaluate honestly.</h2>
-                <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.<button class="footnote-mark" data-comic="family" aria-label="Show related comic">2</button></p>
+                <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.</p>
             </div>
 
             <div class="audit">
@@ -1612,6 +1827,24 @@
                 <p>"I personally do not use this technology to generate or draft my talks, articles, or content for other projects. This must be my diligent effort, my creative work, and, most importantly, my seeking to be open to inspiration from the Holy Ghost."</p>
                 <p>"I do use this technology to critique my work."</p>
                 <p class="practice-note">He used AI to analyze the tone of <em>this very talk</em> after writing it — and made several changes based on the feedback. The model: AI as a coach or editor, never as a ghostwriter.</p>
+            </div>
+
+            <div class="church-ai-links">
+                <h4>Where the Church stands on AI</h4>
+                <ul>
+                    <li>
+                        <a href="https://newsroom.churchofjesuschrist.org/article/church-jesus-christ-artificial-intelligence" target="_blank" rel="noopener">
+                            <strong>Newsroom · The Church and Artificial Intelligence</strong>
+                            <span>Elder Gerrit W. Gong on the Church's principles for using AI — transparency, faithfulness, accuracy, accountability.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.deseret.com/faith/2025/11/05/church-of-jesus-christ-wont-use-ai-to-create-images-of-jesus-or-conference-talks/" target="_blank" rel="noopener">
+                            <strong>Deseret News · Nov 5, 2025</strong>
+                            <span>"<em>The Church of Jesus Christ won't use AI to create images of Jesus or conference talks.</em>"</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
 
             <div class="bednar-questions">
@@ -2014,14 +2247,14 @@
 
         // ============ Comic modal ============
         const comics = {
-            'halo': {
-                src: '/assets/comics/comic-halo.webp',
-                alt: 'Penny Arcade comic: a panicked father saying "Millions have died in a global pandemic and our society burned down. But the big thing I\'m worried about is that my son plays too much Halo."',
+            'halo-panic': {
+                src: '/assets/haloScreentime.jpg',
+                alt: 'Penny Arcade comic about media reaction to youth tech panic',
                 credit: 'via <a href="https://www.penny-arcade.com" target="_blank" rel="noopener">Penny Arcade</a>'
             },
-            'family': {
-                src: '/assets/comics/comic-family.webp',
-                alt: 'Penny Arcade comic',
+            'screentime-panic': {
+                src: '/assets/screentime-paper-quantification.jpg',
+                alt: 'Penny Arcade comic about screentime quantification',
                 credit: 'via <a href="https://www.penny-arcade.com" target="_blank" rel="noopener">Penny Arcade</a>'
             }
         };
