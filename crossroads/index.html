@@ -782,6 +782,282 @@
             .quiz-value { text-align: left; }
         }
 
+        /* === Destination card (what we'll walk out with) ================== */
+        .destination-card {
+            background: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 22px 28px 20px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--indigo);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .destination-card .label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--indigo);
+            margin-bottom: 8px;
+        }
+        .destination-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            line-height: 1.15;
+        }
+        .destination-card ol {
+            list-style: none;
+            counter-reset: dest;
+            padding: 0;
+            margin: 0;
+        }
+        .destination-card li {
+            counter-increment: dest;
+            position: relative;
+            padding: 8px 0 8px 36px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: var(--ink);
+        }
+        .destination-card li + li { border-top: 1px dashed rgba(120, 102, 80, 0.2); }
+        .destination-card li::before {
+            content: counter(dest);
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle at 30% 28%, #5b7281 0%, #2f4a55 52%, #1a2c34 100%);
+            color: var(--paper-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            box-shadow:
+                inset 0 1px 1px rgba(255,255,255,0.3),
+                inset 0 -1px 2px rgba(0,0,0,0.3),
+                0 1px 2px rgba(31,26,22,0.25);
+        }
+        .destination-card strong { color: var(--indigo); font-weight: 700; }
+
+        /* === Field-guide trigger button =================================== */
+        .field-guide-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            background: transparent;
+            color: var(--indigo);
+            border: 1px solid rgba(47, 74, 85, 0.4);
+            padding: 8px 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .field-guide-btn:hover {
+            background: rgba(47, 74, 85, 0.08);
+            border-color: var(--indigo);
+            color: var(--indigo);
+        }
+        .field-guide-btn::after { content: '↗'; font-size: 0.95em; opacity: 0.75; }
+
+        /* === Deep modal (field guide essay) =============================== */
+        .deep-modal[hidden] { display: none; }
+        .deep-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .deep-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(28, 24, 21, 0.86);
+            cursor: pointer;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .deep-card {
+            position: relative;
+            background: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            width: 100%;
+            max-width: 820px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--rule);
+            overflow: hidden;
+        }
+        .deep-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            background: var(--ink);
+            color: var(--paper-card);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0 2px 0;
+        }
+        .deep-close:hover { background: var(--seal); }
+        .deep-content {
+            overflow-y: auto;
+            padding: 36px 44px 36px;
+            flex: 1;
+        }
+        .fg-header {
+            text-align: center;
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 22px;
+            margin-bottom: 24px;
+        }
+        .fg-header .eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+        .fg-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            line-height: 1.1;
+            color: var(--ink);
+            margin: 0;
+        }
+        .fg-tagline {
+            margin-top: 10px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+        .fg-content > p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.94rem;
+            line-height: 1.65;
+            color: var(--ink);
+            margin-bottom: 14px;
+        }
+        .fg-content p em { font-style: italic; color: var(--seal); }
+        .fg-content p strong { font-weight: 600; }
+        .fg-section {
+            border-top: 1px solid var(--rule);
+            padding-top: 18px;
+            margin-top: 18px;
+        }
+        .fg-section > summary {
+            list-style: none;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            padding-right: 30px;
+        }
+        .fg-section > summary::-webkit-details-marker { display: none; }
+        .fg-section > summary h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--ink);
+            margin: 0;
+            padding-right: 24px;
+        }
+        .fg-section > summary::after {
+            content: '▸';
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            color: var(--seal);
+            font-size: 0.95rem;
+            transition: transform 0.2s;
+        }
+        .fg-section[open] > summary::after { transform: rotate(90deg); }
+        .fg-section h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--seal);
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+        .fg-section h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-top: 16px;
+            margin-bottom: 6px;
+        }
+        .fg-section p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--ink);
+            margin: 10px 0;
+        }
+        .fg-section p em { font-style: italic; color: var(--seal); }
+        .fg-section p strong { font-weight: 600; }
+        .fg-section ul {
+            margin: 10px 0 14px 0;
+            padding-left: 22px;
+        }
+        .fg-section ul li {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .fg-section ul li strong { font-weight: 600; }
+        .fg-section ul li em { font-style: italic; color: var(--seal); }
+        .fg-pullout {
+            background: #fff5d4;
+            padding: 16px 22px;
+            margin: 14px 0;
+            border-left: 3px solid var(--seal);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+        @media (max-width: 720px) {
+            .deep-content { padding: 28px 22px 28px; }
+            .fg-section > summary h2 { font-size: 1.3rem; }
+        }
+
         /* === Footnote markers + comic modal =============================== */
         .footnote-mark {
             display: inline-block;
@@ -2198,6 +2474,16 @@
             </summary>
             <div class="section-body">
             <div class="opening-cards">
+                <div class="destination-card">
+                    <div class="label">By the end of class</div>
+                    <h3>You'll walk out with three things.</h3>
+                    <ol>
+                        <li>A <strong>plan</strong> for daily tech use — yours, written, specific.</li>
+                        <li>A <strong>plan</strong> for school and seminary — same.</li>
+                        <li>A <strong>framework</strong> for evaluating any new tech, including whatever AI dreams up next that we haven't even named yet.</li>
+                    </ol>
+                </div>
+
                 <div class="opening-card">
                     <div class="opening-num">1</div>
                     <h3>A Moment of Gratitude</h3>
@@ -2231,7 +2517,7 @@
                     <div class="opening-num">3</div>
                     <h3>A Question to Open the Floor</h3>
                     <p class="opening-question">When were parents <em>first</em> concerned about technology?</p>
-                    <p>It goes back a lot further than smartphones. Or TV. Or radio.</p>
+                    <p>You arrived in the middle of an argument that started before you could read. It goes back a lot further than smartphones — or TV, or radio.</p>
                     <details>
                         <summary>A few historical worries (for the teacher)</summary>
                         <ul>
@@ -2245,6 +2531,7 @@
                         </ul>
                         <p style="margin-top:8px;">Every generation has its tech panic. Some panics turned out warranted; some did not. <em>Discuss:</em> how do we tell the difference?</p>
                     </details>
+                    <button class="field-guide-btn" data-modal="field-guide">Read the full field guide</button>
                 </div>
             </div>
             </div>
@@ -2804,6 +3091,216 @@
         </div>
     </div>
 
+    <!-- Field Guide modal -->
+    <div class="deep-modal" id="field-guide-modal" role="dialog" aria-modal="true" aria-labelledby="fg-title" hidden>
+        <div class="deep-backdrop" data-close></div>
+        <div class="deep-card">
+            <button class="deep-close" data-close aria-label="Close">×</button>
+            <div class="deep-content">
+                <header class="fg-header">
+                    <div class="eyebrow">Field guide</div>
+                    <h1 id="fg-title">The Screen Time Debate</h1>
+                    <p class="fg-tagline">A primer for teens who showed up to a debate already in progress.</p>
+                </header>
+
+                <div class="fg-content">
+                    <p>If you were born after about 2007, you arrived in the middle of an argument that started before you could read. Adults are loudly disagreeing about whether the phone in your pocket is mostly a tool, mostly a problem, or somewhere in between. Both sides have data. Both sides have smart people. Both sides think the other side is being either alarmist or naive.</p>
+                    <p>You deserve the actual map, not a sermon. This guide gives you the timeline, the strongest version of each major position, and the questions that are still genuinely open.</p>
+                </div>
+
+                <details class="fg-section" open>
+                    <summary><h2>Part 1 · The Timeline</h2></summary>
+
+                    <h3>The deep roots (1943–2000)</h3>
+                    <p>The arguments your parents are having about TikTok in 2026 are recognizably the same arguments thinkers were having about industrialization, mass media, and television decades before any of you were born.</p>
+                    <ul>
+                        <li><strong>1943:</strong> C.S. Lewis publishes <em>The Abolition of Man.</em> When humans stop being treated as ends in themselves and start being treated as raw material to be shaped, you get a civilization that produces "men without chests." Foreshadows every modern argument about algorithmic feeds and AI companions. Under 100 pages.</li>
+                        <li><strong>1974:</strong> Robert Pirsig publishes <em>Zen and the Art of Motorcycle Maintenance.</em> Distinguishes technology that <em>extends</em> human capability from technology that <em>diminishes</em> it.</li>
+                        <li><strong>1985:</strong> Neil Postman publishes <em>Amusing Ourselves to Death.</em> TV is restructuring discourse around entertainment values. Substitute "smartphone" for "television" and the argument transfers with little adjustment.</li>
+                        <li><strong>1995:</strong> Robert Putnam publishes "Bowling Alone." Civic life has been collapsing since the 1960s; TV is a major culprit. Empirical predecessor of the modern screen-and-mental-health argument.</li>
+                        <li><strong>1995:</strong> Sherry Turkle publishes <em>Life on the Screen.</em> Three decades of work on mediated identity begin.</li>
+                    </ul>
+
+                    <h3>The setup years (2000–2008)</h3>
+                    <ul>
+                        <li><strong>2000:</strong> Putnam's <em>Bowling Alone</em> book expands the essay.</li>
+                        <li><strong>2000–2005:</strong> Home internet goes mainstream. Most concerns about kids and screens are about <em>content</em>.</li>
+                        <li><strong>2004:</strong> Facebook launches at Harvard.</li>
+                        <li><strong>2006:</strong> Facebook opens to everyone 13+.</li>
+                        <li><strong>2007 (June):</strong> The original iPhone launches.</li>
+                        <li><strong>2008:</strong> App Store opens. The smartphone becomes a platform.</li>
+                    </ul>
+
+                    <h3>The hinge years (2009–2013)</h3>
+                    <p>This is the period the rest of the debate is about.</p>
+                    <ul>
+                        <li><strong>2009 (May 3):</strong> Elder David A. Bednar gives <em>"Things as They Really Are"</em> at BYU-Idaho. He warns that virtual experience can disconnect people from their bodies and from real relationships. <em>Six months before Instagram exists.</em></li>
+                        <li><strong>2010 (June):</strong> iPhone 4 launches with a front-facing camera. Selfies become possible. Social comparison becomes visual and constant.</li>
+                        <li><strong>2010:</strong> Nicholas Carr publishes <em>The Shallows.</em> The internet is rewiring cognition for shallowness. Pulitzer finalist.</li>
+                        <li><strong>2010:</strong> Jaron Lanier publishes <em>You Are Not a Gadget.</em></li>
+                        <li><strong>2010 (October):</strong> Instagram launches.</li>
+                        <li><strong>2011:</strong> Snapchat launches.</li>
+                        <li><strong>2011:</strong> Sherry Turkle publishes <em>Alone Together.</em> Connection-through-screens corrodes connection-in-person.</li>
+                        <li><strong>2012:</strong> Facebook buys Instagram. Smartphone ownership crosses 50% of US adults.</li>
+                        <li><strong>2012–2013:</strong> Adolescent mental-health metrics in the US, UK, Canada, Australia, and the Nordics begin turning sharply upward, in lockstep across multiple countries. Whatever caused this, it happened roughly here.</li>
+                        <li><strong>2013 (Feb):</strong> Tristan Harris writes "A Call to Minimize Distraction" inside Google. Becomes its first "design ethicist."</li>
+                    </ul>
+
+                    <h3>The "is this real?" years (2014–2019)</h3>
+                    <ul>
+                        <li><strong>2014:</strong> <em>Musical.ly</em> launches (later TikTok).</li>
+                        <li><strong>2016:</strong> Cal Newport publishes <em>Deep Work.</em></li>
+                        <li><strong>2017:</strong> Jean Twenge: "Have Smartphones Destroyed a Generation?" in <em>The Atlantic.</em> First mainstream alarm bell.</li>
+                        <li><strong>2018:</strong> Przybylski &amp; Orben find screen time correlates with well-being at about r = -0.05 — <em>about the same as eating potatoes.</em> The methodologists' rallying cry: the effects are tiny.</li>
+                        <li><strong>2018:</strong> Tristan Harris co-founds the Center for Humane Technology.</li>
+                        <li><strong>2018:</strong> Lanier publishes <em>Ten Arguments for Deleting Your Social Media Accounts Right Now.</em></li>
+                        <li><strong>2018:</strong> TikTok launches globally. The recommendation algorithm is qualitatively more aggressive than anything before.</li>
+                        <li><strong>2019:</strong> Newport publishes <em>Digital Minimalism.</em></li>
+                    </ul>
+
+                    <h3>The pandemic years (2020–2022)</h3>
+                    <ul>
+                        <li><strong>2020:</strong> COVID. Screen time roughly doubles overnight. Phones become not optional.</li>
+                        <li><strong>2020 (Sept):</strong> Netflix releases <em>The Social Dilemma.</em> Reaches over 100 million people. The argument goes mainstream.</li>
+                        <li><strong>2021 (Sept):</strong> Frances Haugen leaks internal Facebook research showing the company knew Instagram was harmful to teen girls.</li>
+                        <li><strong>2022:</strong> Braghieri, Levy &amp; Makarin publish causal evidence using Facebook's college-by-college rollout. Earlier-rollout schools showed worse student mental health.</li>
+                    </ul>
+
+                    <h3>The action years (2023–2026)</h3>
+                    <ul>
+                        <li><strong>2023:</strong> US Surgeon General Vivek Murthy issues advisory on social media and youth mental health.</li>
+                        <li><strong>2024 (Mar):</strong> Jonathan Haidt publishes <em>The Anxious Generation.</em> 50+ weeks on NYT bestseller list. No smartphone before 14, no social before 16, phone-free schools.</li>
+                        <li><strong>2024 (Apr):</strong> Candice Odgers publishes a sharp critique in <em>Nature.</em> Other researchers pile on.</li>
+                        <li><strong>2024 (Nov 3):</strong> Elder Bednar gives <em>"Things as They Really Are 2.0"</em> — extends the warning to AI. The danger isn't just disembodiment; it's <em>de-agentification</em>.</li>
+                        <li><strong>2024 (Nov):</strong> Australia bans social media for everyone under 16.</li>
+                        <li><strong>2025 (Feb):</strong> UK SMART Schools study in <em>Lancet</em>: phone bans alone don't help, because they don't actually reduce phone use much.</li>
+                        <li><strong>2025 (May):</strong> <em>Vasconcellos et al.</em> in <em>Psychological Bulletin:</em> the relationship is bidirectional. Phones make kids feel worse <em>and</em> kids who feel worse use phones more.</li>
+                        <li><strong>2025:</strong> By October, 31 US states + DC have laws restricting phones in K–12 schools.</li>
+                        <li><strong>2026 (where you are now):</strong> Empirical debate unresolved. Policy debate has moved ahead of the evidence. The kids who grew up inside this experiment are old enough to start telling us what it was like.</li>
+                    </ul>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 2 · The Steelman of Each View</h2></summary>
+
+                    <h3>View A · "It's basically the phones / the design."</h3>
+                    <p><em>Turkle, Lanier, Harris, Bednar, Twenge, Haidt.</em></p>
+                    <p>Adolescent mental health, especially for girls, broke around 2012 in essentially every developed country with data. That's not a coincidence. Whatever caused it has to be (1) international, (2) sharp in time, (3) bigger for girls than boys. Smartphones reaching saturation between 2010 and 2013 fits all three better than any other candidate.</p>
+                    <p>The mechanism is plausible: the human social brain evolved for embodied, face-to-face interaction. Inserting a 24/7 personalized adversarial optimization system into that brain during the most developmentally sensitive period of adolescence should leave marks. It has.</p>
+                    <p>Effect sizes look small in studies, but that's partly because <em>"screen time"</em> is measured terribly, average screen time conflates Bluey with TikTok algorithmic surge, and small effects across whole populations are public health emergencies — that's the regime where lead in gasoline lived.</p>
+                    <div class="fg-pullout">The Bednar variant: this isn't primarily an empirical question. Technology that disembodies you and erodes your agency is bad for you regardless of what the meta-analyses ultimately conclude, because it's bad for you at the level of what humans are <em>for</em>.</div>
+                    <h4>Practical conclusions</h4>
+                    <ul>
+                        <li>Delay smartphones until 14ish</li>
+                        <li>Delay social media until 16ish</li>
+                        <li>Phones out of bedrooms at night</li>
+                        <li>Phone-free schools</li>
+                        <li>Coordinate with other parents so opting out isn't social suicide</li>
+                        <li>Prioritize unstructured outdoor time, in-person friendships, creative work</li>
+                    </ul>
+
+                    <h3>View B · "It's complicated, the panic is overblown."</h3>
+                    <p><em>Odgers, Przybylski, Orben, Ferguson.</em></p>
+                    <p>Every generation of adults panics about a new medium. Plato thought writing would destroy memory. Victorians thought novels would derange young women. The 1950s thought comic books caused delinquency. The 1980s feared D&amp;D. The 1990s blamed video games for school shootings. <em>Each panic was wrong.</em> The prior should be skepticism.</p>
+                    <p>Effect sizes really are small in well-conducted studies (r = 0.05 to 0.15) — about the same as eating potatoes or being born in an even-numbered month. The 2012 mental-health break is real, but lots of things changed around 2012: anemic post-2008 recovery, helicopter parenting, religious participation collapsing, free-range play declining, medicalization-as-identity going viral.</p>
+                    <p>Also: the bidirectional finding (Vasconcellos 2025) matters. Depressed kids use phones to cope <em>at least as much</em> as phones make kids depressed. Banning the phone of a depressed kid is like banning aspirin during a headache epidemic.</p>
+                    <h4>Practical conclusions</h4>
+                    <ul>
+                        <li>Don't panic</li>
+                        <li>Focus on <em>content</em> and <em>context</em> over total time</li>
+                        <li>Active creation good (Minecraft, coding, video editing); passive algorithmic consumption bad</li>
+                        <li>Sleep matters most — phones out of bedrooms is the high-leverage move</li>
+                        <li>Address underlying mental health, not just the symptom</li>
+                        <li>Teach kids to use technology well, not to fear it</li>
+                    </ul>
+
+                    <h3>View C · "The medium is the message — this one is genuinely different."</h3>
+                    <p>Both sides above are missing something. The Haidt camp is right that something changed. The methodologists are right that "screen time" is a useless category. What unifies these is the recognition that <em>this technology is structurally different from every prior technology</em>.</p>
+                    <p>Three properties make algorithmic media a new category:</p>
+                    <ul>
+                        <li><strong>Adversarial and personalized.</strong> TikTok doesn't show you what's popular. It shows you, specifically, the next clip that maximizes the probability <em>you</em> keep watching. The objective function is your continued attention. The system optimizes against your impulse control with the full force of modern machine learning.</li>
+                        <li><strong>Variable ratio reinforcement.</strong> The same conditioning schedule slot machines use. Skinner discovered it in the 1950s training pigeons. The most addictive operant schedule known to behavioral psychology. Now applied to your attention 16 hours a day starting at age 11.</li>
+                        <li><strong>Socially inescapable.</strong> When TV came along, the kid without a TV could still be in the conversation. The kid without Instagram is <em>literally not in the social graph.</em></li>
+                    </ul>
+                    <p>Bednar's 2024 frame names this: technology that turns <em>agents who act</em> into <em>objects that are acted upon.</em> The category isn't "screen vs. paper." It's "tool that extends human agency vs. system that erodes it." A flight simulator extends agency. A spreadsheet extends agency. <em>Minecraft</em> extends agency. An AI girlfriend, an algorithmic feed, and a slot machine erode it.</p>
+                    <h4>Practical conclusions</h4>
+                    <ul>
+                        <li>The question isn't "how many minutes?" It's <em>"who is acting on whom?"</em></li>
+                        <li>Active creation, communication with people you actually know, and learning are fine</li>
+                        <li>Passive algorithmic feeds and AI-generated parasocial relationships are dangerous in a structurally new way</li>
+                        <li>The right comparison isn't to TV or comics — it's to slot machines and addictive substances</li>
+                        <li>Ages 10–16 are the period when the developing brain is most vulnerable to habit-formation by adversarial systems</li>
+                    </ul>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 3 · What Both Sides Agree On</h2></summary>
+                    <p>The consensus is larger than the public debate suggests:</p>
+                    <ul>
+                        <li><strong>Sleep is sacred.</strong> Phones in bedrooms reduce sleep. Sleep deprivation has <em>large</em> effects on adolescent mood and cognition.</li>
+                        <li><strong>Under-5 is different.</strong> Heavy passive screen exposure displaces language development and parent-child interaction.</li>
+                        <li><strong>Content matters more than minutes.</strong> Two hours building things in <em>Minecraft</em> is not the same as two hours getting algorithmically surged on TikTok.</li>
+                        <li><strong>Heavy use (3+ hours/day on social) correlates with worse outcomes for adolescent girls.</strong> The argument is about <em>how much</em> and <em>via what mechanism</em>, not whether.</li>
+                        <li><strong>The teen mental-health rise after 2012 is real.</strong> Even the methodologists acknowledge the effect.</li>
+                        <li><strong>Active creation is better than passive consumption.</strong> Near-unanimous finding.</li>
+                        <li><strong>Face-to-face friendships matter more than online ones.</strong> In-person social networks are protective; purely online ones are not.</li>
+                    </ul>
+                    <p>If you do nothing else, optimize on these.</p>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 4 · The Questions Still Open</h2></summary>
+                    <p>Honest people genuinely don't know the answers to these yet.</p>
+                    <ul>
+                        <li>How much of the 2012 mental-health break is phones, vs. everything else that changed?</li>
+                        <li>Are the effects "addiction" in any clinically meaningful sense?</li>
+                        <li>What's the right age to introduce smartphones? Social media? AI?</li>
+                        <li>How much can good parenting and good content choices mitigate algorithmic-feed harm?</li>
+                        <li>What will AI companions do to people who grow up with them as the default?</li>
+                        <li>Is there a way to redesign these systems to be non-adversarial without breaking their business models?</li>
+                        <li>Are some kids constitutionally more vulnerable than others, and can we identify them in advance?</li>
+                    </ul>
+                    <p>If anyone tells you they know the answer to any of these with confidence, they're selling you something.</p>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 5 · Notes for the Person Living Through This</h2></summary>
+                    <p><strong>You are not stupid for liking your phone.</strong> It was designed by some of the smartest people in the world to be liked. Hundreds of billions of dollars went into making it as compelling as possible. If a small piece of glass and metal can hold the attention of a being with the spiritual stature of a son or daughter of God, that's not your character flaw — that's their engineering.</p>
+                    <p><strong>You also are not powerless.</strong> The fact that the design is adversarial doesn't mean you can't act inside it. People have always faced engineered temptations — alcohol, gambling, processed food, addictive drugs. Each generation figures out how to relate to its particular set. Yours is harder than your parents' was, in some ways. That's not unfair, that's just the lot you drew.</p>
+                    <p><strong>The adults arguing about this are not your enemies.</strong> Even the ones who sound preachy. They're trying to figure out, mostly in real time, what's happening to you. They have less information than you'd think. The ones worth listening to are the ones who admit that.</p>
+                    <p><strong>You have access to something useful that the researchers don't have:</strong> your own actual experience. You know whether scrolling makes you feel better or worse. You know whether you're more or less of a person after an hour in the feed. That's not anecdote — that's data the studies can't measure.</p>
+                    <div class="fg-pullout">
+                        Two diagnostic questions, courtesy of Elder Bednar:<br>
+                        1. Does this technology <em>invite</em> or <em>impede</em> the influence of the Holy Ghost in my life?<br>
+                        2. Does the time I spend on it <em>enlarge</em> or <em>restrict</em> my capacity to live, to love, and to serve?
+                    </div>
+                    <p>You can ask these about a specific app, a specific platform, a specific evening. The answers won't always be the same. <em>Minecraft</em> with friends might enlarge; an hour of doomscrolling might restrict. The questions are tools for you, not rules for you.</p>
+                    <p><strong>The deepest thing in this whole debate:</strong> the argument isn't really about screens. It's about what humans are <em>for.</em> Are we creatures whose purpose is to be entertained, optimized for, and acted upon? Or are we creatures whose purpose is to act, choose, create, love, suffer, grow, and become? The technology industry, mostly without meaning to, has built a default answer to that question. You don't have to accept it.</p>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>A short reading list for the curious</h2></summary>
+                    <ul>
+                        <li>C.S. Lewis, <em>The Abolition of Man</em> (1943) — the philosophical foundation; under 100 pages</li>
+                        <li>Robert Pirsig, <em>Zen and the Art of Motorcycle Maintenance</em> (1974)</li>
+                        <li>Neil Postman, <em>Amusing Ourselves to Death</em> (1985)</li>
+                        <li>Robert Putnam, <em>Bowling Alone</em> (essay 1995, book 2000)</li>
+                        <li>Sherry Turkle, <em>Alone Together</em> (2011) — the academic anchor</li>
+                        <li>Nicholas Carr, <em>The Shallows</em> (2010)</li>
+                        <li>Jaron Lanier, <em>You Are Not a Gadget</em> (2010); <em>Ten Arguments for Deleting Your Social Media Accounts</em> (2018)</li>
+                        <li>David A. Bednar, <em>Things as They Really Are</em> (2009)</li>
+                        <li>Cal Newport, <em>Deep Work</em> (2016) and <em>Digital Minimalism</em> (2019)</li>
+                        <li><em>The Social Dilemma</em> (Netflix, 2020)</li>
+                        <li>Center for Humane Technology &amp; the <em>Your Undivided Attention</em> podcast</li>
+                        <li>Jonathan Haidt, <em>The Anxious Generation</em> (2024)</li>
+                        <li>Candice Odgers, "The great rewiring," <em>Nature</em> (2024)</li>
+                        <li>David A. Bednar, <em>Things as They Really Are 2.0</em> (2024)</li>
+                    </ul>
+                </details>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script>
     (function() {
@@ -3207,19 +3704,46 @@
             if (lastFocused) lastFocused.focus();
         }
 
+        // Field guide modal (shares the same backdrop/close mechanics)
+        const fieldGuideModal = document.getElementById('field-guide-modal');
+        function openFieldGuide() {
+            lastFocused = document.activeElement;
+            fieldGuideModal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            fieldGuideModal.querySelector('.deep-close').focus();
+        }
+        function closeFieldGuide() {
+            fieldGuideModal.hidden = true;
+            document.body.style.overflow = '';
+            if (lastFocused) lastFocused.focus();
+        }
+        function anyModalOpen() {
+            return !comicModal.hidden || !fieldGuideModal.hidden;
+        }
+        function closeAnyModal() {
+            if (!comicModal.hidden) closeComic();
+            if (!fieldGuideModal.hidden) closeFieldGuide();
+        }
+
         document.addEventListener('click', (e) => {
-            const trigger = e.target.closest('[data-comic]');
-            if (trigger) {
+            const comicTrigger = e.target.closest('[data-comic]');
+            if (comicTrigger) {
                 e.preventDefault();
-                openComic(trigger.dataset.comic);
+                openComic(comicTrigger.dataset.comic);
+                return;
+            }
+            const modalTrigger = e.target.closest('[data-modal]');
+            if (modalTrigger) {
+                e.preventDefault();
+                if (modalTrigger.dataset.modal === 'field-guide') openFieldGuide();
                 return;
             }
             if (e.target.closest('[data-close]')) {
-                closeComic();
+                closeAnyModal();
             }
         });
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !comicModal.hidden) closeComic();
+            if (e.key === 'Escape' && anyModalOpen()) closeAnyModal();
         });
 
         // ============ TOC navigation + expand/collapse all ============
