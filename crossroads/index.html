@@ -714,6 +714,293 @@
         }
         .comic-credit a { color: var(--seal); text-decoration: none; border-bottom: 1px dotted rgba(141, 53, 48, 0.4); }
 
+        /* === Table of contents ============================================ */
+        .toc {
+            background: var(--paper-card);
+            padding: 22px 28px 18px;
+            margin-bottom: 28px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .toc-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            columns: 2;
+            column-gap: 28px;
+        }
+        .toc li {
+            padding: 5px 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.35;
+            break-inside: avoid;
+        }
+        .toc a {
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .toc a:hover { border-bottom-color: var(--seal); color: var(--seal); }
+        .toc .num {
+            display: inline-block;
+            min-width: 38px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-right: 6px;
+        }
+        .toc-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.25);
+            flex-wrap: wrap;
+        }
+        .toc-actions button {
+            background: transparent;
+            color: var(--seal);
+            border: 1px solid rgba(141, 53, 48, 0.35);
+            padding: 6px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.66rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .toc-actions button:hover {
+            background: rgba(141, 53, 48, 0.08);
+            border-color: var(--seal);
+            color: var(--seal);
+        }
+        @media (max-width: 720px) {
+            .toc ul { columns: 1; }
+        }
+
+        /* === Lesson section (collapsible via details/summary) ============= */
+        .lesson-section { margin-bottom: 24px; }
+        .lesson-section > summary {
+            list-style: none;
+            cursor: pointer;
+            display: block;
+        }
+        .lesson-section > summary::-webkit-details-marker { display: none; }
+        .lesson-section > summary::marker { display: none; }
+        .lesson-section .section-head {
+            position: relative;
+            padding-right: 50px;
+            transition: background 0.15s;
+        }
+        .lesson-section .section-head .chevron {
+            position: absolute;
+            right: 22px;
+            top: 24px;
+            color: var(--seal);
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+        .lesson-section[open] .section-head .chevron {
+            transform: rotate(90deg);
+        }
+        .lesson-section > summary:hover .section-head { background: #fff8e5; }
+        .lesson-section > summary:focus-visible { outline: none; }
+        .lesson-section > summary:focus-visible .section-head {
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3),
+                0 0 0 2px rgba(141, 53, 48, 0.4);
+        }
+        .lesson-section .section-body { margin-top: 16px; }
+
+        /* === "Pick a restriction" intro card ============================== */
+        .topic-intro {
+            background: var(--paper-card);
+            padding: 18px 24px 16px;
+            margin-top: 24px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .topic-intro h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            color: var(--ink);
+        }
+        .topic-intro p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.94rem;
+            line-height: 1.55;
+            color: var(--muted);
+        }
+        .topic-intro em { color: var(--seal); font-style: italic; }
+
+        /* === Topic cloud (flat, single box, varied colors) =============== */
+        .topic-cloud-flat {
+            background: var(--paper-card);
+            padding: 22px 26px;
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .topic-cloud-flat .topic-chip:nth-child(3n) { background: #fcebd0; }
+        .topic-cloud-flat .topic-chip:nth-child(5n) { background: #e8e3d3; border-color: rgba(31, 58, 94, 0.3); }
+        .topic-cloud-flat .topic-chip:nth-child(7n) { background: #fce5c8; font-style: italic; }
+        .topic-cloud-flat .topic-chip:nth-child(11n) { background: #f4e3c4; }
+
+        /* === Reflective composer (single, flat library) =================== */
+        .reflective-library {
+            background: var(--paper-card);
+            padding: 22px 28px 18px;
+            margin-top: 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .reflective-library h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .reflective-library ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .reflective-library li {
+            padding: 9px 0;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.2);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .reflective-library li:last-child { border-bottom: none; }
+        .reflective-library .ref {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        .reflective-library .ref a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        .reflective-library .ref a::after {
+            content: '↗';
+            font-size: 0.78em;
+            opacity: 0.6;
+            margin-left: 3px;
+        }
+        .reflective-library em { color: var(--seal); font-style: italic; }
+
+        .composer-single {
+            background: var(--paper-card);
+            padding: 22px 28px 22px;
+            margin-top: 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .composer-single textarea {
+            width: 100%;
+            min-height: 80px;
+            border: 1px solid var(--rule);
+            background: #fffcf3;
+            padding: 14px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--ink);
+            resize: vertical;
+            border-radius: 2px;
+            transition: border-color 0.15s;
+        }
+        .composer-single textarea:focus {
+            outline: none;
+            border-color: var(--seal);
+            box-shadow: 0 0 0 1px rgba(141, 53, 48, 0.25);
+        }
+        .composer-single textarea::placeholder {
+            color: rgba(120, 102, 80, 0.7);
+            font-style: italic;
+        }
+        .composer-single .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .composer-single .hint {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+        .composer-single .examples {
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            color: var(--muted);
+        }
+        .composer-single .examples summary {
+            cursor: pointer;
+            color: var(--seal);
+            font-weight: 600;
+            list-style: none;
+        }
+        .composer-single .examples summary::-webkit-details-marker { display: none; }
+        .composer-single .examples summary::before { content: '▸ '; }
+        .composer-single .examples[open] summary::before { content: '▾ '; }
+        .composer-single .examples ul {
+            margin: 10px 0 0 0;
+            padding-left: 18px;
+            list-style: square;
+        }
+        .composer-single .examples li {
+            padding: 5px 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.4;
+            color: var(--ink);
+            font-style: italic;
+        }
+
         /* === Question composer ============================================ */
         .composers {
             display: grid;
@@ -1724,14 +2011,37 @@
             </div>
         </header>
 
-        <!-- Opening: warm-ups before Section I -->
-        <section class="opening">
-            <div class="section-head opening-head">
-                <div class="section-num">Open · Before We Begin</div>
-                <h2>Three small things.</h2>
-                <p class="lead">Two warm-ups and a question — to settle the room and tee up the lesson.</p>
+        <!-- Table of contents -->
+        <nav class="toc" aria-label="Lesson contents">
+            <div class="toc-title">Lesson Map</div>
+            <ul>
+                <li><a href="#sec-open"><span class="num">Open</span>Before We Begin</a></li>
+                <li><a href="#sec-1"><span class="num">I</span>Which Way Should I Go?</a></li>
+                <li><a href="#sec-2"><span class="num">II</span>Three Principles</a></li>
+                <li><a href="#sec-3"><span class="num">III</span>Where Do I Stand? <em>quiz</em></a></li>
+                <li><a href="#sec-4"><span class="num">IV</span>Discussion</a></li>
+                <li><a href="#sec-5"><span class="num">V</span>Make Your Reflective Question</a></li>
+                <li><a href="#sec-6"><span class="num">VI</span>The Question Wall</a></li>
+                <li><a href="#sec-7"><span class="num">VII</span>My Tech Audit</a></li>
+                <li><a href="#sec-8"><span class="num">VIII</span>Going Deeper · Bednar</a></li>
+            </ul>
+            <div class="toc-actions">
+                <button data-toggle-all="open">Expand all</button>
+                <button data-toggle-all="close">Collapse all</button>
             </div>
+        </nav>
 
+        <!-- Opening -->
+        <details class="lesson-section" id="sec-open" open>
+            <summary>
+                <div class="section-head opening-head">
+                    <div class="section-num">Open · Before We Begin</div>
+                    <h2>Three small things.</h2>
+                    <p class="lead">Two warm-ups and a question — to settle the room and tee up the lesson.</p>
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
             <div class="opening-cards">
                 <div class="opening-card">
                     <div class="opening-num">1</div>
@@ -1782,18 +2092,24 @@
                     </details>
                 </div>
             </div>
-        </section>
+            </div>
+        </details>
 
         <!-- Section 1 -->
-        <section>
-            <div class="section-head">
+        
+        <details class="lesson-section" id="sec-1">
+            <summary>
+                <div class="section-head">
                 <div class="section-num">I · Which Way Should I Go?</div>
                 <h2>Many paths. Limited light.</h2>
                 <p class="lead">Like a traveler at a crossroads, we make daily choices about how to use technology. The Lord has always given His people a way to find the path.</p>
                 <p class="lead lead-instruction">Read each verse and watch for <em>how</em> the Lord guides His people through unfamiliar terrain. What images would you add to a drawing of paths through a forest?</p>
-            </div>
-
-            <div class="scripture-list">
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="scripture-list">
                 <div class="scripture">
                     <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ex/13?lang=eng&id=p21-p22#p21" target="_blank" rel="noopener">Exodus 13:21–22</a></div>
                     <p class="verse">"And the Lord went before them by day in a <em>pillar of a cloud,</em> to lead them the way; and by night in a <em>pillar of fire,</em> to give them light; to go by day and night."</p>
@@ -1818,18 +2134,25 @@
                 <h3>This isn't just about phones.</h3>
                 <p>Today's lesson uses "technology" loosely. <em>Phones, social media, scrolling</em> are the obvious examples — but the same principles apply to <em>VR goggles</em>, <em>smart glasses</em>, <em>large language models</em>, <em>AI companions</em>, <em>neural brain implants</em>, <em>robot friends</em>, <em>virtual buddies</em>, and whatever's coming next that we haven't even named yet. The question stays the same regardless of the medium: <em>does it bring you closer to God and to other people, or further away?</em></p>
             </div>
-        </section>
+        
+            </div>
+        </details>
 
         <!-- Section 2 -->
-        <section>
-            <div class="section-head">
+        
+        <details class="lesson-section" id="sec-2">
+            <summary>
+                <div class="section-head">
                 <div class="section-num">II · Three Principles</div>
                 <h2>Purpose. Plan. Pause.</h2>
                 <p class="lead">From the Church's <em>Taking Charge of Technology</em> guide. Today we'll focus on the first — but each card below has questions and practical suggestions for all three.</p>
                 <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/taking-charge-of-technology/youth-lesson-taking-charge-of-technology-use?lang=eng" target="_blank" rel="noopener">Read the full guide</a>
-            </div>
-
-            <div class="principles">
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="principles">
                 <div class="principle focused">
                     <div class="focus-mark">Today</div>
                     <h3>Purpose</h3>
@@ -1899,17 +2222,24 @@
                     </div>
                 </div>
             </div>
-        </section>
+        
+            </div>
+        </details>
 
         <!-- Section 3: Self-quiz -->
-        <section>
-            <div class="section-head">
+        
+        <details class="lesson-section" id="sec-3">
+            <summary>
+                <div class="section-head">
                 <div class="section-num">III · Where Do I Stand?</div>
                 <h2>A self-quiz on Purpose, Plan, Pause.</h2>
                 <p class="lead">Adapted from the <em>Taking Charge of Technology</em> guide. Drag each slider to how true the statement is for you. Be honest — there's no score sent anywhere.</p>
-            </div>
-
-            <div class="quiz-intro">
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="quiz-intro">
                 <p>We may sometimes struggle to use technology appropriately, and we may feel guilty when that happens. It's helpful to be aware of influences that encourage harmful technology use — profit-driven companies use tactics designed to foster addictive behaviors if we let them, and excessive use of social media has been shown to trigger depression and other emotional health challenges.</p>
                 <p>There are things we can do to evaluate our technology use and seek Heavenly Father's help to ensure we are using it appropriately and safely.</p>
             </div>
@@ -1927,17 +2257,24 @@
             <div class="quiz-summary empty" id="quiz-summary">
                 Drag a slider to begin. As you answer, your weakest area will surface here with ideas for goals.
             </div>
-        </section>
+        
+            </div>
+        </details>
 
         <!-- Section 4: Discussion / Debate -->
-        <section>
-            <div class="section-head">
+        
+        <details class="lesson-section" id="sec-4">
+            <summary>
+                <div class="section-head">
                 <div class="section-num">IV · Discussion</div>
                 <h2>Where should the lines be?</h2>
                 <p class="lead">Pair up. One person speaks <em>for</em> a restriction, one <em>against</em>. Each person picks a verse from the library below, structures a 30-second take, and goes. No prep — just go.</p>
-            </div>
-
-            <div class="scripture-library">
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="scripture-library">
                 <div class="group">
                     <div class="group-label">Guidance · The Lord shows the way</div>
                     <div class="group-cards">
@@ -2041,65 +2378,44 @@
                 </div>
             </div>
 
-            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.4rem;margin-top:24px;margin-bottom:6px;color:var(--ink);">Pick a restriction. Pick a side. Go.</h3>
-            <p class="lead" style="margin-bottom:14px;">Mix common, less common, wise, and wacky. Some are real proposals (Haidt's <em>Anxious Generation</em>); some are just to argue.</p>
+            <div class="topic-intro">
+                <h3>Pick a restriction. Pick a side. Go.</h3>
+                <p>Mix common, less common, wise, and wacky. Some are real proposals (Haidt's <em>Anxious Generation</em>); some are just to argue.</p>
+            </div>
 
-            <div class="topic-cloud">
-                <div class="topic-group">
-                    <h4>School &amp; Seminary</h4>
-                    <div class="topic-chips">
-                        <span class="topic-chip">No phones during class</span>
-                        <span class="topic-chip">Phones locked in pouches all day</span>
-                        <span class="topic-chip">No phones during seminary</span>
-                        <span class="topic-chip">Phone-free lunch period</span>
-                        <span class="topic-chip">No AI for homework, ever</span>
-                        <span class="topic-chip">AI required for homework</span>
-                        <span class="topic-chip">No social media on schooldays</span>
-                        <span class="topic-chip">Notes by hand, no laptops</span>
-                    </div>
-                </div>
-
-                <div class="topic-group">
-                    <h4>At Home</h4>
-                    <div class="topic-chips">
-                        <span class="topic-chip">Phone curfew at 9pm</span>
-                        <span class="topic-chip">Charger out of bedrooms</span>
-                        <span class="topic-chip">No phones at the table</span>
-                        <span class="topic-chip">Phone-free Sundays</span>
-                        <span class="topic-chip">Family "tech treaty" everyone signs</span>
-                        <span class="topic-chip">No headphones during family time</span>
-                        <span class="topic-chip">One hour outside before any screen</span>
-                    </div>
-                </div>
-
-                <div class="topic-group">
-                    <h4>Devices &amp; Apps</h4>
-                    <div class="topic-chips">
-                        <span class="topic-chip wise">No smartphone before high school (Haidt)</span>
-                        <span class="topic-chip wise">No social media before 16 (Haidt)</span>
-                        <span class="topic-chip">Mandatory parental controls until 18</span>
-                        <span class="topic-chip">Hard 2-hour daily screen-time cap</span>
-                        <span class="topic-chip">App allowlist only</span>
-                        <span class="topic-chip">No video games on weekdays</span>
-                        <span class="topic-chip">Required content filter</span>
-                        <span class="topic-chip">No AI companions, period</span>
-                        <span class="topic-chip">Only "create" apps, no "consume" apps</span>
-                    </div>
-                </div>
-
-                <div class="topic-group">
-                    <h4>Wacky &amp; Wise</h4>
-                    <div class="topic-chips">
-                        <span class="topic-chip wacky">Flip phones until age 21</span>
-                        <span class="topic-chip wacky">Faraday cage for charging at night</span>
-                        <span class="topic-chip wacky">Photos delayed 1 week before posting</span>
-                        <span class="topic-chip wacky">No memes during seminary</span>
-                        <span class="topic-chip wise">Read scripture before opening any app each morning</span>
-                        <span class="topic-chip wise">24-hour social media fast every Sunday</span>
-                        <span class="topic-chip wise">Replace one app a month with something offline</span>
-                        <span class="topic-chip wise">A "phone hour" log reviewed at family council</span>
-                    </div>
-                </div>
+            <div class="topic-cloud-flat">
+                <span class="topic-chip">No phones during class</span>
+                <span class="topic-chip">Phones locked in pouches all day</span>
+                <span class="topic-chip">No phones during seminary</span>
+                <span class="topic-chip">Phone-free lunch period</span>
+                <span class="topic-chip">No AI for homework, ever</span>
+                <span class="topic-chip">AI required for homework</span>
+                <span class="topic-chip">No social media on schooldays</span>
+                <span class="topic-chip">Notes by hand, no laptops</span>
+                <span class="topic-chip">Phone curfew at 9pm</span>
+                <span class="topic-chip">Charger out of bedrooms</span>
+                <span class="topic-chip">No phones at the table</span>
+                <span class="topic-chip">Phone-free Sundays</span>
+                <span class="topic-chip">Family "tech treaty" everyone signs</span>
+                <span class="topic-chip">No headphones during family time</span>
+                <span class="topic-chip">One hour outside before any screen</span>
+                <span class="topic-chip">No smartphone before high school (Haidt)</span>
+                <span class="topic-chip">No social media before 16 (Haidt)</span>
+                <span class="topic-chip">Mandatory parental controls until 18</span>
+                <span class="topic-chip">Hard 2-hour daily screen-time cap</span>
+                <span class="topic-chip">App allowlist only</span>
+                <span class="topic-chip">No video games on weekdays</span>
+                <span class="topic-chip">Required content filter</span>
+                <span class="topic-chip">No AI companions, period</span>
+                <span class="topic-chip">Only "create" apps, no "consume" apps</span>
+                <span class="topic-chip">Flip phones until age 21</span>
+                <span class="topic-chip">Faraday cage for charging at night</span>
+                <span class="topic-chip">Photos delayed 1 week before posting</span>
+                <span class="topic-chip">No memes during seminary</span>
+                <span class="topic-chip">Read scripture before opening any app each morning</span>
+                <span class="topic-chip">24-hour social media fast every Sunday</span>
+                <span class="topic-chip">Replace one app a month with something offline</span>
+                <span class="topic-chip">A "phone hour" log reviewed at family council</span>
             </div>
 
             <div class="speech-box">
@@ -2127,45 +2443,80 @@
                     "Phones don't belong in seminary. <em>Be still, and know that I am God</em> — Psalm 46:10. You can't be still with a buzzing pocket. Try one week with your phone in your bag, screen-down. See if anything you'd actually want to feel shows up."
                 </div>
             </div>
-        </section>
+        
+            </div>
+        </details>
+
+        <!-- Section 5: Make Your Reflective Question -->
+        <details class="lesson-section" id="sec-5">
+            <summary>
+                <div class="section-head">
+                    <div class="section-num">V · Make Your Reflective Question</div>
+                    <h2>Turn a verse into a question.</h2>
+                    <p class="lead">Skim the scriptures below and write one question we could ask ourselves to be more intentional with technology. Repeat as many times as you'd like — every question goes to the wall.</p>
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                <div class="reflective-library">
+                    <h4>Scriptures to spark a question</h4>
+                    <ul id="reflective-library-list"><!-- populated by JS --></ul>
+                </div>
+
+                <div class="composer-single">
+                    <textarea id="reflective-input" rows="3"></textarea>
+                    <div class="row">
+                        <span class="hint">Press <strong>⌘ Enter</strong> or click below to post to the wall.</span>
+                        <button id="reflective-submit">Add to wall</button>
+                    </div>
+                    <details class="examples">
+                        <summary>Need ideas? Some example questions</summary>
+                        <ul>
+                            <li>Will using technology this way bring me satisfaction or leave me feeling empty?</li>
+                            <li>Is my use of technology distracting me from showing love for God or others?</li>
+                            <li>Will this lead me to envy others or compare myself to them?</li>
+                            <li>How can I use technology in a way that brings more light into my life?</li>
+                            <li>Does this use of technology foster lustful desires?</li>
+                            <li>Is my use of technology helping or hurting my relationships?</li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+        </details>
 
         <!-- Section 5 -->
-        <section>
-            <div class="section-head">
-                <div class="section-num">V · Make Your Reflective Question</div>
-                <h2>Turn a verse into a question.</h2>
-                <p class="lead">Read a passage, then write a single question we could ask ourselves to be more intentional with technology. When you submit, it joins the wall.</p>
-            </div>
-
-            <div class="composers" id="composers">
-                <!-- populated by JS -->
-            </div>
-        </section>
-
-        <!-- Section 5 -->
-        <section>
-            <div class="wall-head">
-                <div>
+        
+        <details class="lesson-section" id="sec-6">
+            <summary>
+                <div class="section-head">
                     <div class="section-num">VI · The Question Wall</div>
                     <h2>Our class's reflective questions</h2>
+                    <span class="chevron" aria-hidden="true">▸</span>
                 </div>
-                <div>
+            </summary>
+            <div class="section-body">
+                <div class="wall-head">
                     <span class="wall-count" id="wall-count">0 questions</span>
-                    <button class="ghost" id="clear-wall" style="margin-left:12px;">Clear wall</button>
+                    <button class="ghost" id="clear-wall">Clear wall</button>
                 </div>
+                <div class="wall" id="wall"></div>
             </div>
-            <div class="wall" id="wall"></div>
-        </section>
+        </details>
 
         <!-- Section 6 -->
-        <section>
-            <div class="section-head">
+        
+        <details class="lesson-section" id="sec-7">
+            <summary>
+                <div class="section-head">
                 <div class="section-num">VII · My Tech Audit</div>
                 <h2>Evaluate honestly.</h2>
                 <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.</p>
-            </div>
-
-            <div class="audit">
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="audit">
                 <div class="audit-col">
                     <h4>How I use technology</h4>
                     <p class="help">List the apps, sites, and ways you spend screen time. Be specific.</p>
@@ -2179,17 +2530,24 @@
                     <div class="saved-tag" id="saved-journal">Saved.</div>
                 </div>
             </div>
-        </section>
+        
+            </div>
+        </details>
 
         <!-- Section 7: Going Deeper - Bednar -->
-        <section>
-            <div class="section-head">
+        
+        <details class="lesson-section" id="sec-8">
+            <summary>
+                <div class="section-head">
                 <div class="section-num">VIII · Going Deeper</div>
                 <h2><em>Things as They Really Are.</em></h2>
                 <p class="lead">Elder David A. Bednar gave two warnings about technology — fifteen years apart. <em>That was then. This is now.</em></p>
-            </div>
-
-            <div class="bednar-pair">
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="bednar-pair">
                 <article class="bednar-talk">
                     <div class="bednar-year">2009 · That Was Then</div>
                     <h3 class="bednar-title">Things as They Really Are</h3>
@@ -2265,7 +2623,9 @@
                     <li>Does the time you spend using various technologies and media <em>enlarge or restrict</em> your capacity to live, to love, and to serve in meaningful ways?</li>
                 </ol>
             </div>
-        </section>
+        
+            </div>
+        </details>
 
         <!-- Closing -->
         <div class="closing">
@@ -2366,21 +2726,15 @@
             localStorage.setItem(STORE_QUESTIONS, JSON.stringify(qs));
         }
 
-        // ============ Composers ============
-        const composersEl = document.getElementById('composers');
-        passages.forEach((p, i) => {
-            const wrap = document.createElement('div');
-            wrap.className = 'composer';
-            wrap.innerHTML = `
-                <div class="ref">${renderRefLinks(p)}</div>
-                <p class="verse">${p.verse}</p>
-                <textarea data-idx="${i}" placeholder="${p.example}"></textarea>
-                <div class="composer-row">
-                    <span class="composer-hint">Press <strong>⌘ Enter</strong> or click below to post to the wall.</span>
-                    <button data-idx="${i}" class="add-btn">Add to wall</button>
-                </div>
+        // ============ Reflective library (flat list of all passages) ============
+        const libraryEl = document.getElementById('reflective-library-list');
+        passages.forEach((p) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="ref">${renderRefLinks(p)}</span>
+                <span class="verse">${p.verse}</span>
             `;
-            composersEl.appendChild(wrap);
+            libraryEl.appendChild(li);
         });
 
         // ============ Wall rendering ============
@@ -2401,7 +2755,7 @@
                 note.innerHTML = `
                     <span class="pin"></span>
                     ${escapeHtml(q.text)}
-                    <span class="source">${escapeHtml(q.source)}</span>
+                    ${q.source ? `<span class="source">${escapeHtml(q.source)}</span>` : ''}
                 `;
                 wallEl.appendChild(note);
             });
@@ -2412,32 +2766,38 @@
             return d.innerHTML;
         }
 
-        function addQuestion(idx, text) {
-            const trimmed = text.trim();
-            if (!trimmed) return;
+        // ============ Single reflective composer ============
+        const reflectiveInput = document.getElementById('reflective-input');
+        const reflectiveSubmit = document.getElementById('reflective-submit');
+        const placeholderExamples = [
+            'e.g. Will using technology this way bring me satisfaction or leave me feeling empty?',
+            'e.g. Is my use of technology distracting me from showing love for God or others?',
+            'e.g. Will this lead me to envy others or compare myself to them?',
+            'e.g. Does this use bring more light into my life?',
+            'e.g. Is my use of technology helping or hurting my relationships?'
+        ];
+        let placeholderIdx = 0;
+        reflectiveInput.placeholder = placeholderExamples[0];
+        setInterval(() => {
+            if (reflectiveInput.value || document.activeElement === reflectiveInput) return;
+            placeholderIdx = (placeholderIdx + 1) % placeholderExamples.length;
+            reflectiveInput.placeholder = placeholderExamples[placeholderIdx];
+        }, 5000);
+
+        function submitReflectiveQuestion() {
+            const text = reflectiveInput.value.trim();
+            if (!text) return;
             const qs = loadQuestions();
-            qs.push({
-                text: trimmed,
-                source: passages[idx].ref,
-                ts: Date.now()
-            });
+            qs.push({ text, source: '', ts: Date.now() });
             saveQuestions(qs);
             renderWall();
-            const ta = composersEl.querySelector(`textarea[data-idx="${idx}"]`);
-            if (ta) ta.value = '';
+            reflectiveInput.value = '';
+            reflectiveInput.focus();
         }
-
-        composersEl.addEventListener('click', (e) => {
-            if (e.target.matches('button.add-btn')) {
-                const idx = +e.target.dataset.idx;
-                const ta = composersEl.querySelector(`textarea[data-idx="${idx}"]`);
-                addQuestion(idx, ta.value);
-            }
-        });
-        composersEl.addEventListener('keydown', (e) => {
-            if (e.target.matches('textarea') && e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                const idx = +e.target.dataset.idx;
-                addQuestion(idx, e.target.value);
+        reflectiveSubmit.addEventListener('click', submitReflectiveQuestion);
+        reflectiveInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                submitReflectiveQuestion();
                 e.preventDefault();
             }
         });
@@ -2705,6 +3065,32 @@
         });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !comicModal.hidden) closeComic();
+        });
+
+        // ============ TOC navigation + expand/collapse all ============
+        function openSectionFromHash(hash) {
+            if (!hash) return;
+            const id = hash.replace('#', '');
+            const target = document.getElementById(id);
+            if (target && target.tagName.toLowerCase() === 'details') {
+                target.open = true;
+            }
+        }
+        document.querySelectorAll('.toc a').forEach(a => {
+            a.addEventListener('click', () => {
+                openSectionFromHash(a.getAttribute('href'));
+            });
+        });
+        window.addEventListener('hashchange', () => openSectionFromHash(window.location.hash));
+        if (window.location.hash) openSectionFromHash(window.location.hash);
+
+        document.querySelectorAll('[data-toggle-all]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const open = btn.dataset.toggleAll === 'open';
+                document.querySelectorAll('.lesson-section').forEach(d => {
+                    d.open = open;
+                });
+            });
         });
     })();
     </script>
