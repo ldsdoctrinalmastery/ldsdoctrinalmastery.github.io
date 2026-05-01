@@ -835,6 +835,152 @@
         }
         .saved-tag.show { opacity: 1; }
 
+        /* === Bednar — Things as They Really Are pair ====================== */
+        .bednar-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .bednar-talk {
+            background: var(--paper-card);
+            padding: 24px 28px 22px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .bednar-year {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.72rem;
+            letter-spacing: 0.32em;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+        .bednar-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            line-height: 1.1;
+            color: var(--ink);
+            font-style: italic;
+        }
+        .bednar-title .version {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--seal);
+            margin-left: 4px;
+            letter-spacing: 0.02em;
+            vertical-align: 0.15em;
+        }
+        .bednar-venue {
+            margin-top: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+        .bednar-quote {
+            margin-top: 16px;
+            margin-bottom: 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.08rem;
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--ink);
+            flex: 1;
+        }
+        .bednar-quote::before {
+            content: '“';
+            font-size: 2.2rem;
+            line-height: 0;
+            color: var(--seal);
+            vertical-align: -0.4em;
+            margin-right: 4px;
+        }
+        .bednar-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.76rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            padding-bottom: 2px;
+            transition: border-color 0.15s, color 0.15s;
+            align-self: flex-start;
+        }
+        .bednar-link:hover { border-bottom-color: var(--seal); color: var(--ink); }
+        .bednar-link::after { content: '↗'; font-size: 0.95em; opacity: 0.75; }
+
+        .bednar-questions {
+            margin-top: 22px;
+            background: #fff5d4;
+            padding: 26px 32px 24px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 18px -10px rgba(31, 26, 22, 0.35);
+        }
+        .bednar-questions-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.74rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .bednar-questions ol {
+            list-style: none;
+            counter-reset: bednar-q;
+            padding: 0;
+        }
+        .bednar-questions li {
+            counter-increment: bednar-q;
+            position: relative;
+            padding-left: 38px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .bednar-questions li + li { margin-top: 14px; }
+        .bednar-questions li::before {
+            content: counter(bednar-q);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 26px;
+            height: 26px;
+            background: var(--seal);
+            color: var(--paper-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .bednar-questions li em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
+        @media (max-width: 720px) {
+            .bednar-pair { grid-template-columns: 1fr; }
+            .bednar-questions { padding: 22px 24px 20px; }
+            .bednar-questions li { padding-left: 34px; font-size: 1.08rem; }
+        }
+
         /* === Closing quote ================================================= */
         .closing {
             margin-top: 32px;
@@ -1028,6 +1174,40 @@
                     <textarea id="audit-journal" placeholder="Pick a question and answer it honestly. Note any impressions from the Spirit."></textarea>
                     <div class="saved-tag" id="saved-journal">Saved.</div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Going Deeper - Bednar -->
+        <section>
+            <div class="section-head">
+                <div class="section-num">VII · Going Deeper</div>
+                <h2><em>Things as They Really Are.</em></h2>
+                <p class="lead">Elder David A. Bednar gave two warnings about technology — fifteen years apart. <em>That was then. This is now.</em></p>
+            </div>
+
+            <div class="bednar-pair">
+                <article class="bednar-talk">
+                    <div class="bednar-year">2009 · That Was Then</div>
+                    <h3 class="bednar-title">Things as They Really Are</h3>
+                    <p class="bednar-venue">CES Fireside · BYU-Idaho · May 3, 2009</p>
+                    <blockquote class="bednar-quote">I raise an apostolic voice of warning about the potentially stifling, suffocating, suppressing, and constraining impact of some kinds of cyberspace interactions and experiences upon our souls.</blockquote>
+                    <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/ensign/2010/06/things-as-they-really-are?lang=eng" target="_blank" rel="noopener">Read the full talk</a>
+                </article>
+                <article class="bednar-talk">
+                    <div class="bednar-year">2024 · This Is Now</div>
+                    <h3 class="bednar-title">Things as They Really Are <span class="version">2.0</span></h3>
+                    <p class="bednar-venue">Worldwide Devotional for Young Adults · Nov 3, 2024</p>
+                    <blockquote class="bednar-quote">An AI companion is only a mathematical algorithm. It does not like you. It does not care about you. It does not really know if you exist or not. … It is a set of computer equations that will treat you as an object to be acted upon, if you let it.</blockquote>
+                    <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener">Read the full talk</a>
+                </article>
+            </div>
+
+            <div class="bednar-questions">
+                <div class="bednar-questions-label">The same two questions in both talks</div>
+                <ol>
+                    <li>Does the use of various technologies and media <em>invite or impede</em> the constant companionship of the Holy Ghost in your life?</li>
+                    <li>Does the time you spend using various technologies and media <em>enlarge or restrict</em> your capacity to live, to love, and to serve in meaningful ways?</li>
+                </ol>
             </div>
         </section>
 
