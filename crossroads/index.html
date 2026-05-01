@@ -86,11 +86,11 @@
         .opening-num,
         .bednar-questions li::before,
         .speech-beats li::before {
-            background: radial-gradient(circle at 30% 28%, #c25b53 0%, #8d3530 52%, #5a1f1c 100%) !important;
+            background: radial-gradient(circle at 30% 28%, #c25b53 0%, #8d3530 52%, #5a1f1c 100%);
             box-shadow:
                 inset 0 1px 2px rgba(255, 230, 220, 0.32),
                 inset 0 -2px 3px rgba(0, 0, 0, 0.32),
-                0 2px 4px rgba(31, 26, 22, 0.32) !important;
+                0 2px 4px rgba(31, 26, 22, 0.32);
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.18);
         }
 
@@ -153,11 +153,6 @@
             background-size: contain;
         }
 
-        /* Subtle moss accent: re-tint hover states on chips */
-        .topic-chip:hover {
-            background: #e9efd9 !important;
-            border-color: var(--moss) !important;
-        }
 
         /* Soft seigaiha micro-divider between collapsed sections (decorative) */
         .lesson-section + .lesson-section {
@@ -190,7 +185,7 @@
             overflow-x: hidden;
             line-height: 1.5;
         }
-        body { background: transparent; }
+        body { background-color: transparent; }
 
         /* === Fixed full-page background ==================================== */
         .bg {
@@ -221,7 +216,7 @@
             display: flex;
             gap: 32px;
             align-items: center;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 26px 32px 24px;
             border: 1px solid var(--rule);
             margin-bottom: 28px;
@@ -247,7 +242,7 @@
             margin-bottom: 8px;
         }
         .title-qr .qr-frame {
-            background: #fdfaf0;
+            background-color: #fdfaf0;
             padding: 8px;
             display: inline-block;
             line-height: 0;
@@ -297,10 +292,9 @@
             margin: 0 auto;
             padding: 56px 32px 32px;
         }
-        section { margin-bottom: 56px; }
         .section-head {
             margin-bottom: 22px;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 18px 26px 16px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -347,7 +341,7 @@
             font-size: 0.96rem;
             line-height: 1.65;
             color: #2c2620;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 16px 22px;
             border-left: 3px solid var(--seal);
             margin-top: 18px;
@@ -364,7 +358,7 @@
             margin-top: 18px;
         }
         .scripture {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 26px 20px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -380,17 +374,17 @@
             color: var(--seal);
             margin-bottom: 8px;
         }
-        .scripture .ref a, .composer .ref a {
+        .scripture .ref a {
             color: inherit;
             text-decoration: none;
             border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
             transition: border-color 0.15s, color 0.15s;
         }
-        .scripture .ref a:hover, .composer .ref a:hover {
+        .scripture .ref a:hover {
             border-bottom-color: var(--seal);
             color: var(--ink);
         }
-        .scripture .ref a::after, .composer .ref a::after {
+        .scripture .ref a::after {
             content: '↗';
             display: inline-block;
             margin-left: 4px;
@@ -433,7 +427,7 @@
         /* === "More than phones" callout =================================== */
         .more-than-phones {
             margin-top: 22px;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 26px 20px;
             border-left: 3px solid var(--indigo);
             box-shadow:
@@ -474,7 +468,7 @@
         .truth {
             margin-top: 28px;
             padding: 22px 28px;
-            background: var(--paper-deep);
+            background-color: var(--paper-deep);
             border-top: 1px solid var(--rule);
             border-bottom: 1px solid var(--rule);
             text-align: center;
@@ -504,7 +498,7 @@
             margin-top: 18px;
         }
         .principle {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 22px 20px;
             border-radius: 2px;
             box-shadow:
@@ -515,7 +509,7 @@
             flex-direction: column;
         }
         .principle.focused {
-            background: #fff8e5;
+            background-color: #fff8e5;
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
                 0 10px 22px -10px rgba(141, 53, 48, 0.4),
@@ -584,7 +578,7 @@
 
         /* === Self-quiz (sliders) ========================================== */
         .quiz-intro {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 26px 20px;
             margin-top: 18px;
             border-left: 3px solid var(--seal);
@@ -605,7 +599,7 @@
             flex-wrap: wrap;
             gap: 6px 18px;
             margin: 18px 0;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 12px 22px;
             font-family: 'Inter', sans-serif;
             font-size: 0.78rem;
@@ -620,7 +614,7 @@
             margin-right: 4px;
         }
         .quiz-cat {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 28px 18px;
             margin-top: 16px;
             position: relative;
@@ -699,7 +693,7 @@
         }
         .quiz-summary {
             margin-top: 18px;
-            background: #fff5d4;
+            background-color: #fff5d4;
             padding: 22px 28px 20px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -707,7 +701,7 @@
                 0 8px 18px -10px rgba(31, 26, 22, 0.35);
         }
         .quiz-summary.empty {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             color: var(--muted);
             font-style: italic;
             font-family: 'Cormorant Garamond', serif;
@@ -756,13 +750,13 @@
         }
         .quiz-bar .track {
             height: 8px;
-            background: rgba(120, 102, 80, 0.2);
+            background-color: rgba(120, 102, 80, 0.2);
             border-radius: 4px;
             overflow: hidden;
         }
         .quiz-bar .fill {
             height: 100%;
-            background: var(--seal);
+            background-color: var(--seal);
             transition: width 0.3s ease;
         }
         .quiz-bar .num {
@@ -784,7 +778,7 @@
 
         /* === Destination card (what we'll walk out with) ================== */
         .destination-card {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             background-image: var(--washi);
             background-blend-mode: multiply;
             padding: 22px 28px 20px;
@@ -854,7 +848,7 @@
             align-items: center;
             gap: 6px;
             margin-top: 14px;
-            background: transparent;
+            background-color: transparent;
             color: var(--indigo);
             border: 1px solid rgba(47, 74, 85, 0.4);
             padding: 8px 16px;
@@ -868,7 +862,7 @@
             transition: background 0.15s, border-color 0.15s, color 0.15s;
         }
         .field-guide-btn:hover {
-            background: rgba(47, 74, 85, 0.08);
+            background-color: rgba(47, 74, 85, 0.08);
             border-color: var(--indigo);
             color: var(--indigo);
         }
@@ -888,14 +882,14 @@
         .deep-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(28, 24, 21, 0.86);
+            background-color: rgba(28, 24, 21, 0.86);
             cursor: pointer;
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
         .deep-card {
             position: relative;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             background-image: var(--washi);
             background-blend-mode: multiply;
             width: 100%;
@@ -913,7 +907,7 @@
             right: 14px;
             width: 36px;
             height: 36px;
-            background: var(--ink);
+            background-color: var(--ink);
             color: var(--paper-card);
             border: none;
             border-radius: 50%;
@@ -926,7 +920,7 @@
             justify-content: center;
             padding: 0 0 2px 0;
         }
-        .deep-close:hover { background: var(--seal); }
+        .deep-close:hover { background-color: var(--seal); }
         .deep-content {
             overflow-y: auto;
             padding: 36px 44px 36px;
@@ -1043,7 +1037,7 @@
         .fg-section ul li strong { font-weight: 600; }
         .fg-section ul li em { font-style: italic; color: var(--seal); }
         .fg-pullout {
-            background: #fff5d4;
+            background-color: #fff5d4;
             padding: 16px 22px;
             margin: 14px 0;
             border-left: 3px solid var(--seal);
@@ -1061,7 +1055,7 @@
         /* === Footnote markers + comic modal =============================== */
         .footnote-mark {
             display: inline-block;
-            background: none;
+            background-color: transparent;
             border: none;
             color: var(--seal);
             font-family: 'Inter', sans-serif;
@@ -1069,14 +1063,16 @@
             font-size: 0.7em;
             vertical-align: super;
             line-height: 1;
-            padding: 1px 3px;
-            margin: 0 1px;
+            padding: 6px 8px;
+            margin: -4px 0;
             cursor: pointer;
-            border-radius: 2px;
-            transition: background 0.15s;
+            border-radius: 4px;
+            transition: background-color 0.15s;
+            min-width: 24px;
+            text-align: center;
         }
         .footnote-mark:hover, .footnote-mark:focus-visible {
-            background: rgba(141, 53, 48, 0.15);
+            background-color: rgba(141, 53, 48, 0.15);
             outline: none;
         }
         .comic-modal[hidden] { display: none; }
@@ -1092,14 +1088,14 @@
         .comic-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(28, 24, 21, 0.86);
+            background-color: rgba(28, 24, 21, 0.86);
             cursor: pointer;
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
         .comic-card {
             position: relative;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px;
             max-width: 720px;
             max-height: 90vh;
@@ -1113,7 +1109,7 @@
             right: 10px;
             width: 32px;
             height: 32px;
-            background: var(--ink);
+            background-color: var(--ink);
             color: var(--paper-card);
             border: none;
             border-radius: 50%;
@@ -1127,7 +1123,7 @@
             padding: 0 0 2px 0;
             font-weight: 400;
         }
-        .comic-close:hover { background: var(--seal); }
+        .comic-close:hover { background-color: var(--seal); }
         .comic-img {
             display: block;
             max-width: 100%;
@@ -1147,7 +1143,7 @@
 
         /* === Table of contents ============================================ */
         .toc {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 28px 18px;
             margin-bottom: 28px;
             box-shadow:
@@ -1204,7 +1200,7 @@
             flex-wrap: wrap;
         }
         .toc-actions button {
-            background: transparent;
+            background-color: transparent;
             color: var(--seal);
             border: 1px solid rgba(141, 53, 48, 0.35);
             padding: 6px 14px;
@@ -1218,7 +1214,7 @@
             transition: background 0.15s, border-color 0.15s;
         }
         .toc-actions button:hover {
-            background: rgba(141, 53, 48, 0.08);
+            background-color: rgba(141, 53, 48, 0.08);
             border-color: var(--seal);
             color: var(--seal);
         }
@@ -1252,7 +1248,7 @@
         .lesson-section[open] .section-head .chevron {
             transform: rotate(90deg);
         }
-        .lesson-section > summary:hover .section-head { background: #fff8e5; }
+        .lesson-section > summary:hover .section-head { background-color: #fff8e5; }
         .lesson-section > summary:focus-visible { outline: none; }
         .lesson-section > summary:focus-visible .section-head {
             box-shadow:
@@ -1264,7 +1260,7 @@
 
         /* === "Pick a restriction" intro card ============================== */
         .topic-intro {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 18px 24px 16px;
             margin-top: 24px;
             border-left: 3px solid var(--seal);
@@ -1289,7 +1285,7 @@
 
         /* === Topic cloud (flat, single box, varied colors) =============== */
         .topic-cloud-flat {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 26px;
             margin-top: 16px;
             display: flex;
@@ -1299,14 +1295,14 @@
                 0 1px 0 rgba(255,255,255,0.6) inset,
                 0 6px 14px -8px rgba(31, 26, 22, 0.25);
         }
-        .topic-cloud-flat .topic-chip:nth-child(3n) { background: #fcebd0; }
-        .topic-cloud-flat .topic-chip:nth-child(5n) { background: #e8e3d3; border-color: rgba(31, 58, 94, 0.3); }
-        .topic-cloud-flat .topic-chip:nth-child(7n) { background: #fce5c8; font-style: italic; }
-        .topic-cloud-flat .topic-chip:nth-child(11n) { background: #f4e3c4; }
+        .topic-cloud-flat .topic-chip:nth-child(3n) { background-color: #fcebd0; }
+        .topic-cloud-flat .topic-chip:nth-child(5n) { background-color: #e8e3d3; border-color: rgba(31, 58, 94, 0.3); }
+        .topic-cloud-flat .topic-chip:nth-child(7n) { background-color: #fce5c8; font-style: italic; }
+        .topic-cloud-flat .topic-chip:nth-child(11n) { background-color: #f4e3c4; }
 
         /* === Reflective composer (single, flat library) =================== */
         .reflective-library {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 28px 18px;
             margin-top: 18px;
             box-shadow:
@@ -1360,7 +1356,7 @@
         .reflective-library em { color: var(--seal); font-style: italic; }
 
         .composer-single {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 28px 22px;
             margin-top: 18px;
             box-shadow:
@@ -1371,7 +1367,7 @@
             width: 100%;
             min-height: 80px;
             border: 1px solid var(--rule);
-            background: #fffcf3;
+            background-color: #fffcf3;
             padding: 14px 16px;
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.1rem;
@@ -1433,69 +1429,8 @@
         }
 
         /* === Question composer ============================================ */
-        .composers {
-            display: grid;
-            gap: 20px;
-            margin-top: 18px;
-        }
-        .composer {
-            background: var(--paper-card);
-            padding: 22px 26px 22px;
-            box-shadow:
-                0 1px 0 rgba(255,255,255,0.6) inset,
-                0 6px 14px -8px rgba(31, 26, 22, 0.25);
-        }
-        .composer .ref {
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 0.72rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--seal);
-            margin-bottom: 8px;
-        }
-        .composer .verse {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 400;
-            font-size: 1rem;
-            line-height: 1.5;
-            margin-bottom: 14px;
-            color: var(--ink);
-        }
-        .composer textarea {
-            width: 100%;
-            min-height: 64px;
-            border: 1px solid var(--rule);
-            background: #fffcf3;
-            padding: 12px 14px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.08rem;
-            color: var(--ink);
-            resize: vertical;
-            border-radius: 2px;
-            transition: border-color 0.15s;
-        }
-        .composer textarea:focus {
-            outline: none;
-            border-color: var(--seal);
-            box-shadow: 0 0 0 1px rgba(141, 53, 48, 0.25);
-        }
-        .composer textarea::placeholder { color: rgba(120, 102, 80, 0.7); font-style: italic; }
-        .composer-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            gap: 14px;
-        }
-        .composer-hint {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.78rem;
-            color: var(--muted);
-            font-style: italic;
-        }
         button {
-            background: var(--ink);
+            background-color: var(--ink);
             color: var(--paper-card);
             border: none;
             padding: 9px 18px;
@@ -1508,15 +1443,15 @@
             border-radius: 2px;
             transition: background 0.15s, transform 0.1s;
         }
-        button:hover { background: var(--seal); }
+        button:hover { background-color: var(--seal); }
         button:active { transform: translateY(1px); }
         button.ghost {
-            background: transparent;
+            background-color: transparent;
             color: var(--muted);
             border: 1px solid var(--rule);
         }
         button.ghost:hover {
-            background: transparent;
+            background-color: transparent;
             color: var(--seal);
             border-color: var(--seal);
         }
@@ -1529,7 +1464,7 @@
             margin-bottom: 18px;
             gap: 14px;
             flex-wrap: wrap;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 16px 24px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -1550,7 +1485,7 @@
             min-height: 80px;
         }
         .note {
-            background: #fff5d4;
+            background-color: #fff5d4;
             padding: 18px 20px;
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.7) inset,
@@ -1563,9 +1498,9 @@
             line-height: 1.4;
             color: #2a2218;
         }
-        .note:nth-child(3n+2) { background: #fcebd0; --rot: 0.8deg; }
-        .note:nth-child(5n+3) { background: #fce5c8; --rot: -1deg; }
-        .note:nth-child(7n+4) { background: #fff0d6; --rot: 0.4deg; }
+        .note:nth-child(3n+2) { background-color: #fcebd0; --rot: 0.8deg; }
+        .note:nth-child(5n+3) { background-color: #fce5c8; --rot: -1deg; }
+        .note:nth-child(7n+4) { background-color: #fff0d6; --rot: 0.4deg; }
         .note .source {
             display: block;
             margin-top: 10px;
@@ -1581,7 +1516,7 @@
             left: 50%;
             width: 10px;
             height: 10px;
-            background: var(--seal);
+            background-color: var(--seal);
             border-radius: 50%;
             transform: translateX(-50%);
             box-shadow: 0 1px 3px rgba(31, 26, 22, 0.4);
@@ -1603,7 +1538,7 @@
             margin-top: 18px;
         }
         .audit-col {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 24px;
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
@@ -1626,7 +1561,7 @@
             width: 100%;
             min-height: 200px;
             border: 1px solid var(--rule);
-            background: #fffcf3;
+            background-color: #fffcf3;
             padding: 12px 14px;
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.04rem;
@@ -1657,7 +1592,7 @@
             gap: 16px;
         }
         .opening-card {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 24px 28px 22px 60px;
             position: relative;
             box-shadow:
@@ -1671,7 +1606,6 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: var(--seal);
             color: var(--paper-card);
             display: flex;
             align-items: center;
@@ -1722,7 +1656,7 @@
         .opening-action {
             margin-top: 16px;
             padding: 14px 18px;
-            background: #fff5d4;
+            background-color: #fff5d4;
             border-left: 3px solid var(--seal);
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.1rem;
@@ -1767,7 +1701,7 @@
         .lovingkindness-mantra {
             margin-top: 14px;
             padding: 14px 18px;
-            background: var(--paper-deep);
+            background-color: var(--paper-deep);
             border-left: 3px solid var(--seal);
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
@@ -1835,7 +1769,7 @@
             margin-top: 18px;
         }
         .bednar-talk {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 24px 28px 22px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -1933,7 +1867,7 @@
             color: var(--seal);
             margin-bottom: 10px;
             padding: 8px 14px;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             display: inline-block;
             box-shadow: 0 4px 10px -6px rgba(31, 26, 22, 0.3);
         }
@@ -1943,7 +1877,7 @@
             gap: 14px;
         }
         .lib-scripture {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 18px 22px 16px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -1987,7 +1921,7 @@
             margin-top: 18px;
         }
         .topic-group {
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 18px 22px 16px;
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
@@ -2008,7 +1942,7 @@
             gap: 8px;
         }
         .topic-chip {
-            background: var(--paper-deep);
+            background-color: var(--paper-deep);
             color: var(--ink);
             padding: 7px 14px;
             border-radius: 999px;
@@ -2019,23 +1953,23 @@
             transition: background 0.15s, border-color 0.15s, transform 0.1s;
         }
         .topic-chip:hover {
-            background: #fff5d4;
-            border-color: var(--seal);
+            background-color: #e9efd9;
+            border-color: var(--moss);
             transform: translateY(-1px);
             cursor: default;
         }
         .topic-chip.wacky {
-            background: #fce5c8;
+            background-color: #fce5c8;
             font-style: italic;
         }
         .topic-chip.wise {
-            background: #e8e3d3;
+            background-color: #e8e3d3;
             border-color: rgba(31, 58, 94, 0.3);
         }
 
         .speech-box {
             margin-top: 22px;
-            background: #fff5d4;
+            background-color: #fff5d4;
             padding: 26px 32px 22px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -2069,7 +2003,7 @@
         .speech-beats li {
             counter-increment: beat;
             position: relative;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 16px 16px 14px 44px;
             border-radius: 2px;
             font-family: 'Inter', sans-serif;
@@ -2084,7 +2018,6 @@
             top: 14px;
             width: 22px;
             height: 22px;
-            background: var(--seal);
             color: var(--paper-card);
             border-radius: 50%;
             display: flex;
@@ -2114,7 +2047,7 @@
         .speech-example {
             margin-top: 18px;
             padding: 14px 18px;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             border-left: 3px solid var(--indigo);
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
@@ -2139,7 +2072,7 @@
 
         .bednar-questions {
             margin-top: 22px;
-            background: #fff5d4;
+            background-color: #fff5d4;
             padding: 26px 32px 24px;
             border-left: 3px solid var(--seal);
             box-shadow:
@@ -2148,7 +2081,7 @@
         }
         .bednar-feature {
             margin-top: 22px;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 32px 40px 28px;
             position: relative;
             box-shadow:
@@ -2165,7 +2098,7 @@
             font-size: 5rem;
             line-height: 1;
             color: var(--seal);
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 0 10px;
         }
         .bednar-feature blockquote p {
@@ -2213,7 +2146,7 @@
         /* Bednar's own practice (modeling healthy AI use) */
         .bednar-practice {
             margin-top: 16px;
-            background: var(--paper-deep);
+            background-color: var(--paper-deep);
             padding: 22px 28px 18px;
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
@@ -2255,7 +2188,7 @@
         /* === Where the Church stands on AI (links) ======================== */
         .church-ai-links {
             margin-top: 16px;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             padding: 22px 28px 18px;
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
@@ -2337,7 +2270,6 @@
             top: 0;
             width: 26px;
             height: 26px;
-            background: var(--seal);
             color: var(--paper-card);
             border-radius: 50%;
             display: flex;
@@ -2362,7 +2294,7 @@
         .closing {
             margin-top: 32px;
             padding: 36px 40px;
-            background: var(--paper-deep);
+            background-color: var(--paper-deep);
             border-left: 3px solid var(--seal);
             position: relative;
         }
@@ -2392,7 +2324,7 @@
             font-size: 0.78rem;
             color: var(--muted);
             font-weight: 500;
-            background: var(--paper-card);
+            background-color: var(--paper-card);
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
                 0 6px 14px -8px rgba(31, 26, 22, 0.25);
@@ -2400,7 +2332,47 @@
         footer a { color: var(--seal); text-decoration: none; }
         footer a:hover { text-decoration: underline; }
 
+        @media (max-width: 540px) {
+            .quiz-bar {
+                grid-template-columns: 1fr auto;
+                row-gap: 4px;
+            }
+            .quiz-bar .label { grid-column: 1; }
+            .quiz-bar .num   { grid-column: 2; }
+            .quiz-bar .track { grid-column: 1 / -1; }
+            .deep-content { padding: 22px 16px 22px; }
+            .fg-section > summary h2 { font-size: 1.15rem; }
+            .bednar-feature { padding: 24px 22px 20px; }
+            .closing { padding: 26px 24px; }
+        }
+        @media print {
+            .bg, .toc-actions, .field-guide-btn, .deep-modal, .comic-modal,
+            .chevron, .footnote-mark, button, .opening-action, #qrcode { display: none !important; }
+            details, .lesson-section { display: block !important; }
+            details:not([open]) > *, .lesson-section:not([open]) > * { display: revert !important; }
+            .lesson-section[open], .lesson-section { open: ''; }
+            details[open] > summary, details > summary { pointer-events: none; }
+            html, body { background: white !important; color: #000; }
+            .bg.has-image { display: none; }
+            .section-head, .card, .opening-card, .principle, .scripture, .lib-scripture,
+            .composer-single, .reflective-library, .truth, .more-than-phones, .destination-card,
+            .quiz-cat, .quiz-key, .quiz-intro, .quiz-summary, .topic-intro, .topic-cloud-flat,
+            .speech-box, .bednar-talk, .bednar-feature, .bednar-practice, .bednar-questions,
+            .church-ai-links, .closing, footer, .title-card {
+                box-shadow: none !important;
+                background-image: none !important;
+                page-break-inside: avoid;
+            }
+            a::after { content: " (" attr(href) ")"; font-size: 0.78em; color: #666; word-break: break-all; }
+            a[href^="#"]::after { content: ""; }
+            .lesson-section > summary > .section-head .chevron { display: none; }
+        }
+
         @media (max-width: 720px) {
+            /* Hide maple-leaf accent on stacked title-card (it lands over the QR url) */
+            .title-card::after { display: none; }
+            /* Quiz score bars compress to label+number on narrow screens */
+            .quiz-bar { grid-template-columns: 70px 1fr 50px; gap: 8px; }
             .title-card {
                 flex-direction: column;
                 gap: 18px;
@@ -2926,13 +2898,12 @@
             </div>
         </details>
 
-        <!-- Section 5 -->
-        
+        <!-- Section 6: Question Wall -->
         <details class="lesson-section" id="sec-6">
             <summary>
                 <div class="section-head">
                     <div class="section-num">VI · The Question Wall</div>
-                    <h2>Our class's reflective questions</h2>
+                    <h2>Our class's reflective questions.</h2>
                     <span class="chevron" aria-hidden="true">▸</span>
                 </div>
             </summary>
@@ -2945,8 +2916,7 @@
             </div>
         </details>
 
-        <!-- Section 6 -->
-        
+        <!-- Section 7: My Tech Audit -->
         <details class="lesson-section" id="sec-7">
             <summary>
                 <div class="section-head">
@@ -2976,8 +2946,7 @@
             </div>
         </details>
 
-        <!-- Section 7: Going Deeper - Bednar -->
-        
+        <!-- Section 8: Going Deeper -->
         <details class="lesson-section" id="sec-8">
             <summary>
                 <div class="section-head">
@@ -2993,7 +2962,7 @@
                 <article class="bednar-talk">
                     <div class="bednar-year">2009 · That Was Then</div>
                     <h3 class="bednar-title">Things as They Really Are</h3>
-                    <p class="bednar-venue">CES Fireside · BYU-Idaho · May 3, 2009</p>
+                    <p class="bednar-venue">CES Fireside · BYU-Idaho · May 3, 2009 <span style="opacity:0.7;">(reprinted Ensign · June 2010)</span></p>
                     <blockquote class="bednar-quote">I raise an apostolic voice of warning about the potentially stifling, suffocating, suppressing, and constraining impact of some kinds of cyberspace interactions and experiences upon our souls.</blockquote>
                     <div class="bednar-actions">
                         <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/ensign/2010/06/things-as-they-really-are?lang=eng" target="_blank" rel="noopener">Read</a>
@@ -3082,7 +3051,7 @@
         </footer>
     </main>
 
-    <div class="comic-modal" id="comic-modal" role="dialog" aria-modal="true" aria-labelledby="comic-credit" hidden>
+    <div class="comic-modal" id="comic-modal" role="dialog" aria-modal="true" aria-label="Related comic" hidden>
         <div class="comic-backdrop" data-close></div>
         <div class="comic-card">
             <button class="comic-close" data-close aria-label="Close">×</button>
@@ -3134,7 +3103,7 @@
                     <h3>The hinge years (2009–2013)</h3>
                     <p>This is the period the rest of the debate is about.</p>
                     <ul>
-                        <li><strong>2009 (May 3):</strong> Elder David A. Bednar gives <em>"Things as They Really Are"</em> at BYU-Idaho. He warns that virtual experience can disconnect people from their bodies and from real relationships. <em>Six months before Instagram exists.</em></li>
+                        <li><strong>2009 (May 3):</strong> Elder David A. Bednar gives <em>"Things as They Really Are"</em> at BYU-Idaho. He warns that virtual experience can disconnect people from their bodies and from real relationships. <em>A year and a half before Instagram exists.</em></li>
                         <li><strong>2010 (June):</strong> iPhone 4 launches with a front-facing camera. Selfies become possible. Social comparison becomes visual and constant.</li>
                         <li><strong>2010:</strong> Nicholas Carr publishes <em>The Shallows.</em> The internet is rewiring cognition for shallowness. Pulitzer finalist.</li>
                         <li><strong>2010:</strong> Jaron Lanier publishes <em>You Are Not a Gadget.</em></li>
@@ -3271,8 +3240,8 @@
                     <p><strong>You have access to something useful that the researchers don't have:</strong> your own actual experience. You know whether scrolling makes you feel better or worse. You know whether you're more or less of a person after an hour in the feed. That's not anecdote — that's data the studies can't measure.</p>
                     <div class="fg-pullout">
                         Two diagnostic questions, courtesy of Elder Bednar:<br>
-                        1. Does this technology <em>invite</em> or <em>impede</em> the influence of the Holy Ghost in my life?<br>
-                        2. Does the time I spend on it <em>enlarge</em> or <em>restrict</em> my capacity to live, to love, and to serve?
+                        1. Does this technology <em>invite</em> or <em>impede</em> the constant companionship of the Holy Ghost in my life?<br>
+                        2. Does the time I spend on it <em>enlarge</em> or <em>restrict</em> my capacity to live, to love, and to serve in meaningful ways?
                     </div>
                     <p>You can ask these about a specific app, a specific platform, a specific evening. The answers won't always be the same. <em>Minecraft</em> with friends might enlarge; an hour of doomscrolling might restrict. The questions are tools for you, not rules for you.</p>
                     <p><strong>The deepest thing in this whole debate:</strong> the argument isn't really about screens. It's about what humans are <em>for.</em> Are we creatures whose purpose is to be entertained, optimized for, and acted upon? Or are we creatures whose purpose is to act, choose, create, love, suffer, grow, and become? The technology industry, mostly without meaning to, has built a default answer to that question. You don't have to accept it.</p>
@@ -3307,14 +3276,20 @@
         // ============ Self-referencing QR ============
         var qrUrl = window.location.origin + window.location.pathname;
         document.getElementById('qr-url').textContent = qrUrl;
-        new QRCode(document.getElementById('qrcode'), {
-            text: qrUrl,
-            width: 130,
-            height: 130,
-            colorDark: '#1f1a16',
-            colorLight: '#fdfaf0',
-            correctLevel: QRCode.CorrectLevel.M
-        });
+        try {
+            if (typeof QRCode !== 'undefined') {
+                new QRCode(document.getElementById('qrcode'), {
+                    text: qrUrl,
+                    width: 130,
+                    height: 130,
+                    colorDark: '#1f1a16',
+                    colorLight: '#fdfaf0',
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            }
+        } catch (err) {
+            console.warn('QR code failed to render:', err);
+        }
 
         // ============ The five reflective passages ============
         const passages = [
@@ -3700,7 +3675,7 @@
         function closeComic() {
             comicModal.hidden = true;
             document.body.style.overflow = '';
-            comicImg.src = '';
+            comicImg.removeAttribute('src');
             if (lastFocused) lastFocused.focus();
         }
 
