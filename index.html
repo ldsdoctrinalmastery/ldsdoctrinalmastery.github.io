@@ -28,76 +28,56 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
-            background: var(--paper);
             color: var(--ink);
             font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
             overflow-x: hidden;
         }
+        body { background: transparent; }
         a { color: inherit; }
 
-        /* === Hero: dawn sky (drop a Hasui print into /assets/ to override) === */
-        .hero {
-            position: relative;
-            height: 360px;
-            background-color: var(--sky-low);
+        /* === Fixed full-page background ==================================== */
+        /* Drop /assets/hero-landing.jpg in to override the gradient. */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-color: var(--paper);
             background-image: linear-gradient(
                 180deg,
                 var(--sky-top) 0%,
-                #e1b39e 22%,
                 var(--sky-mid) 45%,
-                #d6c2b0 65%,
                 var(--sky-low) 100%
             );
-            overflow: hidden;
         }
-        /* If /assets/hero-landing.jpg exists, layer it on top of the gradient.
-           If it doesn't (404), the gradient stays visible underneath. */
-        .hero.has-image {
+        .bg.has-image {
             background-image:
-                linear-gradient(180deg, rgba(243, 234, 212, 0) 60%, rgba(243, 234, 212, 0.45) 100%),
+                linear-gradient(180deg, rgba(243, 234, 212, 0.05) 0%, rgba(243, 234, 212, 0.18) 100%),
                 url('/assets/hero-landing.jpg'),
                 linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-low) 100%);
             background-size: cover, cover, auto;
-            background-position: center, center 35%, center;
+            background-position: center, center, center;
             background-repeat: no-repeat;
         }
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse at 65% 30%, rgba(255, 230, 210, 0.22) 0%, transparent 55%),
-                radial-gradient(ellipse at 20% 80%, rgba(143, 165, 180, 0.16) 0%, transparent 60%);
-            pointer-events: none;
-        }
 
-        /* === Title block over hero =========================================== */
-        .title-band {
-            position: relative;
-            margin-top: -88px;
-            padding: 0 32px;
-            z-index: 10;
-        }
-        .title-inner {
-            max-width: 980px;
-            margin: 0 auto;
+        /* === Title card (now in normal flow) =============================== */
+        .title-card {
             background: var(--paper-card);
             padding: 32px 40px 28px;
             border: 1px solid var(--rule);
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.6) inset,
-                0 18px 36px -22px rgba(31, 26, 22, 0.35),
-                0 4px 8px -4px rgba(31, 26, 22, 0.15);
+                0 18px 36px -22px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.18);
             position: relative;
         }
-        .title-inner::before {
+        .title-card::before {
             content: '';
             position: absolute;
             top: 14px; right: 14px;
             width: 36px; height: 42px;
             background: var(--seal-soft);
-            color: var(--paper-card);
             border-radius: 2px;
             box-shadow: inset 0 0 0 1.5px rgba(255,235,220,0.4);
         }
@@ -119,18 +99,25 @@
             max-width: 50ch;
         }
 
-        /* === Body container ================================================ */
-        .container {
+        /* === Page (vertical stack of paper cards over the bg) ============== */
+        .page {
             max-width: 980px;
             margin: 0 auto;
             padding: 56px 32px 24px;
         }
 
-        /* === QR ============================================================ */
+        /* === QR (paper card wrapping label, frame, url) =================== */
         .qr-block {
-            margin: 0 auto 24px;
-            max-width: 440px;
+            margin: 36px auto 0;
+            max-width: 460px;
+            background: var(--paper-card);
+            padding: 28px 28px 26px;
             text-align: center;
+            border: 1px solid var(--rule);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 14px 28px -14px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.15);
         }
         .qr-label {
             font-family: 'Inter', sans-serif;
@@ -143,31 +130,28 @@
         }
         .qr-frame {
             background: #fdfaf0;
-            padding: 22px;
+            padding: 16px;
             display: inline-block;
             line-height: 0;
             border-radius: 2px;
-            box-shadow:
-                0 1px 0 rgba(255,255,255,0.7) inset,
-                0 14px 28px -14px rgba(31, 26, 22, 0.4),
-                0 4px 8px -4px rgba(31, 26, 22, 0.15);
+            box-shadow: 0 4px 10px -4px rgba(31, 26, 22, 0.25);
         }
         #qrcode { width: 260px; height: 260px; }
         #qrcode canvas, #qrcode img { display: block; width: 260px; height: 260px; }
         .qr-url {
-            margin-top: 18px;
+            margin-top: 16px;
             font-family: 'Inter', ui-monospace, monospace;
-            font-weight: 300;
+            font-weight: 400;
             font-size: 0.8rem;
             color: var(--muted);
             word-break: break-all;
         }
 
-        /* === Sections ====================================================== */
-        .section { margin-top: 64px; }
+        /* === Sections (heading floats over bg, cards are paper) =========== */
+        .section { margin-top: 56px; }
         .section-title {
             font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.7rem;
             letter-spacing: 0.005em;
             margin-bottom: 22px;
@@ -175,23 +159,32 @@
             align-items: baseline;
             gap: 16px;
             color: var(--ink);
+            /* Halo so the heading reads cleanly against any photo */
+            text-shadow:
+                0 0 14px rgba(251, 245, 230, 0.95),
+                0 0 8px rgba(251, 245, 230, 0.85),
+                0 1px 0 rgba(255, 255, 255, 0.6);
         }
         .section-title::before {
             content: '';
             width: 28px;
-            height: 1px;
+            height: 2px;
             background: var(--seal);
-            transform: translateY(-6px);
+            transform: translateY(-7px);
             flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(251, 245, 230, 0.9);
         }
         .section-meta {
             font-family: 'Inter', sans-serif;
-            font-weight: 400;
+            font-weight: 500;
             font-size: 0.7rem;
             letter-spacing: 0.25em;
             text-transform: uppercase;
             color: var(--muted);
             margin-left: auto;
+            text-shadow:
+                0 0 10px rgba(251, 245, 230, 0.95),
+                0 0 6px rgba(251, 245, 230, 0.85);
         }
 
         /* === Cards ========================================================= */
@@ -249,18 +242,18 @@
 
         /* === Footer ======================================================== */
         footer {
-            margin-top: 80px;
-            padding: 28px 32px 36px;
+            margin: 64px auto 30px;
+            padding: 18px 24px;
             text-align: center;
             color: var(--muted);
             font-family: 'Inter', sans-serif;
-            font-weight: 300;
+            font-weight: 400;
             font-size: 0.78rem;
             letter-spacing: 0.04em;
-            border-top: 1px solid var(--rule);
             max-width: 980px;
-            margin-left: auto;
-            margin-right: auto;
+            text-shadow:
+                0 0 10px rgba(251, 245, 230, 0.9),
+                0 0 6px rgba(251, 245, 230, 0.8);
         }
         footer .dot {
             color: var(--seal);
@@ -268,10 +261,9 @@
         }
 
         @media (max-width: 600px) {
-            .hero { height: 280px; }
-            .title-band { margin-top: -64px; padding: 0 18px; }
-            .title-inner { padding: 24px 24px 20px; }
-            .container { padding: 36px 18px 20px; }
+            .title-card { padding: 24px 24px 20px; }
+            .page { padding: 36px 18px 20px; }
+            .qr-block { padding: 22px 22px 20px; }
             #qrcode { width: 220px; height: 220px; }
             #qrcode canvas, #qrcode img { width: 220px; height: 220px; }
             .section-meta { display: none; }
@@ -279,18 +271,14 @@
     </style>
 </head>
 <body>
-    <div class="hero has-image" aria-hidden="true">
-        <div class="hero-overlay"></div>
-    </div>
+    <div class="bg has-image" aria-hidden="true"></div>
 
-    <div class="title-band">
-        <div class="title-inner">
+    <main class="page">
+        <header class="title-card">
             <h1>Seminary Resources</h1>
             <p class="tagline">Lessons, presentations, and games for Doctrinal Mastery — Forrest Walker's classroom.</p>
-        </div>
-    </div>
+        </header>
 
-    <div class="container">
         <div class="qr-block">
             <div class="qr-label">Scan to open</div>
             <div class="qr-frame">
@@ -331,11 +319,11 @@
                 </a>
             </div>
         </section>
-    </div>
 
-    <footer>
-        <p>ldsdoctrinalmastery.github.io <span class="dot">·</span> made for the classroom</p>
-    </footer>
+        <footer>
+            <p>ldsdoctrinalmastery.github.io <span class="dot">·</span> made for the classroom</p>
+        </footer>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script>
