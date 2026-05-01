@@ -1218,6 +1218,231 @@
         }
         .bednar-link:hover { border-bottom-color: var(--seal); color: var(--ink); }
         .bednar-link::after { content: '↗'; font-size: 0.95em; opacity: 0.75; }
+        .bednar-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* === Discussion section: scripture library + topics + speech ====== */
+        .scripture-library {
+            margin-top: 18px;
+        }
+        .scripture-library .group {
+            margin-bottom: 24px;
+        }
+        .scripture-library .group-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 10px;
+            padding: 8px 14px;
+            background: var(--paper-card);
+            display: inline-block;
+            box-shadow: 0 4px 10px -6px rgba(31, 26, 22, 0.3);
+        }
+        .scripture-library .group-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+        }
+        .lib-scripture {
+            background: var(--paper-card);
+            padding: 18px 22px 16px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 4px 10px -6px rgba(31, 26, 22, 0.25);
+        }
+        .lib-scripture .ref {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .lib-scripture .ref a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        .lib-scripture .ref a::after {
+            content: '↗';
+            font-size: 0.8em;
+            opacity: 0.6;
+            margin-left: 3px;
+        }
+        .lib-scripture .verse {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .lib-scripture .verse em {
+            color: var(--seal);
+            font-style: italic;
+        }
+
+        .topic-cloud {
+            display: grid;
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .topic-group {
+            background: var(--paper-card);
+            padding: 18px 22px 16px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .topic-group h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 12px;
+        }
+        .topic-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .topic-chip {
+            background: var(--paper-deep);
+            color: var(--ink);
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            line-height: 1.3;
+            border: 1px solid rgba(120, 102, 80, 0.25);
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+        }
+        .topic-chip:hover {
+            background: #fff5d4;
+            border-color: var(--seal);
+            transform: translateY(-1px);
+            cursor: default;
+        }
+        .topic-chip.wacky {
+            background: #fce5c8;
+            font-style: italic;
+        }
+        .topic-chip.wise {
+            background: #e8e3d3;
+            border-color: rgba(31, 58, 94, 0.3);
+        }
+
+        .speech-box {
+            margin-top: 22px;
+            background: #fff5d4;
+            padding: 26px 32px 22px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 18px -10px rgba(31, 26, 22, 0.35);
+        }
+        .speech-box h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        .speech-box .timing {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--seal);
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .speech-beats {
+            list-style: none;
+            counter-reset: beat;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        .speech-beats li {
+            counter-increment: beat;
+            position: relative;
+            background: var(--paper-card);
+            padding: 16px 16px 14px 44px;
+            border-radius: 2px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 10px -6px rgba(31, 26, 22, 0.2);
+        }
+        .speech-beats li::before {
+            content: counter(beat);
+            position: absolute;
+            left: 12px;
+            top: 14px;
+            width: 22px;
+            height: 22px;
+            background: var(--seal);
+            color: var(--paper-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .speech-beats strong {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+        .speech-beats .secs {
+            display: block;
+            margin-top: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            color: var(--seal);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+        .speech-example {
+            margin-top: 18px;
+            padding: 14px 18px;
+            background: var(--paper-card);
+            border-left: 3px solid var(--indigo);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.96rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+        .speech-example .lab {
+            display: block;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.66rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--indigo);
+            margin-bottom: 6px;
+        }
+        @media (max-width: 720px) {
+            .speech-beats { grid-template-columns: 1fr; }
+        }
 
         .bednar-questions {
             margin-top: 22px;
@@ -1729,10 +1954,210 @@
             </div>
         </section>
 
-        <!-- Section 4 -->
+        <!-- Section 4: Discussion / Debate -->
         <section>
             <div class="section-head">
-                <div class="section-num">IV · Make Your Reflective Question</div>
+                <div class="section-num">IV · Discussion</div>
+                <h2>Where should the lines be?</h2>
+                <p class="lead">Pair up. One person speaks <em>for</em> a restriction, one <em>against</em>. Each person picks a verse from the library below, structures a 30-second take, and goes. No prep — just go.</p>
+            </div>
+
+            <div class="scripture-library">
+                <div class="group">
+                    <div class="group-label">Guidance · The Lord shows the way</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ex/13?lang=eng&id=p21-p22#p21" target="_blank" rel="noopener">Exodus 13:21–22</a></div>
+                            <p class="verse">"And the Lord went before them by day in a <em>pillar of a cloud,</em> to lead them the way; and by night in a <em>pillar of fire,</em> to give them light; to go by day and night."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ps/119?lang=eng&id=p105#p105" target="_blank" rel="noopener">Psalm 119:105</a></div>
+                            <p class="verse">"Thy word is a <em>lamp unto my feet,</em> and a light unto my path."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/isa/2?lang=eng&id=p3,p5#p3" target="_blank" rel="noopener">Isaiah 2:3, 5</a></div>
+                            <p class="verse">"…he will teach us of his ways, and we will <em>walk in his paths</em>… O house of Jacob, come ye, and let us walk in the light of the Lord."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Intent · Watch your mind</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/philip/4?lang=eng&id=p8#p8" target="_blank" rel="noopener">Philippians 4:8</a></div>
+                            <p class="verse">"Whatsoever things are <em>true</em>, whatsoever things are <em>honest</em>, whatsoever things are <em>just</em>, whatsoever things are <em>pure</em>, whatsoever things are <em>lovely</em>, whatsoever things are of <em>good report</em>… <em>think on these things</em>."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/col/3?lang=eng&id=p23#p23" target="_blank" rel="noopener">Colossians 3:23</a></div>
+                            <p class="verse">"And whatsoever ye do, do it <em>heartily, as to the Lord</em>, and not unto men."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/prov/16?lang=eng&id=p3#p3" target="_blank" rel="noopener">Proverbs 16:3</a></div>
+                            <p class="verse">"<em>Commit thy works unto the Lord</em>, and thy thoughts shall be established."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Pause · Be still</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ps/46?lang=eng&id=p10#p10" target="_blank" rel="noopener">Psalm 46:10</a></div>
+                            <p class="verse">"<em>Be still</em>, and know that I am God."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/matt/26?lang=eng&id=p41#p41" target="_blank" rel="noopener">Matthew 26:41</a></div>
+                            <p class="verse">"<em>Watch and pray</em>, that ye enter not into temptation: the spirit indeed is willing, but the flesh is weak."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Weakness · Grace is enough</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/2-cor/12?lang=eng&id=p9#p9" target="_blank" rel="noopener">2 Corinthians 12:9</a></div>
+                            <p class="verse">"My <em>grace is sufficient for thee</em>: for my strength is made perfect in weakness."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Appetite · Don't pay for what doesn't satisfy</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/isa/55?lang=eng&id=p2#p2" target="_blank" rel="noopener">Isaiah 55:2</a></div>
+                            <p class="verse">"Wherefore do ye <em>spend money for that which is not bread</em>? and your labour for that which <em>satisfieth not</em>?"</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/9?lang=eng&id=p51#p51" target="_blank" rel="noopener">2 Nephi 9:51</a></div>
+                            <p class="verse">"Do not spend money for that which is of <em>no worth</em>, nor your labor for that which <em>cannot satisfy</em>."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Love · Over distraction</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/matt/22?lang=eng&id=p36-p39#p36" target="_blank" rel="noopener">Matthew 22:36–39</a></div>
+                            <p class="verse">"Thou shalt <em>love the Lord thy God</em> with all thy heart… and thy <em>neighbour as thyself</em>."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/moro/7?lang=eng&id=p45#p45" target="_blank" rel="noopener">Moroni 7:45</a></div>
+                            <p class="verse">"And charity… <em>envieth not</em>, is not <em>puffed up</em>, seeketh not her own, is not easily provoked, thinketh no evil."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Light · And what darkens</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/50?lang=eng&id=p23-p25#p23" target="_blank" rel="noopener">D&amp;C 50:23–25</a></div>
+                            <p class="verse">"That which doth <em>not edify</em> is <em>not of God</em>, and is darkness. That which is of God is light; and he that receiveth light… <em>that light groweth brighter and brighter</em> until the perfect day."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/63?lang=eng&id=p16#p16" target="_blank" rel="noopener">D&amp;C 63:16</a></div>
+                            <p class="verse">"He that <em>looketh on a woman to lust</em> after her… shall not have the Spirit, but shall deny the faith."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.4rem;margin-top:24px;margin-bottom:6px;color:var(--ink);">Pick a restriction. Pick a side. Go.</h3>
+            <p class="lead" style="margin-bottom:14px;">Mix common, less common, wise, and wacky. Some are real proposals (Haidt's <em>Anxious Generation</em>); some are just to argue.</p>
+
+            <div class="topic-cloud">
+                <div class="topic-group">
+                    <h4>School &amp; Seminary</h4>
+                    <div class="topic-chips">
+                        <span class="topic-chip">No phones during class</span>
+                        <span class="topic-chip">Phones locked in pouches all day</span>
+                        <span class="topic-chip">No phones during seminary</span>
+                        <span class="topic-chip">Phone-free lunch period</span>
+                        <span class="topic-chip">No AI for homework, ever</span>
+                        <span class="topic-chip">AI required for homework</span>
+                        <span class="topic-chip">No social media on schooldays</span>
+                        <span class="topic-chip">Notes by hand, no laptops</span>
+                    </div>
+                </div>
+
+                <div class="topic-group">
+                    <h4>At Home</h4>
+                    <div class="topic-chips">
+                        <span class="topic-chip">Phone curfew at 9pm</span>
+                        <span class="topic-chip">Charger out of bedrooms</span>
+                        <span class="topic-chip">No phones at the table</span>
+                        <span class="topic-chip">Phone-free Sundays</span>
+                        <span class="topic-chip">Family "tech treaty" everyone signs</span>
+                        <span class="topic-chip">No headphones during family time</span>
+                        <span class="topic-chip">One hour outside before any screen</span>
+                    </div>
+                </div>
+
+                <div class="topic-group">
+                    <h4>Devices &amp; Apps</h4>
+                    <div class="topic-chips">
+                        <span class="topic-chip wise">No smartphone before high school (Haidt)</span>
+                        <span class="topic-chip wise">No social media before 16 (Haidt)</span>
+                        <span class="topic-chip">Mandatory parental controls until 18</span>
+                        <span class="topic-chip">Hard 2-hour daily screen-time cap</span>
+                        <span class="topic-chip">App allowlist only</span>
+                        <span class="topic-chip">No video games on weekdays</span>
+                        <span class="topic-chip">Required content filter</span>
+                        <span class="topic-chip">No AI companions, period</span>
+                        <span class="topic-chip">Only "create" apps, no "consume" apps</span>
+                    </div>
+                </div>
+
+                <div class="topic-group">
+                    <h4>Wacky &amp; Wise</h4>
+                    <div class="topic-chips">
+                        <span class="topic-chip wacky">Flip phones until age 21</span>
+                        <span class="topic-chip wacky">Faraday cage for charging at night</span>
+                        <span class="topic-chip wacky">Photos delayed 1 week before posting</span>
+                        <span class="topic-chip wacky">No memes during seminary</span>
+                        <span class="topic-chip wise">Read scripture before opening any app each morning</span>
+                        <span class="topic-chip wise">24-hour social media fast every Sunday</span>
+                        <span class="topic-chip wise">Replace one app a month with something offline</span>
+                        <span class="topic-chip wise">A "phone hour" log reviewed at family council</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="speech-box">
+                <h3>Your 30 seconds</h3>
+                <div class="timing">3 beats · 10 seconds each · ≈ 75 words</div>
+                <ol class="speech-beats">
+                    <li>
+                        <strong>Hook</strong>
+                        State your position in one sentence. Be bold.
+                        <span class="secs">≈ 10 sec</span>
+                    </li>
+                    <li>
+                        <strong>Scripture</strong>
+                        Quote (or paraphrase) one verse from the library and explain why it backs you up.
+                        <span class="secs">≈ 10 sec</span>
+                    </li>
+                    <li>
+                        <strong>Specific</strong>
+                        One concrete example or call to action. Land the plane.
+                        <span class="secs">≈ 10 sec</span>
+                    </li>
+                </ol>
+                <div class="speech-example">
+                    <span class="lab">Example · "for" no phones at seminary</span>
+                    "Phones don't belong in seminary. <em>Be still, and know that I am God</em> — Psalm 46:10. You can't be still with a buzzing pocket. Try one week with your phone in your bag, screen-down. See if anything you'd actually want to feel shows up."
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5 -->
+        <section>
+            <div class="section-head">
+                <div class="section-num">V · Make Your Reflective Question</div>
                 <h2>Turn a verse into a question.</h2>
                 <p class="lead">Read a passage, then write a single question we could ask ourselves to be more intentional with technology. When you submit, it joins the wall.</p>
             </div>
@@ -1746,7 +2171,7 @@
         <section>
             <div class="wall-head">
                 <div>
-                    <div class="section-num">V · The Question Wall</div>
+                    <div class="section-num">VI · The Question Wall</div>
                     <h2>Our class's reflective questions</h2>
                 </div>
                 <div>
@@ -1760,7 +2185,7 @@
         <!-- Section 6 -->
         <section>
             <div class="section-head">
-                <div class="section-num">VI · My Tech Audit</div>
+                <div class="section-num">VII · My Tech Audit</div>
                 <h2>Evaluate honestly.</h2>
                 <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.</p>
             </div>
@@ -1784,7 +2209,7 @@
         <!-- Section 7: Going Deeper - Bednar -->
         <section>
             <div class="section-head">
-                <div class="section-num">VII · Going Deeper</div>
+                <div class="section-num">VIII · Going Deeper</div>
                 <h2><em>Things as They Really Are.</em></h2>
                 <p class="lead">Elder David A. Bednar gave two warnings about technology — fifteen years apart. <em>That was then. This is now.</em></p>
             </div>
@@ -1795,14 +2220,19 @@
                     <h3 class="bednar-title">Things as They Really Are</h3>
                     <p class="bednar-venue">CES Fireside · BYU-Idaho · May 3, 2009</p>
                     <blockquote class="bednar-quote">I raise an apostolic voice of warning about the potentially stifling, suffocating, suppressing, and constraining impact of some kinds of cyberspace interactions and experiences upon our souls.</blockquote>
-                    <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/ensign/2010/06/things-as-they-really-are?lang=eng" target="_blank" rel="noopener">Read the full talk</a>
+                    <div class="bednar-actions">
+                        <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/ensign/2010/06/things-as-they-really-are?lang=eng" target="_blank" rel="noopener">Read</a>
+                        <a class="bednar-link" href="https://www.youtube.com/watch?v=CstRqAlAZf0" target="_blank" rel="noopener">Watch</a>
+                    </div>
                 </article>
                 <article class="bednar-talk">
                     <div class="bednar-year">2024 · This Is Now</div>
                     <h3 class="bednar-title">Things as They Really Are <span class="version">2.0</span></h3>
                     <p class="bednar-venue">Worldwide Devotional for Young Adults · Nov 3, 2024</p>
                     <blockquote class="bednar-quote">An AI companion is only a mathematical algorithm. It does not like you. It does not care about you. It does not really know if you exist or not. … It is a set of computer equations that will treat you as an object to be acted upon, if you let it.</blockquote>
-                    <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener">Read the full talk</a>
+                    <div class="bednar-actions">
+                        <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener">Read</a>
+                    </div>
                 </article>
             </div>
 
@@ -1832,6 +2262,12 @@
             <div class="church-ai-links">
                 <h4>Where the Church stands on AI</h4>
                 <ul>
+                    <li>
+                        <a href="https://www.churchofjesuschrist.org/learn/artificial-intelligence?lang=eng" target="_blank" rel="noopener">
+                            <strong>Church · Learn — Artificial Intelligence</strong>
+                            <span>The Church's official guidance and principles for AI use.</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="https://newsroom.churchofjesuschrist.org/article/church-jesus-christ-artificial-intelligence" target="_blank" rel="noopener">
                             <strong>Newsroom · The Church and Artificial Intelligence</strong>
