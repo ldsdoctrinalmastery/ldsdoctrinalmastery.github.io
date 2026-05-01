@@ -57,7 +57,7 @@
                 url('/assets/hero-landing.webp'),
                 linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-low) 100%);
             background-size: cover, cover, auto;
-            background-position: center, center, center;
+            background-position: center, 25% center, center;
             background-repeat: no-repeat;
         }
 
@@ -147,32 +147,24 @@
             word-break: break-all;
         }
 
-        /* === Sections (heading floats over bg, cards are paper) =========== */
+        /* === Sections (heading is its own paper tab over the bg) ========== */
         .section { margin-top: 56px; }
         .section-title {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 700;
-            font-size: 1.7rem;
+            font-size: 1.55rem;
             letter-spacing: 0.005em;
             margin-bottom: 22px;
             display: flex;
             align-items: baseline;
             gap: 16px;
             color: var(--ink);
-            /* Halo so the heading reads cleanly against any photo */
-            text-shadow:
-                0 0 14px rgba(251, 245, 230, 0.95),
-                0 0 8px rgba(251, 245, 230, 0.85),
-                0 1px 0 rgba(255, 255, 255, 0.6);
-        }
-        .section-title::before {
-            content: '';
-            width: 28px;
-            height: 2px;
-            background: var(--seal);
-            transform: translateY(-7px);
-            flex-shrink: 0;
-            box-shadow: 0 0 8px rgba(251, 245, 230, 0.9);
+            background: var(--paper-card);
+            padding: 14px 22px 12px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
         }
         .section-meta {
             font-family: 'Inter', sans-serif;
@@ -182,9 +174,6 @@
             text-transform: uppercase;
             color: var(--muted);
             margin-left: auto;
-            text-shadow:
-                0 0 10px rgba(251, 245, 230, 0.95),
-                0 0 6px rgba(251, 245, 230, 0.85);
         }
 
         /* === Cards ========================================================= */
@@ -243,17 +232,18 @@
         /* === Footer ======================================================== */
         footer {
             margin: 64px auto 30px;
-            padding: 18px 24px;
+            padding: 14px 24px;
             text-align: center;
             color: var(--muted);
             font-family: 'Inter', sans-serif;
             font-weight: 400;
             font-size: 0.78rem;
             letter-spacing: 0.04em;
-            max-width: 980px;
-            text-shadow:
-                0 0 10px rgba(251, 245, 230, 0.9),
-                0 0 6px rgba(251, 245, 230, 0.8);
+            max-width: 480px;
+            background: var(--paper-card);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
         }
         footer .dot {
             color: var(--seal);

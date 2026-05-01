@@ -108,15 +108,14 @@
             padding: 56px 32px 32px;
         }
         section { margin-bottom: 56px; }
-        /* Floating-text helper: halo so text reads over any photo */
-        .floating, .section-head, .wall-head, .body-text {
-            text-shadow:
-                0 0 14px rgba(251, 245, 230, 0.95),
-                0 0 8px rgba(251, 245, 230, 0.85),
-                0 1px 0 rgba(255, 255, 255, 0.6);
-        }
         .section-head {
             margin-bottom: 22px;
+            background: var(--paper-card);
+            padding: 18px 26px 16px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
         }
         .section-num {
             font-family: 'Inter', sans-serif;
@@ -155,7 +154,6 @@
                 0 1px 0 rgba(255,255,255,0.6) inset,
                 0 6px 14px -8px rgba(31, 26, 22, 0.25);
         }
-        .body-text { text-shadow: none; }
         .body-text + .body-text { margin-top: 12px; }
 
         /* === Scripture cards =============================================== */
@@ -303,6 +301,226 @@
             color: var(--seal);
         }
 
+        /* === Self-quiz (sliders) ========================================== */
+        .quiz-intro {
+            background: var(--paper-card);
+            padding: 22px 26px 20px;
+            margin-top: 18px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .quiz-intro p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.93rem;
+            line-height: 1.6;
+            color: #2c2620;
+        }
+        .quiz-intro p + p { margin-top: 10px; }
+        .quiz-key {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            margin: 18px 0;
+            background: var(--paper-card);
+            padding: 12px 22px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .quiz-key strong {
+            font-weight: 600;
+            color: var(--seal);
+            margin-right: 4px;
+        }
+        .quiz-cat {
+            background: var(--paper-card);
+            padding: 22px 28px 18px;
+            margin-top: 16px;
+            position: relative;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .quiz-cat-head {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            padding-bottom: 14px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--rule);
+            flex-wrap: wrap;
+        }
+        .quiz-cat-head h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--ink);
+        }
+        .quiz-cat-head .desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1rem;
+            flex: 1;
+            min-width: 180px;
+        }
+        .quiz-cat-head .score {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-left: auto;
+            white-space: nowrap;
+        }
+        .quiz-row {
+            display: grid;
+            grid-template-columns: 1fr 200px 110px;
+            align-items: center;
+            gap: 18px;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.18);
+        }
+        .quiz-row:last-child { border-bottom: none; padding-bottom: 4px; }
+        .quiz-statement {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            line-height: 1.4;
+            color: var(--ink);
+        }
+        .quiz-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(120, 102, 80, 0.25);
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+            accent-color: var(--seal);
+        }
+        .quiz-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--seal);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid var(--paper-card);
+            box-shadow: 0 2px 6px rgba(31, 26, 22, 0.3);
+        }
+        .quiz-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            background: var(--seal);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid var(--paper-card);
+            box-shadow: 0 2px 6px rgba(31, 26, 22, 0.3);
+        }
+        .quiz-slider.untouched::-webkit-slider-thumb {
+            background: rgba(120, 102, 80, 0.5);
+        }
+        .quiz-slider.untouched::-moz-range-thumb {
+            background: rgba(120, 102, 80, 0.5);
+        }
+        .quiz-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        .quiz-value.set {
+            color: var(--seal);
+            font-weight: 600;
+        }
+        .quiz-summary {
+            margin-top: 18px;
+            background: #fff5d4;
+            padding: 22px 28px 20px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 18px -10px rgba(31, 26, 22, 0.35);
+        }
+        .quiz-summary.empty {
+            background: var(--paper-card);
+            color: var(--muted);
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.02rem;
+        }
+        .quiz-summary h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+        .quiz-summary .focus {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+        .quiz-summary .tip {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.93rem;
+            line-height: 1.55;
+            color: #2c2620;
+        }
+        .quiz-summary .tip + .tip { margin-top: 8px; }
+        .quiz-bars {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 12px;
+            margin-bottom: 14px;
+        }
+        .quiz-bar {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+        }
+        .quiz-bar .label {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.72rem;
+        }
+        .quiz-bar .track {
+            height: 8px;
+            background: rgba(120, 102, 80, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .quiz-bar .fill {
+            height: 100%;
+            background: var(--seal);
+            transition: width 0.3s ease;
+        }
+        .quiz-bar .num {
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+            color: var(--seal);
+            font-size: 0.78rem;
+        }
+        @media (max-width: 720px) {
+            .quiz-row { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
+            .quiz-value { text-align: left; }
+        }
+
         /* === Question composer ============================================ */
         .composers {
             display: grid;
@@ -400,8 +618,14 @@
             margin-bottom: 18px;
             gap: 14px;
             flex-wrap: wrap;
+            background: var(--paper-card);
+            padding: 16px 24px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
         }
-        .wall-head > div { text-shadow: inherit; }
+        .wall-head h2 { margin-top: 2px; font-size: 1.6rem; }
         .wall-count {
             font-family: 'Inter', sans-serif;
             font-size: 0.78rem;
@@ -540,16 +764,17 @@
 
         footer {
             margin: 56px auto 30px;
-            max-width: 880px;
-            padding: 18px 24px;
+            max-width: 360px;
+            padding: 14px 24px;
             text-align: center;
             font-family: 'Inter', sans-serif;
             font-size: 0.78rem;
             color: var(--muted);
             font-weight: 500;
-            text-shadow:
-                0 0 12px rgba(251, 245, 230, 0.95),
-                0 0 6px rgba(251, 245, 230, 0.85);
+            background: var(--paper-card);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
         }
         footer a { color: var(--seal); text-decoration: none; }
         footer a:hover { text-decoration: underline; }
@@ -629,10 +854,38 @@
             </div>
         </section>
 
-        <!-- Section 3 -->
+        <!-- Section 3: Self-quiz -->
         <section>
             <div class="section-head">
-                <div class="section-num">III · Make Your Reflective Question</div>
+                <div class="section-num">III · Where Do I Stand?</div>
+                <h2>A self-quiz on Purpose, Plan, Pause.</h2>
+                <p class="lead">Adapted from the <em>Taking Charge of Technology</em> guide. Drag each slider to how true the statement is for you. Be honest — there's no score sent anywhere.</p>
+            </div>
+
+            <div class="quiz-intro">
+                <p>We may sometimes struggle to use technology appropriately, and we may feel guilty when that happens. It's helpful to be aware of influences that encourage harmful technology use — profit-driven companies use tactics designed to foster addictive behaviors if we let them, and excessive use of social media has been shown to trigger depression and other emotional health challenges.</p>
+                <p>There are things we can do to evaluate our technology use and seek Heavenly Father's help to ensure we are using it appropriately and safely.</p>
+            </div>
+
+            <div class="quiz-key">
+                <span><strong>1</strong>Never</span>
+                <span><strong>2</strong>Sometimes</span>
+                <span><strong>3</strong>Often</span>
+                <span><strong>4</strong>Almost always</span>
+                <span><strong>5</strong>Always</span>
+            </div>
+
+            <div id="quiz-categories"><!-- populated by JS --></div>
+
+            <div class="quiz-summary empty" id="quiz-summary">
+                Drag a slider to begin. As you answer, your weakest area will surface here with ideas for goals.
+            </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section>
+            <div class="section-head">
+                <div class="section-num">IV · Make Your Reflective Question</div>
                 <h2>Turn a verse into a question.</h2>
                 <p class="lead">Read a passage, then write a single question we could ask ourselves to be more intentional with technology. When you submit, it joins the wall.</p>
             </div>
@@ -642,11 +895,11 @@
             </div>
         </section>
 
-        <!-- Section 4 -->
+        <!-- Section 5 -->
         <section>
             <div class="wall-head">
                 <div>
-                    <div class="section-num">IV · The Question Wall</div>
+                    <div class="section-num">V · The Question Wall</div>
                     <h2>Our class's reflective questions</h2>
                 </div>
                 <div>
@@ -657,10 +910,10 @@
             <div class="wall" id="wall"></div>
         </section>
 
-        <!-- Section 5 -->
+        <!-- Section 6 -->
         <section>
             <div class="section-head">
-                <div class="section-num">V · My Tech Audit</div>
+                <div class="section-num">VI · My Tech Audit</div>
                 <h2>Evaluate honestly.</h2>
                 <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.</p>
             </div>
@@ -860,6 +1113,193 @@
         }
         bindJournal('audit-uses', STORE_USES, 'saved-uses');
         bindJournal('audit-journal', STORE_JOURNAL, 'saved-journal');
+
+        // ============ Self-quiz ============
+        const quizCategories = [
+            {
+                key: 'purpose',
+                name: 'Purpose',
+                desc: "I can use technology with a purpose. It doesn't control me.",
+                questions: [
+                    "I know how long I will spend on a device when I turn it on.",
+                    "I know why I am using a device.",
+                    "I am spending only the time I need to on a device.",
+                    "I do not catch myself pointlessly scrolling on a device.",
+                    "I feel good about what I am doing when I am on a device."
+                ],
+                tips: [
+                    "Set an intention before unlocking your phone — name out loud what you're opening it for.",
+                    "Try the Why / What / How long check: ask yourself the three questions before you start.",
+                    "If you catch yourself scrolling without a reason, just close the app — even if it's a small win."
+                ]
+            },
+            {
+                key: 'plan',
+                name: 'Plan',
+                desc: 'When I plan ahead, I feel better and make better choices.',
+                questions: [
+                    "I give myself a daily limit for screen time.",
+                    "I mostly follow and contact only close family and friends while on my phone.",
+                    "I have device-free areas at home.",
+                    "I set up a charging station, away from my bed, so my device is plugged in and out of reach at night.",
+                    "I use filters to block inappropriate or unsafe applications and content."
+                ],
+                tips: [
+                    "Set a daily screen-time limit in your phone's settings tonight.",
+                    "Pick one device-free zone (the dinner table, your bed, etc.) and protect it.",
+                    "Move your charger out of your bedroom — a small change with a big effect on sleep."
+                ]
+            },
+            {
+                key: 'pause',
+                name: 'Pause',
+                desc: "It's OK for me to pause and take a break.",
+                questions: [
+                    "I recognize my emotions when I see content that is explicit or makes me feel bad, lonely, or weird.",
+                    "I listen to the Spirit for guidance when I am on a device.",
+                    "I turn off or silence my device when I see content that is explicit or makes me feel bad, lonely, uncomfortable, or unable to feel the Holy Ghost.",
+                    "I can leave my device in a different room or go outside without the device if needed.",
+                    "I am open to talking to a friend or family member about how I am feeling, especially in person when needed."
+                ],
+                tips: [
+                    "Try a short fast — even an hour without the phone can reset your mood.",
+                    "Practice naming the emotion out loud when something on a screen makes you feel bad. Then close it.",
+                    "Pick one trusted person you'll talk to (in person) when something online lands hard."
+                ]
+            }
+        ];
+        const quizLabels = ['', 'Never', 'Sometimes', 'Often', 'Almost always', 'Always'];
+        const STORE_QUIZ = 'crossroads.quiz.v1';
+
+        function loadQuiz() {
+            try { return JSON.parse(localStorage.getItem(STORE_QUIZ) || '{}'); }
+            catch { return {}; }
+        }
+        function saveQuiz(state) {
+            localStorage.setItem(STORE_QUIZ, JSON.stringify(state));
+        }
+
+        const quizState = loadQuiz();
+        const quizContainer = document.getElementById('quiz-categories');
+        const quizSummary = document.getElementById('quiz-summary');
+
+        quizCategories.forEach((cat) => {
+            const catEl = document.createElement('div');
+            catEl.className = 'quiz-cat';
+            catEl.innerHTML = `
+                <div class="quiz-cat-head">
+                    <h3>${cat.name}</h3>
+                    <span class="desc">${cat.desc}</span>
+                    <span class="score" data-score="${cat.key}">— / 25</span>
+                </div>
+                <div class="quiz-rows">
+                    ${cat.questions.map((q, qi) => {
+                        const id = `${cat.key}-${qi}`;
+                        const stored = quizState[id];
+                        const val = stored != null ? stored : 3;
+                        const touched = stored != null;
+                        return `
+                            <div class="quiz-row">
+                                <div class="quiz-statement">${escapeHtml(q)}</div>
+                                <input type="range" min="1" max="5" step="1" value="${val}"
+                                       class="quiz-slider${touched ? '' : ' untouched'}"
+                                       data-id="${id}" data-cat="${cat.key}"
+                                       aria-label="${escapeHtml(q)}">
+                                <div class="quiz-value${touched ? ' set' : ''}" data-value="${id}">${touched ? `${val} — ${quizLabels[val]}` : '—'}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            quizContainer.appendChild(catEl);
+        });
+
+        function recalcQuiz() {
+            const state = loadQuiz();
+            let weakest = null;
+            let weakestScore = Infinity;
+            let allAnsweredCount = 0;
+            let totalQuestions = 0;
+            const summaries = [];
+
+            quizCategories.forEach((cat) => {
+                let total = 0;
+                let answered = 0;
+                cat.questions.forEach((_, qi) => {
+                    totalQuestions++;
+                    const id = `${cat.key}-${qi}`;
+                    if (state[id] != null) {
+                        total += state[id];
+                        answered++;
+                        allAnsweredCount++;
+                    }
+                });
+                const scoreEl = document.querySelector(`[data-score="${cat.key}"]`);
+                if (answered === cat.questions.length) {
+                    scoreEl.textContent = `${total} / 25`;
+                    if (total < weakestScore) {
+                        weakestScore = total;
+                        weakest = cat;
+                    }
+                } else {
+                    scoreEl.textContent = answered === 0 ? '— / 25' : `${total} / ${answered * 5} (so far)`;
+                }
+                summaries.push({ cat, total, answered });
+            });
+
+            // Render summary
+            if (allAnsweredCount === 0) {
+                quizSummary.className = 'quiz-summary empty';
+                quizSummary.innerHTML = 'Drag a slider to begin. As you answer, your weakest area will surface here with ideas for goals.';
+                return;
+            }
+
+            const allDone = allAnsweredCount === totalQuestions;
+            const bars = summaries.map(({ cat, total, answered }) => {
+                const max = answered === cat.questions.length ? 25 : answered * 5;
+                const pct = max > 0 ? (total / 25) * 100 : 0;
+                return `
+                    <div class="quiz-bar">
+                        <div class="label">${cat.name}</div>
+                        <div class="track"><div class="fill" style="width: ${pct}%"></div></div>
+                        <div class="num">${total} / 25${answered < cat.questions.length ? ` (${answered}/5)` : ''}</div>
+                    </div>
+                `;
+            }).join('');
+
+            quizSummary.className = 'quiz-summary';
+            if (allDone && weakest) {
+                quizSummary.innerHTML = `
+                    <h4>Your weakest area: <span style="color:var(--seal)">${weakest.name}</span></h4>
+                    <p class="focus">${escapeHtml(weakest.desc)}</p>
+                    <div class="quiz-bars">${bars}</div>
+                    <p class="tip" style="margin-top:14px;font-weight:600;font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--seal);">Goal ideas</p>
+                    ${weakest.tips.map(t => `<p class="tip">• ${escapeHtml(t)}</p>`).join('')}
+                `;
+            } else {
+                quizSummary.innerHTML = `
+                    <h4>Running tally</h4>
+                    <p class="focus">${allAnsweredCount} of ${totalQuestions} answered. Keep going to see your weakest area.</p>
+                    <div class="quiz-bars">${bars}</div>
+                `;
+            }
+        }
+
+        quizContainer.addEventListener('input', (e) => {
+            if (!e.target.matches('.quiz-slider')) return;
+            const id = e.target.dataset.id;
+            const val = +e.target.value;
+            const state = loadQuiz();
+            state[id] = val;
+            saveQuiz(state);
+            e.target.classList.remove('untouched');
+            const valEl = document.querySelector(`[data-value="${id}"]`);
+            valEl.textContent = `${val} — ${quizLabels[val]}`;
+            valEl.classList.add('set');
+            recalcQuiz();
+        });
+
+        recalcQuiz();
     })();
     </script>
 </body>
