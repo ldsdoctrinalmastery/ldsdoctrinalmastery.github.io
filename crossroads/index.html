@@ -532,6 +532,93 @@
             .quiz-value { text-align: left; }
         }
 
+        /* === Footnote markers + comic modal =============================== */
+        .footnote-mark {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: var(--seal);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.7em;
+            vertical-align: super;
+            line-height: 1;
+            padding: 1px 3px;
+            margin: 0 1px;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s;
+        }
+        .footnote-mark:hover, .footnote-mark:focus-visible {
+            background: rgba(141, 53, 48, 0.15);
+            outline: none;
+        }
+        .comic-modal[hidden] { display: none; }
+        .comic-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .comic-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(28, 24, 21, 0.86);
+            cursor: pointer;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .comic-card {
+            position: relative;
+            background: var(--paper-card);
+            padding: 22px;
+            max-width: 720px;
+            max-height: 90vh;
+            overflow: auto;
+            box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--rule);
+        }
+        .comic-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            background: var(--ink);
+            color: var(--paper-card);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0 2px 0;
+            font-weight: 400;
+        }
+        .comic-close:hover { background: var(--seal); }
+        .comic-img {
+            display: block;
+            max-width: 100%;
+            max-height: 75vh;
+            height: auto;
+            margin: 0 auto;
+        }
+        .comic-credit {
+            text-align: center;
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+        .comic-credit a { color: var(--seal); text-decoration: none; border-bottom: 1px dotted rgba(141, 53, 48, 0.4); }
+
         /* === Question composer ============================================ */
         .composers {
             display: grid;
@@ -873,7 +960,7 @@
             </div>
 
             <div class="quiz-intro">
-                <p>We may sometimes struggle to use technology appropriately, and we may feel guilty when that happens. It's helpful to be aware of influences that encourage harmful technology use — profit-driven companies use tactics designed to foster addictive behaviors if we let them, and excessive use of social media has been shown to trigger depression and other emotional health challenges.</p>
+                <p>We may sometimes struggle to use technology appropriately, and we may feel guilty when that happens. It's helpful to be aware of influences that encourage harmful technology use — profit-driven companies use tactics designed to foster addictive behaviors if we let them, and excessive use of social media has been shown to trigger depression and other emotional health challenges.<button class="footnote-mark" data-comic="halo" aria-label="Show related comic">1</button></p>
                 <p>There are things we can do to evaluate our technology use and seek Heavenly Father's help to ensure we are using it appropriately and safely.</p>
             </div>
 
@@ -925,7 +1012,7 @@
             <div class="section-head">
                 <div class="section-num">VI · My Tech Audit</div>
                 <h2>Evaluate honestly.</h2>
-                <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.</p>
+                <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.<button class="footnote-mark" data-comic="family" aria-label="Show related comic">2</button></p>
             </div>
 
             <div class="audit">
@@ -956,6 +1043,15 @@
             <p><a href="/">← back to seminary resources</a></p>
         </footer>
     </main>
+
+    <div class="comic-modal" id="comic-modal" role="dialog" aria-modal="true" aria-labelledby="comic-credit" hidden>
+        <div class="comic-backdrop" data-close></div>
+        <div class="comic-card">
+            <button class="comic-close" data-close aria-label="Close">×</button>
+            <img class="comic-img" src="" alt="">
+            <p class="comic-credit" id="comic-credit"></p>
+        </div>
+    </div>
 
     <script>
     (function() {
@@ -1310,6 +1406,57 @@
         });
 
         recalcQuiz();
+
+        // ============ Comic modal ============
+        const comics = {
+            'halo': {
+                src: '/assets/comics/comic-halo.webp',
+                alt: 'Penny Arcade comic: a panicked father saying "Millions have died in a global pandemic and our society burned down. But the big thing I\'m worried about is that my son plays too much Halo."',
+                credit: 'via <a href="https://www.penny-arcade.com" target="_blank" rel="noopener">Penny Arcade</a>'
+            },
+            'family': {
+                src: '/assets/comics/comic-family.webp',
+                alt: 'Penny Arcade comic',
+                credit: 'via <a href="https://www.penny-arcade.com" target="_blank" rel="noopener">Penny Arcade</a>'
+            }
+        };
+        const comicModal = document.getElementById('comic-modal');
+        const comicImg = comicModal.querySelector('.comic-img');
+        const comicCredit = comicModal.querySelector('.comic-credit');
+        let lastFocused = null;
+
+        function openComic(key) {
+            const comic = comics[key];
+            if (!comic) return;
+            lastFocused = document.activeElement;
+            comicImg.src = comic.src;
+            comicImg.alt = comic.alt;
+            comicCredit.innerHTML = comic.credit;
+            comicModal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            comicModal.querySelector('.comic-close').focus();
+        }
+        function closeComic() {
+            comicModal.hidden = true;
+            document.body.style.overflow = '';
+            comicImg.src = '';
+            if (lastFocused) lastFocused.focus();
+        }
+
+        document.addEventListener('click', (e) => {
+            const trigger = e.target.closest('[data-comic]');
+            if (trigger) {
+                e.preventDefault();
+                openComic(trigger.dataset.comic);
+                return;
+            }
+            if (e.target.closest('[data-close]')) {
+                closeComic();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !comicModal.hidden) closeComic();
+        });
     })();
     </script>
 </body>
