@@ -6,7 +6,7 @@
     <title>LDS Seminary Resources</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0f172a;
@@ -21,7 +21,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
-            background: radial-gradient(ellipse at top, #1e293b 0%, #0f172a 60%);
+            background: radial-gradient(ellipse at top, var(--bg-2) 0%, var(--bg) 60%);
             color: var(--text);
             font-family: 'Inter', system-ui, sans-serif;
             min-height: 100vh;
@@ -72,6 +72,8 @@
             border-radius: 14px;
             display: inline-block;
             line-height: 0;
+            width: 288px;
+            height: 288px;
         }
         #qrcode canvas, #qrcode img { display: block; width: 260px; height: 260px; }
         .qr-url {
@@ -104,10 +106,12 @@
             color: inherit;
             transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
         }
-        .card:hover {
+        .card:hover,
+        .card:focus-visible {
             transform: translateY(-3px);
             background: var(--card-hover);
             border-color: var(--accent);
+            outline: none;
         }
         .card .icon {
             font-size: 1.8rem;
@@ -143,6 +147,7 @@
         }
         @media (max-width: 480px) {
             .container { padding: 28px 16px 60px; }
+            #qrcode { width: 248px; height: 248px; }
             #qrcode canvas, #qrcode img { width: 220px; height: 220px; }
         }
     </style>
@@ -156,14 +161,14 @@
 
         <div class="qr-block">
             <div class="qr-label">Scan to open on your device</div>
-            <div id="qrcode"></div>
+            <div id="qrcode" role="img" aria-label="QR code for this page"></div>
             <div class="qr-url" id="qr-url"></div>
         </div>
 
         <h2 class="section-title">Games</h2>
         <div class="grid">
             <a class="card" href="/battle/">
-                <div class="icon">⚔️</div>
+                <div class="icon" aria-hidden="true">⚔️</div>
                 <span class="tag">Multiplayer</span>
                 <h3>Scripture Battle Royale</h3>
                 <p>D&amp;C Doctrinal Mastery battle game. Single player or P2P multiplayer rooms.</p>
@@ -173,7 +178,7 @@
         <h2 class="section-title">Lessons &amp; Tools</h2>
         <div class="grid">
             <a class="card" href="/remember2/">
-                <div class="icon">📖</div>
+                <div class="icon" aria-hidden="true">📖</div>
                 <span class="tag">FHE / Lesson</span>
                 <h3>Remember, Remember</h3>
                 <p>Word cloud &amp; analysis tool inspired by Elder Wong's April 2026 conference talk.</p>
