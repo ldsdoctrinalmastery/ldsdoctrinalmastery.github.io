@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Sort — Standard Works</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .reference {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 36px 24px;
+            margin-bottom: 16px;
+            text-align: center;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 10px 22px -12px rgba(31, 26, 22, 0.4);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .reference .ref {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 3rem);
+            color: var(--ink);
+            letter-spacing: 0.01em;
+        }
+        .buckets {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .bucket {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 22px 16px;
+            border: 2px solid rgba(120, 102, 80, 0.3);
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--ink);
+            cursor: pointer;
+            transition: transform 0.08s, border-color 0.15s, background-color 0.15s;
+            text-align: center;
+            user-select: none;
+        }
+        .bucket:hover { border-color: var(--seal); }
+        .bucket.flash-correct { background-color: var(--moss); color: #fff; border-color: var(--moss); }
+        .bucket.flash-wrong { background-color: var(--seal); color: #fff; border-color: var(--seal); }
+        .bucket .name {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.66rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .bucket.flash-correct .name, .bucket.flash-wrong .name { color: rgba(255,255,255,0.85); }
+        .start-overlay {
+            text-align: center;
+            padding: 30px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Speed Sort</h1>
+            <p class="subtitle">Tap the standard work each reference belongs to. Thirty seconds.</p>
+        </header>
+
+        <div class="score-strip">
+            <div class="stat"><div class="label">Time</div><div class="val" id="time">30</div></div>
+            <div class="stat"><div class="label">Score</div><div class="val" id="score">0</div></div>
+            <div class="stat"><div class="label">Best</div><div class="val" id="best">0</div></div>
+        </div>
+
+        <div class="reference"><div class="ref" id="ref">Tap Start</div></div>
+
+        <div class="buckets">
+            <button class="bucket" data-vol="ot"><span class="name">Old Testament</span>OT</button>
+            <button class="bucket" data-vol="nt"><span class="name">New Testament</span>NT</button>
+            <button class="bucket" data-vol="bofm"><span class="name">Book of Mormon</span>BoM</button>
+            <button class="bucket" data-vol="dc"><span class="name">Doctrine &amp; Covenants</span>D&amp;C</button>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div id="start-card" class="card start-overlay">
+            <button class="btn big" id="start">Start the timer</button>
+        </div>
+
+        <div id="result" class="result" hidden>
+            <h3 id="result-title"></h3>
+            <p id="result-summary" style="font-family:'Inter',sans-serif; font-size:0.92rem; color:var(--muted); margin-top:6px;"></p>
+            <button class="btn" id="play-again" style="margin-top: 14px;">Play again</button>
+        </div>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        const REFS = [
+            // OT
+            { ref: 'Genesis 1:1', vol: 'ot' }, { ref: 'Exodus 20:3', vol: 'ot' },
+            { ref: 'Leviticus 19:18', vol: 'ot' }, { ref: 'Numbers 21:8', vol: 'ot' },
+            { ref: 'Deuteronomy 6:5', vol: 'ot' }, { ref: 'Joshua 24:15', vol: 'ot' },
+            { ref: 'Ruth 1:16', vol: 'ot' }, { ref: '1 Samuel 16:7', vol: 'ot' },
+            { ref: '1 Kings 18:21', vol: 'ot' }, { ref: 'Job 19:25', vol: 'ot' },
+            { ref: 'Psalm 23:1', vol: 'ot' }, { ref: 'Psalm 46:10', vol: 'ot' },
+            { ref: 'Psalm 119:105', vol: 'ot' }, { ref: 'Proverbs 3:5', vol: 'ot' },
+            { ref: 'Ecclesiastes 3:1', vol: 'ot' }, { ref: 'Isaiah 1:18', vol: 'ot' },
+            { ref: 'Isaiah 53:5', vol: 'ot' }, { ref: 'Jeremiah 1:5', vol: 'ot' },
+            { ref: 'Ezekiel 37:15', vol: 'ot' }, { ref: 'Daniel 2:44', vol: 'ot' },
+            { ref: 'Amos 3:7', vol: 'ot' }, { ref: 'Malachi 3:8', vol: 'ot' },
+            { ref: 'Malachi 4:5', vol: 'ot' },
+            // NT
+            { ref: 'Matthew 5:3', vol: 'nt' }, { ref: 'Matthew 11:28', vol: 'nt' },
+            { ref: 'Matthew 16:18', vol: 'nt' }, { ref: 'Matthew 22:36', vol: 'nt' },
+            { ref: 'Matthew 28:19', vol: 'nt' }, { ref: 'Mark 10:14', vol: 'nt' },
+            { ref: 'Luke 2:7', vol: 'nt' }, { ref: 'Luke 24:36', vol: 'nt' },
+            { ref: 'John 3:16', vol: 'nt' }, { ref: 'John 14:6', vol: 'nt' },
+            { ref: 'John 14:15', vol: 'nt' }, { ref: 'John 17:3', vol: 'nt' },
+            { ref: 'Acts 2:38', vol: 'nt' }, { ref: 'Romans 1:16', vol: 'nt' },
+            { ref: 'Romans 8:28', vol: 'nt' }, { ref: '1 Corinthians 13:13', vol: 'nt' },
+            { ref: '1 Corinthians 15:22', vol: 'nt' }, { ref: 'Ephesians 2:8', vol: 'nt' },
+            { ref: 'Ephesians 4:11', vol: 'nt' }, { ref: 'Philippians 4:13', vol: 'nt' },
+            { ref: '2 Timothy 3:16', vol: 'nt' }, { ref: 'Hebrews 11:1', vol: 'nt' },
+            { ref: 'James 1:5', vol: 'nt' }, { ref: '1 Peter 4:6', vol: 'nt' },
+            { ref: 'Revelation 20:12', vol: 'nt' },
+            // BoM
+            { ref: '1 Nephi 3:7', vol: 'bofm' }, { ref: '2 Nephi 2:25', vol: 'bofm' },
+            { ref: '2 Nephi 9:51', vol: 'bofm' }, { ref: '2 Nephi 25:23', vol: 'bofm' },
+            { ref: '2 Nephi 26:33', vol: 'bofm' }, { ref: '2 Nephi 32:3', vol: 'bofm' },
+            { ref: 'Jacob 2:18', vol: 'bofm' }, { ref: 'Mosiah 2:17', vol: 'bofm' },
+            { ref: 'Mosiah 3:19', vol: 'bofm' }, { ref: 'Mosiah 18:9', vol: 'bofm' },
+            { ref: 'Alma 7:11', vol: 'bofm' }, { ref: 'Alma 32:21', vol: 'bofm' },
+            { ref: 'Alma 34:32', vol: 'bofm' }, { ref: 'Alma 41:10', vol: 'bofm' },
+            { ref: 'Helaman 5:12', vol: 'bofm' }, { ref: '3 Nephi 11:29', vol: 'bofm' },
+            { ref: '3 Nephi 18:21', vol: 'bofm' }, { ref: 'Ether 12:6', vol: 'bofm' },
+            { ref: 'Ether 12:27', vol: 'bofm' }, { ref: 'Moroni 7:45', vol: 'bofm' },
+            { ref: 'Moroni 10:5', vol: 'bofm' },
+            // D&C
+            { ref: 'D&C 1:38', vol: 'dc' }, { ref: 'D&C 4:2', vol: 'dc' },
+            { ref: 'D&C 8:2', vol: 'dc' }, { ref: 'D&C 13:1', vol: 'dc' },
+            { ref: 'D&C 18:10', vol: 'dc' }, { ref: 'D&C 25:12', vol: 'dc' },
+            { ref: 'D&C 50:23', vol: 'dc' }, { ref: 'D&C 58:42', vol: 'dc' },
+            { ref: 'D&C 76:22', vol: 'dc' }, { ref: 'D&C 82:10', vol: 'dc' },
+            { ref: 'D&C 84:33', vol: 'dc' }, { ref: 'D&C 88:118', vol: 'dc' },
+            { ref: 'D&C 89:18', vol: 'dc' }, { ref: 'D&C 93:24', vol: 'dc' },
+            { ref: 'D&C 121:36', vol: 'dc' }, { ref: 'D&C 130:20', vol: 'dc' },
+            { ref: 'D&C 131:1', vol: 'dc' }
+        ];
+
+        const STORE = 'speedsort.best.v1';
+        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let score = 0, time = 30, current = null, timer = null, playing = false;
+
+        const refEl = document.getElementById('ref');
+        const scoreEl = document.getElementById('score');
+        const bestEl = document.getElementById('best');
+        const timeEl = document.getElementById('time');
+        const message = document.getElementById('message');
+        const result = document.getElementById('result');
+        const startCard = document.getElementById('start-card');
+
+        bestEl.textContent = best;
+
+        function pick() {
+            return REFS[Math.floor(Math.random() * REFS.length)];
+        }
+
+        function next() {
+            current = pick();
+            refEl.textContent = current.ref;
+        }
+
+        function start() {
+            playing = true;
+            score = 0;
+            time = 30;
+            startCard.style.display = 'none';
+            result.hidden = true;
+            message.textContent = '';
+            scoreEl.textContent = score;
+            timeEl.textContent = time;
+            next();
+            timer = setInterval(() => {
+                time--;
+                timeEl.textContent = time;
+                if (time <= 0) end();
+            }, 1000);
+        }
+
+        function end() {
+            clearInterval(timer);
+            playing = false;
+            refEl.textContent = '⌛';
+            if (score > best) {
+                best = score;
+                localStorage.setItem(STORE, best);
+                bestEl.textContent = best;
+            }
+            document.getElementById('result-title').textContent = `Final score: ${score}`;
+            document.getElementById('result-summary').textContent = score === best && score > 0
+                ? 'New personal best!'
+                : `Personal best: ${best}.`;
+            result.hidden = false;
+        }
+
+        function flashBucket(btn, ok) {
+            btn.classList.add(ok ? 'flash-correct' : 'flash-wrong');
+            setTimeout(() => btn.classList.remove('flash-correct', 'flash-wrong'), 300);
+        }
+
+        document.querySelectorAll('.bucket').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!playing) return;
+                const ok = btn.dataset.vol === current.vol;
+                flashBucket(btn, ok);
+                if (ok) {
+                    score++;
+                    scoreEl.textContent = score;
+                    next();
+                } else {
+                    score = Math.max(0, score - 1);
+                    scoreEl.textContent = score;
+                }
+            });
+        });
+
+        document.getElementById('start').addEventListener('click', start);
+        document.getElementById('play-again').addEventListener('click', () => { startCard.style.display = ''; result.hidden = true; refEl.textContent = 'Tap Start'; });
+    })();
+    </script>
+</body>
+</html>

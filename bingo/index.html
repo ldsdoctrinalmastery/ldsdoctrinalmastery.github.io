@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctrinal Mastery Bingo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 8px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 8px 18px -10px rgba(31, 26, 22, 0.3);
+        }
+        .cell {
+            aspect-ratio: 1;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--rule);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--ink);
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.15s;
+        }
+        .cell.free {
+            background-color: var(--gold);
+            color: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.92rem;
+            font-style: italic;
+            font-weight: 700;
+            cursor: default;
+        }
+        .cell.marked {
+            background-color: var(--seal);
+            color: #fff;
+        }
+        .controls { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .controls .btn { flex: 1; min-width: 140px; }
+        @media print {
+            .bg, .score-strip, .controls, footer, .message, .result, .btn { display: none !important; }
+            .board { box-shadow: none; }
+            body, html { background: white !important; }
+        }
+        @media (max-width: 540px) {
+            .cell { font-size: 0.6rem; padding: 2px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Doctrinal Mastery Bingo</h1>
+            <p class="subtitle">25 references in 5×5. Free space in the middle. Print or play live.</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn" id="reshuffle">Shuffle a new card</button>
+            <button class="btn ghost" id="print">Print this card</button>
+        </div>
+
+        <div class="board" id="board"></div>
+        <div class="message" id="message"></div>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        // 25 Doctrinal Mastery references — mix of canonical favorites
+        const REFS = [
+            'Genesis 1:26-27', 'Exodus 19:5-6', 'Joshua 24:15', 'Psalm 24:3-4', 'Isaiah 53:3-5',
+            'Jeremiah 1:4-5', 'Amos 3:7', 'Matthew 5:14-16', 'Matthew 16:15-19', 'John 3:5',
+            'John 14:6', 'John 17:3', 'Acts 3:19-21', '1 Corinthians 15:20-22', '1 Corinthians 15:40-42',
+            'Ephesians 1:10', 'James 1:5-6', '1 Nephi 3:7', '2 Nephi 2:25', '2 Nephi 32:3',
+            'Mosiah 2:17', 'Alma 7:11-13', 'Alma 32:21', 'Helaman 5:12', 'Moroni 10:4-5',
+            'D&C 1:30-33', 'D&C 18:10-11', 'D&C 58:42-43', 'D&C 88:118', 'D&C 89:18-21'
+        ];
+
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+
+        function shuffle(arr) {
+            arr = arr.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function checkWin() {
+            const cells = Array.from(board.children);
+            const at = (r, c) => cells[r * 5 + c].classList.contains('marked') || cells[r * 5 + c].classList.contains('free');
+            // Rows
+            for (let r = 0; r < 5; r++) {
+                if ([0,1,2,3,4].every(c => at(r, c))) return 'Row ' + (r+1);
+            }
+            // Cols
+            for (let c = 0; c < 5; c++) {
+                if ([0,1,2,3,4].every(r => at(r, c))) return 'Column ' + (c+1);
+            }
+            // Diagonals
+            if ([0,1,2,3,4].every(i => at(i, i))) return 'Diagonal';
+            if ([0,1,2,3,4].every(i => at(i, 4-i))) return 'Anti-diagonal';
+            return null;
+        }
+
+        function newCard() {
+            const picked = shuffle(REFS).slice(0, 24);
+            board.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                if (i === 12) {
+                    cell.classList.add('free');
+                    cell.textContent = 'Free';
+                } else {
+                    const r = picked[i < 12 ? i : i - 1];
+                    cell.textContent = r;
+                    cell.addEventListener('click', () => {
+                        cell.classList.toggle('marked');
+                        const win = checkWin();
+                        if (win) {
+                            message.textContent = `✓ Bingo — ${win}!`;
+                        } else {
+                            message.textContent = '';
+                        }
+                    });
+                }
+                board.appendChild(cell);
+            }
+            message.textContent = '';
+        }
+
+        document.getElementById('reshuffle').addEventListener('click', newCard);
+        document.getElementById('print').addEventListener('click', () => window.print());
+        newCard();
+    })();
+    </script>
+</body>
+</html>

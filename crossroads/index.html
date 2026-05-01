@@ -1,0 +1,3752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossroads · Taking Charge of Technology</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #f3ead4;
+            --paper-soft: #eadfc1;
+            --paper-card: #fbf5e6;
+            --paper-deep: #ede0bf;
+            --ink: #1f1a16;
+            --muted: #786650;
+            --rule: rgba(31, 26, 22, 0.18);
+            --sky-top: #c9d6dc;
+            --sky-mid: #d8c8a8;
+            --sky-low: #e6d4ad;
+            --canopy: #1a2a26;
+            --trunk: #271912;
+            --path: #d6bc8a;
+            --path-shadow: #ad9362;
+            --pine-far: #4a6258;
+            --pine-mid: #28403a;
+            --pine-near: #15201d;
+            --seal: #8d3530;
+            --seal-soft: rgba(141, 53, 48, 0.85);
+            --gold: #b89968;
+            --indigo: #2f4a55;
+            --moss: #5d6f4c;
+            --bamboo: #a08a72;
+            /* Washi paper grain — subtle SVG turbulence noise */
+            --washi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.36 0 0 0 0 0.30 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+            /* Calligraphic brush stroke — tapered horizontal mark */
+            --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8'%3E%3Cpath d='M2 5 Q 25 3 50 4 T 96 5' stroke='%238d3530' stroke-width='2.5' stroke-linecap='round' fill='none' opacity='0.55'/%3E%3Cpath d='M8 4 Q 30 5 60 4 T 92 4' stroke='%238d3530' stroke-width='1' stroke-linecap='round' fill='none' opacity='0.35'/%3E%3C/svg%3E");
+            /* Maple leaf — stylized momiji silhouette */
+            --maple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 6 L36 18 L48 14 L42 26 L56 28 L46 34 L52 46 L40 42 L42 56 L32 48 L22 56 L24 42 L12 46 L18 34 L8 28 L22 26 L16 14 L28 18 Z' fill='%238d3530' opacity='0.32'/%3E%3Cpath d='M32 50 L32 6' stroke='%238d3530' stroke-width='1' opacity='0.28'/%3E%3C/svg%3E");
+            /* Koi silhouette */
+            --koi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 60'%3E%3Cpath d='M10 30 Q 25 14 55 22 Q 80 26 90 22 L 100 12 L 96 30 L 100 48 L 90 38 Q 80 34 55 38 Q 25 46 10 30 Z' fill='%238d3530' opacity='0.5'/%3E%3Ccircle cx='80' cy='26' r='1.6' fill='%231f1a16' opacity='0.7'/%3E%3Cpath d='M50 22 Q 55 30 50 38' stroke='%23fbf5e6' stroke-width='1' fill='none' opacity='0.6'/%3E%3C/svg%3E");
+        }
+        /* === Zen flourishes ============================================== */
+        /* Washi paper grain on all paper-cream surfaces */
+        .title-card,
+        .lesson-section .section-head,
+        .toc,
+        .card,
+        .qr-frame,
+        .scripture,
+        .truth,
+        .more-than-phones,
+        .principle,
+        .quiz-cat,
+        .quiz-key,
+        .quiz-intro,
+        .quiz-summary,
+        .topic-intro,
+        .topic-cloud-flat,
+        .topic-chip,
+        .reflective-library,
+        .composer-single,
+        .wall-head,
+        .audit-col,
+        .note,
+        .speech-box,
+        .speech-beats li,
+        .speech-example,
+        .lib-scripture,
+        .opening-card,
+        .lovingkindness-mantra,
+        .opening-action,
+        .bednar-talk,
+        .bednar-feature,
+        .bednar-practice,
+        .bednar-questions,
+        .church-ai-links,
+        .closing,
+        footer {
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+        }
+
+        /* Stone-textured number badges (radial gradient, inset shadow) */
+        .opening-num,
+        .bednar-questions li::before,
+        .speech-beats li::before {
+            background: radial-gradient(circle at 30% 28%, #c25b53 0%, #8d3530 52%, #5a1f1c 100%);
+            box-shadow:
+                inset 0 1px 2px rgba(255, 230, 220, 0.32),
+                inset 0 -2px 3px rgba(0, 0, 0, 0.32),
+                0 2px 4px rgba(31, 26, 22, 0.32);
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.18);
+        }
+
+        /* Brush-stroke flourish under section H2 headings */
+        .lesson-section .section-head h2,
+        h2 {
+            position: relative;
+        }
+        .lesson-section .section-head h2::after {
+            content: '';
+            display: block;
+            width: 92px;
+            height: 8px;
+            margin-top: 6px;
+            background-image: var(--brush);
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.85;
+        }
+
+        /* Maple-leaf accent on key cards (low opacity, decorative) */
+        .title-card,
+        .bednar-feature,
+        .closing {
+            position: relative;
+        }
+        .title-card::after,
+        .bednar-feature::after,
+        .closing::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background-image: var(--maple);
+            background-repeat: no-repeat;
+            background-size: contain;
+            pointer-events: none;
+            transform: rotate(8deg);
+        }
+        /* Title card already has a hanko-style red square via ::before; keep it but make the maple slightly farther in */
+        .title-card::after { right: 60px; transform: rotate(-12deg); opacity: 0.7; }
+
+        /* Koi swimming in the empty wall state */
+        .empty-wall {
+            position: relative;
+            padding-top: 70px !important;
+        }
+        .empty-wall::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 50px;
+            background-image: var(--koi);
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+
+        /* Soft seigaiha micro-divider between collapsed sections (decorative) */
+        .lesson-section + .lesson-section {
+            position: relative;
+        }
+        .lesson-section + .lesson-section::before {
+            content: '';
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 8px;
+            background-image:
+                radial-gradient(circle at 50% 100%, transparent 5px, rgba(45, 74, 85, 0.35) 5px, rgba(45, 74, 85, 0.35) 6px, transparent 6px),
+                radial-gradient(circle at 0% 100%, transparent 5px, rgba(45, 74, 85, 0.35) 5px, rgba(45, 74, 85, 0.35) 6px, transparent 6px),
+                radial-gradient(circle at 100% 100%, transparent 5px, rgba(45, 74, 85, 0.35) 5px, rgba(45, 74, 85, 0.35) 6px, transparent 6px);
+            background-size: 16px 8px;
+            background-repeat: repeat-x;
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            color: var(--ink);
+            font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+        body { background-color: transparent; }
+
+        /* === Fixed full-page background ==================================== */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-color: var(--paper);
+            background-image: linear-gradient(
+                180deg,
+                var(--sky-top) 0%,
+                var(--sky-mid) 50%,
+                var(--sky-low) 100%
+            );
+        }
+        .bg.has-image {
+            background-image:
+                linear-gradient(180deg, rgba(243, 234, 212, 0.05) 0%, rgba(243, 234, 212, 0.18) 100%),
+                url('/assets/hero-crossing.webp'),
+                linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-low) 100%);
+            /* Nikkō Kaidō is portrait — anchor low so the path/wayfarer stays visible */
+            background-size: cover, cover, auto;
+            background-position: center, center 78%, center;
+            background-repeat: no-repeat;
+        }
+
+        /* === Title card with inline QR =================================== */
+        .title-card {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            background-color: var(--paper-card);
+            padding: 26px 32px 24px;
+            border: 1px solid var(--rule);
+            margin-bottom: 28px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 18px 36px -22px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.18);
+        }
+        .title-card .title-text { flex: 1; min-width: 0; }
+        .title-card .title-qr {
+            flex-shrink: 0;
+            text-align: center;
+            border-left: 1px solid var(--rule);
+            padding-left: 28px;
+        }
+        .title-qr .qr-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.24em;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .title-qr .qr-frame {
+            background-color: #fdfaf0;
+            padding: 8px;
+            display: inline-block;
+            line-height: 0;
+            border-radius: 2px;
+            box-shadow: 0 4px 8px -4px rgba(31, 26, 22, 0.25);
+        }
+        .title-qr #qrcode { width: 130px; height: 130px; }
+        .title-qr #qrcode canvas, .title-qr #qrcode img { display: block; width: 130px; height: 130px; }
+        .title-qr .qr-url {
+            margin-top: 8px;
+            font-family: 'Inter', monospace;
+            font-size: 0.66rem;
+            color: var(--muted);
+            max-width: 130px;
+            word-break: break-all;
+            line-height: 1.3;
+        }
+
+        .eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.72rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: clamp(2rem, 4.5vw, 3rem);
+            letter-spacing: 0.005em;
+            line-height: 1.05;
+        }
+        .subtitle {
+            margin-top: 10px;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1.02rem;
+            font-weight: 400;
+            max-width: 60ch;
+        }
+
+        /* === Layout ======================================================== */
+        .page {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 56px 32px 32px;
+        }
+        .section-head {
+            margin-bottom: 22px;
+            background-color: var(--paper-card);
+            padding: 18px 26px 16px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .section-num {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 6px;
+        }
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.9rem;
+            line-height: 1.15;
+            letter-spacing: 0.005em;
+        }
+        h2 + .lead {
+            margin-top: 8px;
+            color: var(--muted);
+            font-style: italic;
+            font-size: 1.02rem;
+            max-width: 60ch;
+        }
+        .lead + .lead-instruction {
+            margin-top: 10px;
+            font-style: normal;
+            color: #2c2620;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.25);
+        }
+        .lead-instruction em { color: var(--seal); font-style: italic; font-weight: 600; }
+        .body-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.96rem;
+            line-height: 1.65;
+            color: #2c2620;
+            background-color: var(--paper-card);
+            padding: 16px 22px;
+            border-left: 3px solid var(--seal);
+            margin-top: 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .body-text + .body-text { margin-top: 12px; }
+
+        /* === Scripture cards =============================================== */
+        .scripture-list {
+            display: grid;
+            gap: 16px;
+            margin-top: 18px;
+        }
+        .scripture {
+            background-color: var(--paper-card);
+            padding: 22px 26px 20px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .scripture .ref {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .scripture .ref a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .scripture .ref a:hover {
+            border-bottom-color: var(--seal);
+            color: var(--ink);
+        }
+        .scripture .ref a::after {
+            content: '↗';
+            display: inline-block;
+            margin-left: 4px;
+            font-size: 0.75em;
+            opacity: 0.6;
+        }
+        .lesson-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            padding-bottom: 2px;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .lesson-link:hover { border-bottom-color: var(--seal); color: var(--ink); }
+        .lesson-link::after { content: '↗'; font-size: 0.85em; opacity: 0.7; }
+        .closing cite a {
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        .closing cite a:hover { color: var(--ink); border-bottom-color: var(--seal); }
+        .scripture .verse {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: 1.08rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .scripture .verse em { color: var(--seal); font-style: italic; }
+
+        /* === "More than phones" callout =================================== */
+        .more-than-phones {
+            margin-top: 22px;
+            background-color: var(--paper-card);
+            padding: 22px 26px 20px;
+            border-left: 3px solid var(--indigo);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .more-than-phones .label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--indigo);
+            margin-bottom: 10px;
+        }
+        .more-than-phones h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 600;
+            font-size: 1.35rem;
+            line-height: 1.2;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+        .more-than-phones p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.94rem;
+            line-height: 1.6;
+            color: #2c2620;
+        }
+        .more-than-phones em {
+            color: var(--indigo);
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        /* === Truth pulled out ============================================== */
+        .truth {
+            margin-top: 28px;
+            padding: 22px 28px;
+            background-color: var(--paper-deep);
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+            text-align: center;
+        }
+        .truth .label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.68rem;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .truth .statement {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: 1.35rem;
+            font-style: italic;
+            color: var(--ink);
+        }
+
+        /* === Three principles ============================================= */
+        .principles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .principle {
+            background-color: var(--paper-card);
+            padding: 22px 22px 20px;
+            border-radius: 2px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .principle.focused {
+            background-color: #fff8e5;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 10px 22px -10px rgba(141, 53, 48, 0.4),
+                inset 0 0 0 1.5px rgba(141, 53, 48, 0.18);
+        }
+        .principle h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+        .principle .motto {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--ink);
+            line-height: 1.45;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.3);
+        }
+        .principle .focus-mark {
+            position: absolute;
+            top: 14px; right: 16px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+        }
+        .principle-block { margin-top: 14px; }
+        .principle-block:first-of-type { margin-top: 0; }
+        .principle-block h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.66rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .principle-block ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .principle-block li {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            line-height: 1.45;
+            color: #2c2620;
+            padding: 4px 0 4px 14px;
+            position: relative;
+        }
+        .principle-block li + li { border-top: 1px dashed rgba(120, 102, 80, 0.18); }
+        .principle-block li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: var(--seal);
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+
+        /* === Self-quiz (sliders) ========================================== */
+        .quiz-intro {
+            background-color: var(--paper-card);
+            padding: 22px 26px 20px;
+            margin-top: 18px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .quiz-intro p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.93rem;
+            line-height: 1.6;
+            color: #2c2620;
+        }
+        .quiz-intro p + p { margin-top: 10px; }
+        .quiz-key {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            margin: 18px 0;
+            background-color: var(--paper-card);
+            padding: 12px 22px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .quiz-key strong {
+            font-weight: 600;
+            color: var(--seal);
+            margin-right: 4px;
+        }
+        .quiz-cat {
+            background-color: var(--paper-card);
+            padding: 22px 28px 18px;
+            margin-top: 16px;
+            position: relative;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .quiz-cat-head {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            padding-bottom: 14px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--rule);
+            flex-wrap: wrap;
+        }
+        .quiz-cat-head h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--ink);
+        }
+        .quiz-cat-head .desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1rem;
+            flex: 1;
+            min-width: 180px;
+        }
+        .quiz-cat-head .score {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-left: auto;
+            white-space: nowrap;
+        }
+        .quiz-row {
+            display: grid;
+            grid-template-columns: 1fr 200px 110px;
+            align-items: center;
+            gap: 18px;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.18);
+        }
+        .quiz-row:last-child { border-bottom: none; padding-bottom: 4px; }
+        .quiz-statement {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            line-height: 1.4;
+            color: var(--ink);
+        }
+        .quiz-slider {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            margin: 6px 0;
+            accent-color: var(--seal);
+            cursor: pointer;
+        }
+        .quiz-slider:focus-visible { outline: 2px solid rgba(141, 53, 48, 0.4); outline-offset: 2px; }
+        .quiz-slider.untouched { accent-color: rgba(120, 102, 80, 0.5); }
+        .quiz-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        .quiz-value.set {
+            color: var(--seal);
+            font-weight: 600;
+        }
+        .quiz-summary {
+            margin-top: 18px;
+            background-color: #fff5d4;
+            padding: 22px 28px 20px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 18px -10px rgba(31, 26, 22, 0.35);
+        }
+        .quiz-summary.empty {
+            background-color: var(--paper-card);
+            color: var(--muted);
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.02rem;
+        }
+        .quiz-summary h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+        .quiz-summary .focus {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+        .quiz-summary .tip {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.93rem;
+            line-height: 1.55;
+            color: #2c2620;
+        }
+        .quiz-summary .tip + .tip { margin-top: 8px; }
+        .quiz-bars {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 12px;
+            margin-bottom: 14px;
+        }
+        .quiz-bar {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+        }
+        .quiz-bar .label {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.72rem;
+        }
+        .quiz-bar .track {
+            height: 8px;
+            background-color: rgba(120, 102, 80, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .quiz-bar .fill {
+            height: 100%;
+            background-color: var(--seal);
+            transition: width 0.3s ease;
+        }
+        .quiz-bar .num {
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+            color: var(--seal);
+            font-size: 0.78rem;
+        }
+        @media (max-width: 720px) {
+            .quiz-row {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 4px;
+                padding: 14px 0;
+            }
+            .quiz-value { text-align: left; }
+        }
+
+        /* === Destination card (what we'll walk out with) ================== */
+        .destination-card {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 22px 28px 20px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--indigo);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .destination-card .label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--indigo);
+            margin-bottom: 8px;
+        }
+        .destination-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            line-height: 1.15;
+        }
+        .destination-card ol {
+            list-style: none;
+            counter-reset: dest;
+            padding: 0;
+            margin: 0;
+        }
+        .destination-card li {
+            counter-increment: dest;
+            position: relative;
+            padding: 8px 0 8px 36px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: var(--ink);
+        }
+        .destination-card li + li { border-top: 1px dashed rgba(120, 102, 80, 0.2); }
+        .destination-card li::before {
+            content: counter(dest);
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle at 30% 28%, #5b7281 0%, #2f4a55 52%, #1a2c34 100%);
+            color: var(--paper-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            box-shadow:
+                inset 0 1px 1px rgba(255,255,255,0.3),
+                inset 0 -1px 2px rgba(0,0,0,0.3),
+                0 1px 2px rgba(31,26,22,0.25);
+        }
+        .destination-card strong { color: var(--indigo); font-weight: 700; }
+
+        /* === Field-guide trigger button =================================== */
+        .field-guide-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            background-color: transparent;
+            color: var(--indigo);
+            border: 1px solid rgba(47, 74, 85, 0.4);
+            padding: 8px 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .field-guide-btn:hover {
+            background-color: rgba(47, 74, 85, 0.08);
+            border-color: var(--indigo);
+            color: var(--indigo);
+        }
+        .field-guide-btn::after { content: '↗'; font-size: 0.95em; opacity: 0.75; }
+
+        /* === Deep modal (field guide essay) =============================== */
+        .deep-modal[hidden] { display: none; }
+        .deep-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .deep-backdrop {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(28, 24, 21, 0.86);
+            cursor: pointer;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .deep-card {
+            position: relative;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            width: 100%;
+            max-width: 820px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--rule);
+            overflow: hidden;
+        }
+        .deep-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            background-color: var(--ink);
+            color: var(--paper-card);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0 2px 0;
+        }
+        .deep-close:hover { background-color: var(--seal); }
+        .deep-content {
+            overflow-y: auto;
+            padding: 36px 44px 36px;
+            flex: 1;
+        }
+        .fg-header {
+            text-align: center;
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 22px;
+            margin-bottom: 24px;
+        }
+        .fg-header .eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+        .fg-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            line-height: 1.1;
+            color: var(--ink);
+            margin: 0;
+        }
+        .fg-tagline {
+            margin-top: 10px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+        .fg-content > p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.94rem;
+            line-height: 1.65;
+            color: var(--ink);
+            margin-bottom: 14px;
+        }
+        .fg-content p em { font-style: italic; color: var(--seal); }
+        .fg-content p strong { font-weight: 600; }
+        .fg-section {
+            border-top: 1px solid var(--rule);
+            padding-top: 18px;
+            margin-top: 18px;
+        }
+        .fg-section > summary {
+            list-style: none;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            padding-right: 30px;
+        }
+        .fg-section > summary::-webkit-details-marker { display: none; }
+        .fg-section > summary h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--ink);
+            margin: 0;
+            padding-right: 24px;
+        }
+        .fg-section > summary::after {
+            content: '▸';
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            color: var(--seal);
+            font-size: 0.95rem;
+            transition: transform 0.2s;
+        }
+        .fg-section[open] > summary::after { transform: rotate(90deg); }
+        .fg-section h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--seal);
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+        .fg-section h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-top: 16px;
+            margin-bottom: 6px;
+        }
+        .fg-section p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--ink);
+            margin: 10px 0;
+        }
+        .fg-section p em { font-style: italic; color: var(--seal); }
+        .fg-section p strong { font-weight: 600; }
+        .fg-section ul {
+            margin: 10px 0 14px 0;
+            padding-left: 22px;
+        }
+        .fg-section ul li {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .fg-section ul li strong { font-weight: 600; }
+        .fg-section ul li em { font-style: italic; color: var(--seal); }
+        .fg-pullout {
+            background-color: #fff5d4;
+            padding: 16px 22px;
+            margin: 14px 0;
+            border-left: 3px solid var(--seal);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+        @media (max-width: 720px) {
+            .deep-content { padding: 28px 22px 28px; }
+            .fg-section > summary h2 { font-size: 1.3rem; }
+        }
+
+        /* === Footnote markers + comic modal =============================== */
+        .footnote-mark {
+            display: inline-block;
+            background-color: transparent;
+            border: none;
+            color: var(--seal);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.7em;
+            vertical-align: super;
+            line-height: 1;
+            padding: 6px 8px;
+            margin: -4px 0;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.15s;
+            min-width: 24px;
+            text-align: center;
+        }
+        .footnote-mark:hover, .footnote-mark:focus-visible {
+            background-color: rgba(141, 53, 48, 0.15);
+            outline: none;
+        }
+        .comic-modal[hidden] { display: none; }
+        .comic-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .comic-backdrop {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(28, 24, 21, 0.86);
+            cursor: pointer;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .comic-card {
+            position: relative;
+            background-color: var(--paper-card);
+            padding: 22px;
+            max-width: 720px;
+            max-height: 90vh;
+            overflow: auto;
+            box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--rule);
+        }
+        .comic-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            background-color: var(--ink);
+            color: var(--paper-card);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0 2px 0;
+            font-weight: 400;
+        }
+        .comic-close:hover { background-color: var(--seal); }
+        .comic-img {
+            display: block;
+            max-width: 100%;
+            max-height: 75vh;
+            height: auto;
+            margin: 0 auto;
+        }
+        .comic-credit {
+            text-align: center;
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+        .comic-credit a { color: var(--seal); text-decoration: none; border-bottom: 1px dotted rgba(141, 53, 48, 0.4); }
+
+        /* === Table of contents ============================================ */
+        .toc {
+            background-color: var(--paper-card);
+            padding: 22px 28px 18px;
+            margin-bottom: 28px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .toc-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            columns: 2;
+            column-gap: 28px;
+        }
+        .toc li {
+            padding: 5px 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.35;
+            break-inside: avoid;
+        }
+        .toc a {
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .toc a:hover { border-bottom-color: var(--seal); color: var(--seal); }
+        .toc .num {
+            display: inline-block;
+            min-width: 38px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-right: 6px;
+        }
+        .toc-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.25);
+            flex-wrap: wrap;
+        }
+        .toc-actions button {
+            background-color: transparent;
+            color: var(--seal);
+            border: 1px solid rgba(141, 53, 48, 0.35);
+            padding: 6px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.66rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .toc-actions button:hover {
+            background-color: rgba(141, 53, 48, 0.08);
+            border-color: var(--seal);
+            color: var(--seal);
+        }
+        @media (max-width: 720px) {
+            .toc ul { columns: 1; }
+        }
+
+        /* === Lesson section (collapsible via details/summary) ============= */
+        .lesson-section { margin-bottom: 24px; }
+        .lesson-section > summary {
+            list-style: none;
+            cursor: pointer;
+            display: block;
+        }
+        .lesson-section > summary::-webkit-details-marker { display: none; }
+        .lesson-section > summary::marker { display: none; }
+        .lesson-section .section-head {
+            position: relative;
+            padding-right: 50px;
+            transition: background 0.15s;
+        }
+        .lesson-section .section-head .chevron {
+            position: absolute;
+            right: 22px;
+            top: 24px;
+            color: var(--seal);
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+        .lesson-section[open] .section-head .chevron {
+            transform: rotate(90deg);
+        }
+        .lesson-section > summary:hover .section-head { background-color: #fff8e5; }
+        .lesson-section > summary:focus-visible { outline: none; }
+        .lesson-section > summary:focus-visible .section-head {
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3),
+                0 0 0 2px rgba(141, 53, 48, 0.4);
+        }
+        .lesson-section .section-body { margin-top: 16px; }
+
+        /* === "Pick a restriction" intro card ============================== */
+        .topic-intro {
+            background-color: var(--paper-card);
+            padding: 18px 24px 16px;
+            margin-top: 24px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .topic-intro h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            color: var(--ink);
+        }
+        .topic-intro p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.94rem;
+            line-height: 1.55;
+            color: var(--muted);
+        }
+        .topic-intro em { color: var(--seal); font-style: italic; }
+
+        /* === Topic cloud (flat, single box, varied colors) =============== */
+        .topic-cloud-flat {
+            background-color: var(--paper-card);
+            padding: 22px 26px;
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .topic-cloud-flat .topic-chip:nth-child(3n) { background-color: #fcebd0; }
+        .topic-cloud-flat .topic-chip:nth-child(5n) { background-color: #e8e3d3; border-color: rgba(31, 58, 94, 0.3); }
+        .topic-cloud-flat .topic-chip:nth-child(7n) { background-color: #fce5c8; font-style: italic; }
+        .topic-cloud-flat .topic-chip:nth-child(11n) { background-color: #f4e3c4; }
+
+        /* === Reflective composer (single, flat library) =================== */
+        .reflective-library {
+            background-color: var(--paper-card);
+            padding: 22px 28px 18px;
+            margin-top: 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .reflective-library h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .reflective-library ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .reflective-library li {
+            padding: 9px 0;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.2);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .reflective-library li:last-child { border-bottom: none; }
+        .reflective-library .ref {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        .reflective-library .ref a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        .reflective-library .ref a::after {
+            content: '↗';
+            font-size: 0.78em;
+            opacity: 0.6;
+            margin-left: 3px;
+        }
+        .reflective-library em { color: var(--seal); font-style: italic; }
+
+        .composer-single {
+            background-color: var(--paper-card);
+            padding: 22px 28px 22px;
+            margin-top: 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .composer-single textarea {
+            width: 100%;
+            min-height: 80px;
+            border: 1px solid var(--rule);
+            background-color: #fffcf3;
+            padding: 14px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--ink);
+            resize: vertical;
+            border-radius: 2px;
+            transition: border-color 0.15s;
+        }
+        .composer-single textarea:focus {
+            outline: none;
+            border-color: var(--seal);
+            box-shadow: 0 0 0 1px rgba(141, 53, 48, 0.25);
+        }
+        .composer-single textarea::placeholder {
+            color: rgba(120, 102, 80, 0.7);
+            font-style: italic;
+        }
+        .composer-single .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .composer-single .hint {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+        .composer-single .examples {
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            color: var(--muted);
+        }
+        .composer-single .examples summary {
+            cursor: pointer;
+            color: var(--seal);
+            font-weight: 600;
+            list-style: none;
+        }
+        .composer-single .examples summary::-webkit-details-marker { display: none; }
+        .composer-single .examples summary::before { content: '▸ '; }
+        .composer-single .examples[open] summary::before { content: '▾ '; }
+        .composer-single .examples ul {
+            margin: 10px 0 0 0;
+            padding-left: 18px;
+            list-style: square;
+        }
+        .composer-single .examples li {
+            padding: 5px 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.4;
+            color: var(--ink);
+            font-style: italic;
+        }
+
+        /* === Question composer ============================================ */
+        button {
+            background-color: var(--ink);
+            color: var(--paper-card);
+            border: none;
+            padding: 9px 18px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s, transform 0.1s;
+        }
+        button:hover { background-color: var(--seal); }
+        button:active { transform: translateY(1px); }
+        button.ghost {
+            background-color: transparent;
+            color: var(--muted);
+            border: 1px solid var(--rule);
+        }
+        button.ghost:hover {
+            background-color: transparent;
+            color: var(--seal);
+            border-color: var(--seal);
+        }
+
+        /* === Question wall ================================================= */
+        .wall-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            gap: 14px;
+            flex-wrap: wrap;
+            background-color: var(--paper-card);
+            padding: 16px 24px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .wall-head h2 { margin-top: 2px; font-size: 1.6rem; }
+        .wall-count {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+        .wall {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            min-height: 80px;
+        }
+        .note {
+            background-color: #fff5d4;
+            padding: 18px 20px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                3px 4px 8px -2px rgba(31, 26, 22, 0.25),
+                0 1px 2px rgba(31, 26, 22, 0.1);
+            transform: rotate(var(--rot, -0.6deg));
+            position: relative;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            line-height: 1.4;
+            color: #2a2218;
+        }
+        .note:nth-child(3n+2) { background-color: #fcebd0; --rot: 0.8deg; }
+        .note:nth-child(5n+3) { background-color: #fce5c8; --rot: -1deg; }
+        .note:nth-child(7n+4) { background-color: #fff0d6; --rot: 0.4deg; }
+        .note .source {
+            display: block;
+            margin-top: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--seal);
+        }
+        .note .pin {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: var(--seal);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 1px 3px rgba(31, 26, 22, 0.4);
+        }
+        .empty-wall {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--muted);
+            font-style: italic;
+            padding: 40px 0;
+            font-size: 1rem;
+        }
+
+        /* === Audit / journal =============================================== */
+        .audit {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-top: 18px;
+        }
+        .audit-col {
+            background-color: var(--paper-card);
+            padding: 22px 24px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .audit-col h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .audit-col .help {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        .audit-col textarea {
+            width: 100%;
+            min-height: 200px;
+            border: 1px solid var(--rule);
+            background-color: #fffcf3;
+            padding: 12px 14px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.04rem;
+            line-height: 1.5;
+            color: var(--ink);
+            resize: vertical;
+        }
+        .audit-col textarea:focus {
+            outline: none;
+            border-color: var(--seal);
+        }
+        .saved-tag {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            color: var(--muted);
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .saved-tag.show { opacity: 1; }
+
+        /* === Opening (warm-up cards before Section I) ===================== */
+        .opening-head h2 {
+            font-style: italic;
+        }
+        .opening-cards {
+            display: grid;
+            gap: 16px;
+        }
+        .opening-card {
+            background-color: var(--paper-card);
+            padding: 24px 28px 22px 60px;
+            position: relative;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .opening-num {
+            position: absolute;
+            top: 22px;
+            left: 22px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: var(--paper-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .opening-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        .opening-card p, .opening-card li {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: #2c2620;
+        }
+        .opening-card p + p { margin-top: 10px; }
+        .opening-card em { color: var(--seal); font-style: italic; font-weight: 600; }
+        .opening-card strong { font-weight: 600; }
+
+        .gratitude-prompts {
+            list-style: none;
+            margin: 12px 0;
+            padding: 0;
+        }
+        .gratitude-prompts li {
+            position: relative;
+            padding: 8px 0 8px 26px;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.18);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+        }
+        .gratitude-prompts li:last-child { border-bottom: none; }
+        .gratitude-prompts li::before {
+            content: '·';
+            position: absolute;
+            left: 4px;
+            top: 6px;
+            font-size: 1.5rem;
+            color: var(--seal);
+            line-height: 1;
+        }
+
+        .opening-action {
+            margin-top: 16px;
+            padding: 14px 18px;
+            background-color: #fff5d4;
+            border-left: 3px solid var(--seal);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            line-height: 1.45;
+            color: var(--ink);
+        }
+        .opening-action strong { color: var(--seal); }
+
+        .lovingkindness {
+            list-style: none;
+            counter-reset: lk;
+            padding: 0;
+            margin: 12px 0;
+        }
+        .lovingkindness li {
+            counter-increment: lk;
+            position: relative;
+            padding: 6px 0 6px 36px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--ink);
+        }
+        .lovingkindness li::before {
+            content: counter(lk);
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 22px;
+            height: 22px;
+            border: 1px solid var(--seal);
+            border-radius: 50%;
+            color: var(--seal);
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 0.72rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lovingkindness-mantra {
+            margin-top: 14px;
+            padding: 14px 18px;
+            background-color: var(--paper-deep);
+            border-left: 3px solid var(--seal);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.12rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+        .lovingkindness-mantra em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 700;
+        }
+        .lovingkindness-seed {
+            margin-top: 10px;
+            font-size: 0.86rem;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+        .lovingkindness-seed em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        .opening-question {
+            margin: 12px 0 6px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            line-height: 1.25;
+            color: var(--ink);
+        }
+        .opening-card details {
+            margin-top: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            color: var(--muted);
+        }
+        .opening-card details summary {
+            cursor: pointer;
+            color: var(--seal);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            list-style: none;
+        }
+        .opening-card details summary::-webkit-details-marker { display: none; }
+        .opening-card details summary::before { content: '▸ '; }
+        .opening-card details[open] summary::before { content: '▾ '; }
+        .opening-card details ul {
+            margin: 10px 0 0 0;
+            padding-left: 18px;
+            list-style: square;
+        }
+        .opening-card details ul li {
+            font-size: 0.86rem;
+            line-height: 1.55;
+            padding: 2px 0;
+        }
+
+        /* === Bednar — Things as They Really Are pair ====================== */
+        .bednar-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .bednar-talk {
+            background-color: var(--paper-card);
+            padding: 24px 28px 22px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .bednar-year {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.72rem;
+            letter-spacing: 0.32em;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+        .bednar-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            line-height: 1.1;
+            color: var(--ink);
+            font-style: italic;
+        }
+        .bednar-title .version {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--seal);
+            margin-left: 4px;
+            letter-spacing: 0.02em;
+            vertical-align: 0.15em;
+        }
+        .bednar-venue {
+            margin-top: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+        .bednar-quote {
+            margin-top: 16px;
+            margin-bottom: 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.08rem;
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--ink);
+            flex: 1;
+        }
+        .bednar-quote::before {
+            content: '“';
+            font-size: 2.2rem;
+            line-height: 0;
+            color: var(--seal);
+            vertical-align: -0.4em;
+            margin-right: 4px;
+        }
+        .bednar-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.76rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            padding-bottom: 2px;
+            transition: border-color 0.15s, color 0.15s;
+            align-self: flex-start;
+        }
+        .bednar-link:hover { border-bottom-color: var(--seal); color: var(--ink); }
+        .bednar-link::after { content: '↗'; font-size: 0.95em; opacity: 0.75; }
+        .bednar-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* === Discussion section: scripture library + topics + speech ====== */
+        .scripture-library {
+            margin-top: 18px;
+        }
+        .scripture-library .group {
+            margin-bottom: 24px;
+        }
+        .scripture-library .group-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 10px;
+            padding: 8px 14px;
+            background-color: var(--paper-card);
+            display: inline-block;
+            box-shadow: 0 4px 10px -6px rgba(31, 26, 22, 0.3);
+        }
+        .scripture-library .group-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+        }
+        .lib-scripture {
+            background-color: var(--paper-card);
+            padding: 18px 22px 16px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 4px 10px -6px rgba(31, 26, 22, 0.25);
+        }
+        .lib-scripture .ref {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .lib-scripture .ref a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        .lib-scripture .ref a::after {
+            content: '↗';
+            font-size: 0.8em;
+            opacity: 0.6;
+            margin-left: 3px;
+        }
+        .lib-scripture .verse {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .lib-scripture .verse em {
+            color: var(--seal);
+            font-style: italic;
+        }
+
+        .topic-cloud {
+            display: grid;
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .topic-group {
+            background-color: var(--paper-card);
+            padding: 18px 22px 16px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .topic-group h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 12px;
+        }
+        .topic-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .topic-chip {
+            background-color: var(--paper-deep);
+            color: var(--ink);
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            line-height: 1.3;
+            border: 1px solid rgba(120, 102, 80, 0.25);
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+        }
+        .topic-chip:hover {
+            background-color: #e9efd9;
+            border-color: var(--moss);
+            transform: translateY(-1px);
+            cursor: default;
+        }
+        .topic-chip.wacky {
+            background-color: #fce5c8;
+            font-style: italic;
+        }
+        .topic-chip.wise {
+            background-color: #e8e3d3;
+            border-color: rgba(31, 58, 94, 0.3);
+        }
+
+        .speech-box {
+            margin-top: 22px;
+            background-color: #fff5d4;
+            padding: 26px 32px 22px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 18px -10px rgba(31, 26, 22, 0.35);
+        }
+        .speech-box h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        .speech-box .timing {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--seal);
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .speech-beats {
+            list-style: none;
+            counter-reset: beat;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        .speech-beats li {
+            counter-increment: beat;
+            position: relative;
+            background-color: var(--paper-card);
+            padding: 16px 16px 14px 44px;
+            border-radius: 2px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 10px -6px rgba(31, 26, 22, 0.2);
+        }
+        .speech-beats li::before {
+            content: counter(beat);
+            position: absolute;
+            left: 12px;
+            top: 14px;
+            width: 22px;
+            height: 22px;
+            color: var(--paper-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .speech-beats strong {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+        .speech-beats .secs {
+            display: block;
+            margin-top: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            color: var(--seal);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+        .speech-example {
+            margin-top: 18px;
+            padding: 14px 18px;
+            background-color: var(--paper-card);
+            border-left: 3px solid var(--indigo);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.96rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+        .speech-example .lab {
+            display: block;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.66rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--indigo);
+            margin-bottom: 6px;
+        }
+        @media (max-width: 720px) {
+            .speech-beats { grid-template-columns: 1fr; }
+        }
+
+        .bednar-questions {
+            margin-top: 22px;
+            background-color: #fff5d4;
+            padding: 26px 32px 24px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 18px -10px rgba(31, 26, 22, 0.35);
+        }
+        .bednar-feature {
+            margin-top: 22px;
+            background-color: var(--paper-card);
+            padding: 32px 40px 28px;
+            position: relative;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 10px 24px -12px rgba(31, 26, 22, 0.4);
+        }
+        .bednar-feature::before {
+            content: '“';
+            position: absolute;
+            top: -12px;
+            left: 28px;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 5rem;
+            line-height: 1;
+            color: var(--seal);
+            background-color: var(--paper-card);
+            padding: 0 10px;
+        }
+        .bednar-feature blockquote p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.22rem;
+            line-height: 1.5;
+            color: var(--ink);
+            font-style: italic;
+        }
+        .bednar-feature blockquote p + p {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.25);
+        }
+        .bednar-feature em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
+        .bednar-feature cite {
+            display: block;
+            margin-top: 16px;
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+        }
+        .bednar-feature cite a {
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        /* Second feature card (no large quote glyph, simpler frame) */
+        .bednar-feature.feature-secondary {
+            margin-top: 16px;
+            padding: 26px 32px 22px;
+            border-left: 3px solid var(--seal);
+        }
+        .bednar-feature.feature-secondary::before { display: none; }
+        .bednar-feature.feature-secondary blockquote p {
+            font-size: 1.15rem;
+        }
+
+        /* Bednar's own practice (modeling healthy AI use) */
+        .bednar-practice {
+            margin-top: 16px;
+            background-color: var(--paper-deep);
+            padding: 22px 28px 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .bednar-practice h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 12px;
+        }
+        .bednar-practice p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            font-style: italic;
+            color: var(--ink);
+        }
+        .bednar-practice p + p { margin-top: 10px; }
+        .bednar-practice .practice-note {
+            margin-top: 14px;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            color: var(--muted);
+            padding-top: 12px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.3);
+            line-height: 1.55;
+        }
+        .bednar-practice .practice-note em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        /* === Where the Church stands on AI (links) ======================== */
+        .church-ai-links {
+            margin-top: 16px;
+            background-color: var(--paper-card);
+            padding: 22px 28px 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .church-ai-links h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .church-ai-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        .church-ai-links li + li {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.25);
+        }
+        .church-ai-links a {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .church-ai-links a:hover strong { color: var(--seal); }
+        .church-ai-links strong {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.12rem;
+            color: var(--ink);
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+            align-self: flex-start;
+            transition: color 0.15s;
+        }
+        .church-ai-links span {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        .church-ai-links span em {
+            font-style: italic;
+            color: var(--seal);
+        }
+        .bednar-questions-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.74rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .bednar-questions ol {
+            list-style: none;
+            counter-reset: bednar-q;
+            padding: 0;
+        }
+        .bednar-questions li {
+            counter-increment: bednar-q;
+            position: relative;
+            padding-left: 38px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .bednar-questions li + li { margin-top: 14px; }
+        .bednar-questions li::before {
+            content: counter(bednar-q);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 26px;
+            height: 26px;
+            color: var(--paper-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .bednar-questions li em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
+        @media (max-width: 720px) {
+            .bednar-pair { grid-template-columns: 1fr; }
+            .bednar-questions { padding: 22px 24px 20px; }
+            .bednar-questions li { padding-left: 34px; font-size: 1.08rem; }
+        }
+
+        /* === Closing quote ================================================= */
+        .closing {
+            margin-top: 32px;
+            padding: 36px 40px;
+            background-color: var(--paper-deep);
+            border-left: 3px solid var(--seal);
+            position: relative;
+        }
+        .closing blockquote {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: var(--ink);
+        }
+        .closing cite {
+            display: block;
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+        }
+
+        footer {
+            margin: 56px auto 30px;
+            max-width: 360px;
+            padding: 14px 24px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 500;
+            background-color: var(--paper-card);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        footer a { color: var(--seal); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 540px) {
+            .quiz-bar {
+                grid-template-columns: 1fr auto;
+                row-gap: 4px;
+            }
+            .quiz-bar .label { grid-column: 1; }
+            .quiz-bar .num   { grid-column: 2; }
+            .quiz-bar .track { grid-column: 1 / -1; }
+            .deep-content { padding: 22px 16px 22px; }
+            .fg-section > summary h2 { font-size: 1.15rem; }
+            .bednar-feature { padding: 24px 22px 20px; }
+            .closing { padding: 26px 24px; }
+        }
+        @media print {
+            .bg, .toc-actions, .field-guide-btn, .deep-modal, .comic-modal,
+            .chevron, .footnote-mark, button, .opening-action, #qrcode { display: none !important; }
+            details, .lesson-section { display: block !important; }
+            details:not([open]) > *, .lesson-section:not([open]) > * { display: revert !important; }
+            .lesson-section[open], .lesson-section { open: ''; }
+            details[open] > summary, details > summary { pointer-events: none; }
+            html, body { background: white !important; color: #000; }
+            .bg.has-image { display: none; }
+            .section-head, .card, .opening-card, .principle, .scripture, .lib-scripture,
+            .composer-single, .reflective-library, .truth, .more-than-phones, .destination-card,
+            .quiz-cat, .quiz-key, .quiz-intro, .quiz-summary, .topic-intro, .topic-cloud-flat,
+            .speech-box, .bednar-talk, .bednar-feature, .bednar-practice, .bednar-questions,
+            .church-ai-links, .closing, footer, .title-card {
+                box-shadow: none !important;
+                background-image: none !important;
+                page-break-inside: avoid;
+            }
+            a::after { content: " (" attr(href) ")"; font-size: 0.78em; color: #666; word-break: break-all; }
+            a[href^="#"]::after { content: ""; }
+            .lesson-section > summary > .section-head .chevron { display: none; }
+        }
+
+        @media (max-width: 720px) {
+            /* Hide maple-leaf accent on stacked title-card (it lands over the QR url) */
+            .title-card::after { display: none; }
+            /* Quiz score bars compress to label+number on narrow screens */
+            .quiz-bar { grid-template-columns: 70px 1fr 50px; gap: 8px; }
+            .title-card {
+                flex-direction: column;
+                gap: 18px;
+                padding: 22px 22px 20px;
+                align-items: stretch;
+            }
+            .title-card .title-qr {
+                border-left: none;
+                border-top: 1px solid var(--rule);
+                padding-left: 0;
+                padding-top: 18px;
+            }
+            .title-qr #qrcode { width: 160px; height: 160px; }
+            .title-qr #qrcode canvas, .title-qr #qrcode img { width: 160px; height: 160px; }
+            .title-qr .qr-url { max-width: none; }
+            .page { padding: 36px 18px 20px; }
+            .principles { grid-template-columns: 1fr; }
+            .audit { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+
+    <main class="page">
+        <header class="title-card">
+            <div class="title-text">
+                <div class="eyebrow">For the Strength of Youth · Lesson 174</div>
+                <h1>Crossroads</h1>
+                <p class="subtitle">"Let us be careful and not casual in our use of technology." Reading, reflection, and a class question wall.</p>
+                <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/old-testament-seminary-student-manual-2026/63-for-the-strength-of-youth/634-taking-charge-of-technology?lang=eng" target="_blank" rel="noopener">Read the lesson on ChurchofJesusChrist.org</a>
+            </div>
+            <div class="title-qr">
+                <div class="qr-label">Scan to follow</div>
+                <div class="qr-frame">
+                    <div id="qrcode" role="img" aria-label="QR code for this lesson page"></div>
+                </div>
+                <div class="qr-url" id="qr-url"></div>
+            </div>
+        </header>
+
+        <!-- Table of contents -->
+        <nav class="toc" aria-label="Lesson contents">
+            <div class="toc-title">Lesson Map</div>
+            <ul>
+                <li><a href="#sec-open"><span class="num">Open</span>Before We Begin</a></li>
+                <li><a href="#sec-1"><span class="num">I</span>Which Way Should I Go?</a></li>
+                <li><a href="#sec-2"><span class="num">II</span>Three Principles</a></li>
+                <li><a href="#sec-3"><span class="num">III</span>Where Do I Stand? <em>quiz</em></a></li>
+                <li><a href="#sec-4"><span class="num">IV</span>Discussion</a></li>
+                <li><a href="#sec-5"><span class="num">V</span>Make Your Reflective Question</a></li>
+                <li><a href="#sec-6"><span class="num">VI</span>The Question Wall</a></li>
+                <li><a href="#sec-7"><span class="num">VII</span>My Tech Audit</a></li>
+                <li><a href="#sec-8"><span class="num">VIII</span>Going Deeper · Bednar</a></li>
+            </ul>
+            <div class="toc-actions">
+                <button data-toggle-all="open">Expand all</button>
+                <button data-toggle-all="close">Collapse all</button>
+            </div>
+        </nav>
+
+        <!-- Opening -->
+        <details class="lesson-section" id="sec-open" open>
+            <summary>
+                <div class="section-head opening-head">
+                    <div class="section-num">Open · Before We Begin</div>
+                    <h2>Three small things.</h2>
+                    <p class="lead">Two warm-ups and a question — to settle the room and tee up the lesson.</p>
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+            <div class="opening-cards">
+                <div class="destination-card">
+                    <div class="label">By the end of class</div>
+                    <h3>You'll walk out with three things.</h3>
+                    <ol>
+                        <li>A <strong>plan</strong> for daily tech use — yours, written, specific.</li>
+                        <li>A <strong>plan</strong> for school and seminary — same.</li>
+                        <li>A <strong>framework</strong> for evaluating any new tech, including whatever AI dreams up next that we haven't even named yet.</li>
+                    </ol>
+                </div>
+
+                <div class="opening-card">
+                    <div class="opening-num">1</div>
+                    <h3>A Moment of Gratitude</h3>
+                    <p>Bring three things to mind, one at a time:</p>
+                    <ul class="gratitude-prompts">
+                        <li>A <strong>fun trip</strong> you've been on.</li>
+                        <li>A <strong>delicious meal</strong> you've had.</li>
+                        <li>A <strong>wonderful gift</strong> from a parent, leader, or mentor.</li>
+                    </ul>
+                    <p>Pick one. Now picture <em>everything</em> that went into making it happen — the funds someone provided, the opportunity opened, the research, the planning, the work, the love. Sit with that for a moment.</p>
+                    <div class="opening-action">
+                        <strong>Now: pull out your phone and text the person who made it happen. Thank them. Right now, while we wait.</strong> Gratitude attitude.
+                    </div>
+                </div>
+
+                <div class="opening-card">
+                    <div class="opening-num">2</div>
+                    <h3>Loving-Kindness</h3>
+                    <p>Close your eyes for thirty seconds. Silently offer the same simple wish — to four different people in turn:</p>
+                    <ol class="lovingkindness">
+                        <li>To <strong>yourself</strong></li>
+                        <li>To <strong>someone you love</strong></li>
+                        <li>To <strong>someone you barely know</strong></li>
+                        <li>To <strong>someone who has been hard to love</strong></li>
+                    </ol>
+                    <p class="lovingkindness-mantra">"May they be safe. May they be loved. May they be at peace. May they be <em>truly happy</em>."</p>
+                    <p class="lovingkindness-seed"><em>Stuck?</em> Picture someone whose love for you is uncomplicated — a sleeping puppy, a small child, a mentor smiling — and let that warmth be the place you wish from.</p>
+                </div>
+
+                <div class="opening-card">
+                    <div class="opening-num">3</div>
+                    <h3>A Question to Open the Floor</h3>
+                    <p class="opening-question">When were parents <em>first</em> concerned about technology?</p>
+                    <p>You arrived in the middle of an argument that started before you could read. It goes back a lot further than smartphones — or TV, or radio.</p>
+                    <details>
+                        <summary>A few historical worries (for the teacher)</summary>
+                        <ul>
+                            <li><strong>~370 BC</strong> — Plato (in <em>Phaedrus</em>) had Socrates warn that <em>writing</em> would destroy memory and produce people who only seemed wise.</li>
+                            <li><strong>1700s</strong> — Newspapers and novels were blamed for moral decline, especially among young women.</li>
+                            <li><strong>1950s</strong> — Comic books were said to cause juvenile delinquency (Senate hearings, public burnings).</li>
+                            <li><strong>1960s–80s</strong> — Television, then rock music, then video arcades.</li>
+                            <li><strong>1990s</strong> — The Internet, AOL, chat rooms.</li>
+                            <li><strong>2000s–10s</strong> — Halo<button class="footnote-mark" data-comic="halo-panic" aria-label="Show related comic">¹</button>, World of Warcraft, Facebook, smartphones, TikTok.</li>
+                            <li><strong>2020s</strong> — Screentime studies<button class="footnote-mark" data-comic="screentime-panic" aria-label="Show related comic">²</button>, AI companions, neural implants.</li>
+                        </ul>
+                        <p style="margin-top:8px;">Every generation has its tech panic. Some panics turned out warranted; some did not. <em>Discuss:</em> how do we tell the difference?</p>
+                    </details>
+                    <button class="field-guide-btn" data-modal="field-guide">Read the full field guide</button>
+                </div>
+            </div>
+            </div>
+        </details>
+
+        <!-- Section 1 -->
+        
+        <details class="lesson-section" id="sec-1">
+            <summary>
+                <div class="section-head">
+                <div class="section-num">I · Which Way Should I Go?</div>
+                <h2>Many paths. Limited light.</h2>
+                <p class="lead">Like a traveler at a crossroads, we make daily choices about how to use technology. The Lord has always given His people a way to find the path.</p>
+                <p class="lead lead-instruction">Read each verse and watch for <em>how</em> the Lord guides His people through unfamiliar terrain. What images would you add to a drawing of paths through a forest?</p>
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="scripture-list">
+                <div class="scripture">
+                    <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ex/13?lang=eng&id=p21-p22#p21" target="_blank" rel="noopener">Exodus 13:21–22</a></div>
+                    <p class="verse">"And the Lord went before them by day in a <em>pillar of a cloud,</em> to lead them the way; and by night in a <em>pillar of fire,</em> to give them light; to go by day and night."</p>
+                </div>
+                <div class="scripture">
+                    <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ps/119?lang=eng&id=p105#p105" target="_blank" rel="noopener">Psalm 119:105</a></div>
+                    <p class="verse">"Thy word is a <em>lamp unto my feet,</em> and a light unto my path."</p>
+                </div>
+                <div class="scripture">
+                    <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/isa/2?lang=eng&id=p3,p5#p3" target="_blank" rel="noopener">Isaiah 2:3, 5</a></div>
+                    <p class="verse">"…he will teach us of his ways, and we will <em>walk in his paths</em>… O house of Jacob, come ye, and let us walk in the light of the Lord."</p>
+                </div>
+            </div>
+
+            <div class="truth">
+                <div class="label">A truth</div>
+                <div class="statement">The Lord provides help to guide us in our lives.</div>
+            </div>
+
+            <div class="more-than-phones">
+                <div class="label">And one more thing</div>
+                <h3>This isn't just about phones.</h3>
+                <p>Today's lesson uses "technology" loosely. <em>Phones, social media, scrolling</em> are the obvious examples — but the same principles apply to <em>VR goggles</em>, <em>smart glasses</em>, <em>large language models</em>, <em>AI companions</em>, <em>neural brain implants</em>, <em>robot friends</em>, <em>virtual buddies</em>, and whatever's coming next that we haven't even named yet. The question stays the same regardless of the medium: <em>does it bring you closer to God and to other people, or further away?</em></p>
+            </div>
+        
+            </div>
+        </details>
+
+        <!-- Section 2 -->
+        
+        <details class="lesson-section" id="sec-2">
+            <summary>
+                <div class="section-head">
+                <div class="section-num">II · Three Principles</div>
+                <h2>Purpose. Plan. Pause.</h2>
+                <p class="lead">From the Church's <em>Taking Charge of Technology</em> guide. Today we'll focus on the first — but each card below has questions and practical suggestions for all three.</p>
+                <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/taking-charge-of-technology/youth-lesson-taking-charge-of-technology-use?lang=eng" target="_blank" rel="noopener">Read the full guide</a>
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="principles">
+                <div class="principle focused">
+                    <div class="focus-mark">Today</div>
+                    <h3>Purpose</h3>
+                    <p class="motto">"I can use technology with a purpose. It doesn't control me."</p>
+                    <div class="principle-block">
+                        <h4>Questions to ask</h4>
+                        <ul>
+                            <li>Why am I using technology right now?</li>
+                            <li>Do I feel good about what I'm doing?</li>
+                            <li>How long will I be using technology?</li>
+                            <li>What is my plan for using technology?</li>
+                            <li>What am I showing God by how I use my time?</li>
+                        </ul>
+                    </div>
+                    <div class="principle-block">
+                        <h4>Try it</h4>
+                        <ul>
+                            <li>Send a positive message to someone.</li>
+                            <li>Listen to music that brings peace.</li>
+                            <li>Create your own content.</li>
+                            <li>Use it to learn something on purpose.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="principle">
+                    <h3>Plan</h3>
+                    <p class="motto">"When I plan ahead, I feel better and make better choices."</p>
+                    <div class="principle-block">
+                        <h4>Questions to ask</h4>
+                        <ul>
+                            <li>Am I avoiding content I know isn't right or purposeful?</li>
+                            <li>Do my filters and limits match what I actually want?</li>
+                            <li>Am I spending time with people, or with feeds about people?</li>
+                        </ul>
+                    </div>
+                    <div class="principle-block">
+                        <h4>Try it</h4>
+                        <ul>
+                            <li>Set a daily limit for screen time.</li>
+                            <li>"Follow" only close family and friends.</li>
+                            <li>Make a device-free area at home.</li>
+                            <li>Set up a family charging station out of bedrooms.</li>
+                            <li>Use a content filter.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="principle">
+                    <h3>Pause</h3>
+                    <p class="motto">"It's OK for me to pause and take a break."</p>
+                    <div class="principle-block">
+                        <h4>Questions to ask</h4>
+                        <ul>
+                            <li>Am I feeling the Spirit leave?</li>
+                            <li>Is what I'm seeing making me feel bad, lonely, or weird?</li>
+                            <li>Have I stopped enjoying this and just kept going?</li>
+                        </ul>
+                    </div>
+                    <div class="principle-block">
+                        <h4>Try it</h4>
+                        <ul>
+                            <li>Put the device down and step away.</li>
+                            <li>Pray for strength.</li>
+                            <li>Talk to someone — in person if you can.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        
+            </div>
+        </details>
+
+        <!-- Section 3: Self-quiz -->
+        
+        <details class="lesson-section" id="sec-3">
+            <summary>
+                <div class="section-head">
+                <div class="section-num">III · Where Do I Stand?</div>
+                <h2>A self-quiz on Purpose, Plan, Pause.</h2>
+                <p class="lead">Adapted from the <em>Taking Charge of Technology</em> guide. Drag each slider to how true the statement is for you. Be honest — there's no score sent anywhere.</p>
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="quiz-intro">
+                <p>We may sometimes struggle to use technology appropriately, and we may feel guilty when that happens. It's helpful to be aware of influences that encourage harmful technology use — profit-driven companies use tactics designed to foster addictive behaviors if we let them, and excessive use of social media has been shown to trigger depression and other emotional health challenges.</p>
+                <p>There are things we can do to evaluate our technology use and seek Heavenly Father's help to ensure we are using it appropriately and safely.</p>
+            </div>
+
+            <div class="quiz-key">
+                <span><strong>1</strong>Never</span>
+                <span><strong>2</strong>Sometimes</span>
+                <span><strong>3</strong>Often</span>
+                <span><strong>4</strong>Almost always</span>
+                <span><strong>5</strong>Always</span>
+            </div>
+
+            <div id="quiz-categories"><!-- populated by JS --></div>
+
+            <div class="quiz-summary empty" id="quiz-summary">
+                Drag a slider to begin. As you answer, your weakest area will surface here with ideas for goals.
+            </div>
+        
+            </div>
+        </details>
+
+        <!-- Section 4: Discussion / Debate -->
+        
+        <details class="lesson-section" id="sec-4">
+            <summary>
+                <div class="section-head">
+                <div class="section-num">IV · Discussion</div>
+                <h2>Where should the lines be?</h2>
+                <p class="lead">Pair up. One person speaks <em>for</em> a restriction, one <em>against</em>. Each person picks a verse from the library below, structures a 30-second take, and goes. No prep — just go.</p>
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="scripture-library">
+                <div class="group">
+                    <div class="group-label">Guidance · The Lord shows the way</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ex/13?lang=eng&id=p21-p22#p21" target="_blank" rel="noopener">Exodus 13:21–22</a></div>
+                            <p class="verse">"And the Lord went before them by day in a <em>pillar of a cloud,</em> to lead them the way; and by night in a <em>pillar of fire,</em> to give them light; to go by day and night."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ps/119?lang=eng&id=p105#p105" target="_blank" rel="noopener">Psalm 119:105</a></div>
+                            <p class="verse">"Thy word is a <em>lamp unto my feet,</em> and a light unto my path."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/isa/2?lang=eng&id=p3,p5#p3" target="_blank" rel="noopener">Isaiah 2:3, 5</a></div>
+                            <p class="verse">"…he will teach us of his ways, and we will <em>walk in his paths</em>… O house of Jacob, come ye, and let us walk in the light of the Lord."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Intent · Watch your mind</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/philip/4?lang=eng&id=p8#p8" target="_blank" rel="noopener">Philippians 4:8</a></div>
+                            <p class="verse">"Whatsoever things are <em>true</em>, whatsoever things are <em>honest</em>, whatsoever things are <em>just</em>, whatsoever things are <em>pure</em>, whatsoever things are <em>lovely</em>, whatsoever things are of <em>good report</em>… <em>think on these things</em>."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/col/3?lang=eng&id=p23#p23" target="_blank" rel="noopener">Colossians 3:23</a></div>
+                            <p class="verse">"And whatsoever ye do, do it <em>heartily, as to the Lord</em>, and not unto men."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/prov/16?lang=eng&id=p3#p3" target="_blank" rel="noopener">Proverbs 16:3</a></div>
+                            <p class="verse">"<em>Commit thy works unto the Lord</em>, and thy thoughts shall be established."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Pause · Be still</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/ps/46?lang=eng&id=p10#p10" target="_blank" rel="noopener">Psalm 46:10</a></div>
+                            <p class="verse">"<em>Be still</em>, and know that I am God."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/matt/26?lang=eng&id=p41#p41" target="_blank" rel="noopener">Matthew 26:41</a></div>
+                            <p class="verse">"<em>Watch and pray</em>, that ye enter not into temptation: the spirit indeed is willing, but the flesh is weak."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Weakness · Grace is enough</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/2-cor/12?lang=eng&id=p9#p9" target="_blank" rel="noopener">2 Corinthians 12:9</a></div>
+                            <p class="verse">"My <em>grace is sufficient for thee</em>: for my strength is made perfect in weakness."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Appetite · Don't pay for what doesn't satisfy</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/ot/isa/55?lang=eng&id=p2#p2" target="_blank" rel="noopener">Isaiah 55:2</a></div>
+                            <p class="verse">"Wherefore do ye <em>spend money for that which is not bread</em>? and your labour for that which <em>satisfieth not</em>?"</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/9?lang=eng&id=p51#p51" target="_blank" rel="noopener">2 Nephi 9:51</a></div>
+                            <p class="verse">"Do not spend money for that which is of <em>no worth</em>, nor your labor for that which <em>cannot satisfy</em>."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Love · Over distraction</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/nt/matt/22?lang=eng&id=p36-p39#p36" target="_blank" rel="noopener">Matthew 22:36–39</a></div>
+                            <p class="verse">"Thou shalt <em>love the Lord thy God</em> with all thy heart… and thy <em>neighbour as thyself</em>."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/bofm/moro/7?lang=eng&id=p45#p45" target="_blank" rel="noopener">Moroni 7:45</a></div>
+                            <p class="verse">"And charity… <em>envieth not</em>, is not <em>puffed up</em>, seeketh not her own, is not easily provoked, thinketh no evil."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="group-label">Light · And what darkens</div>
+                    <div class="group-cards">
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/50?lang=eng&id=p23-p25#p23" target="_blank" rel="noopener">D&amp;C 50:23–25</a></div>
+                            <p class="verse">"That which doth <em>not edify</em> is <em>not of God</em>, and is darkness. That which is of God is light; and he that receiveth light… <em>that light groweth brighter and brighter</em> until the perfect day."</p>
+                        </div>
+                        <div class="lib-scripture">
+                            <div class="ref"><a href="https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/63?lang=eng&id=p16#p16" target="_blank" rel="noopener">D&amp;C 63:16</a></div>
+                            <p class="verse">"He that <em>looketh on a woman to lust</em> after her… shall not have the Spirit, but shall deny the faith."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic-intro">
+                <h3>Pick a restriction. Pick a side. Go.</h3>
+                <p>Mix common, less common, wise, and wacky. Some are real proposals (Haidt's <em>Anxious Generation</em>); some are just to argue.</p>
+            </div>
+
+            <div class="topic-cloud-flat">
+                <span class="topic-chip">No phones during class</span>
+                <span class="topic-chip">Phones locked in pouches all day</span>
+                <span class="topic-chip">No phones during seminary</span>
+                <span class="topic-chip">Phone-free lunch period</span>
+                <span class="topic-chip">No AI for homework, ever</span>
+                <span class="topic-chip">AI required for homework</span>
+                <span class="topic-chip">No social media on schooldays</span>
+                <span class="topic-chip">Notes by hand, no laptops</span>
+                <span class="topic-chip">Phone curfew at 9pm</span>
+                <span class="topic-chip">Charger out of bedrooms</span>
+                <span class="topic-chip">No phones at the table</span>
+                <span class="topic-chip">Phone-free Sundays</span>
+                <span class="topic-chip">Family "tech treaty" everyone signs</span>
+                <span class="topic-chip">No headphones during family time</span>
+                <span class="topic-chip">One hour outside before any screen</span>
+                <span class="topic-chip">No smartphone before high school (Haidt)</span>
+                <span class="topic-chip">No social media before 16 (Haidt)</span>
+                <span class="topic-chip">Mandatory parental controls until 18</span>
+                <span class="topic-chip">Hard 2-hour daily screen-time cap</span>
+                <span class="topic-chip">App allowlist only</span>
+                <span class="topic-chip">No video games on weekdays</span>
+                <span class="topic-chip">Required content filter</span>
+                <span class="topic-chip">No AI companions, period</span>
+                <span class="topic-chip">Only "create" apps, no "consume" apps</span>
+                <span class="topic-chip">Flip phones until age 21</span>
+                <span class="topic-chip">Faraday cage for charging at night</span>
+                <span class="topic-chip">Photos delayed 1 week before posting</span>
+                <span class="topic-chip">No memes during seminary</span>
+                <span class="topic-chip">Read scripture before opening any app each morning</span>
+                <span class="topic-chip">24-hour social media fast every Sunday</span>
+                <span class="topic-chip">Replace one app a month with something offline</span>
+                <span class="topic-chip">A "phone hour" log reviewed at family council</span>
+            </div>
+
+            <div class="speech-box">
+                <h3>Your 30 seconds</h3>
+                <div class="timing">3 beats · 10 seconds each · ≈ 75 words</div>
+                <ol class="speech-beats">
+                    <li>
+                        <strong>Hook</strong>
+                        State your position in one sentence. Be bold.
+                        <span class="secs">≈ 10 sec</span>
+                    </li>
+                    <li>
+                        <strong>Scripture</strong>
+                        Quote (or paraphrase) one verse from the library and explain why it backs you up.
+                        <span class="secs">≈ 10 sec</span>
+                    </li>
+                    <li>
+                        <strong>Specific</strong>
+                        One concrete example or call to action. Land the plane.
+                        <span class="secs">≈ 10 sec</span>
+                    </li>
+                </ol>
+                <div class="speech-example">
+                    <span class="lab">Example · "for" no phones at seminary</span>
+                    "Phones don't belong in seminary. <em>Be still, and know that I am God</em> — Psalm 46:10. You can't be still with a buzzing pocket. Try one week with your phone in your bag, screen-down. See if anything you'd actually want to feel shows up."
+                </div>
+            </div>
+        
+            </div>
+        </details>
+
+        <!-- Section 5: Make Your Reflective Question -->
+        <details class="lesson-section" id="sec-5">
+            <summary>
+                <div class="section-head">
+                    <div class="section-num">V · Make Your Reflective Question</div>
+                    <h2>Turn a verse into a question.</h2>
+                    <p class="lead">Skim the scriptures below and write one question we could ask ourselves to be more intentional with technology. Repeat as many times as you'd like — every question goes to the wall.</p>
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                <div class="reflective-library">
+                    <h4>Scriptures to spark a question</h4>
+                    <ul id="reflective-library-list"><!-- populated by JS --></ul>
+                </div>
+
+                <div class="composer-single">
+                    <textarea id="reflective-input" rows="3"></textarea>
+                    <div class="row">
+                        <span class="hint">Press <strong>⌘ Enter</strong> or click below to post to the wall.</span>
+                        <button id="reflective-submit">Add to wall</button>
+                    </div>
+                    <details class="examples">
+                        <summary>Need ideas? Some example questions</summary>
+                        <ul>
+                            <li>Will using technology this way bring me satisfaction or leave me feeling empty?</li>
+                            <li>Is my use of technology distracting me from showing love for God or others?</li>
+                            <li>Will this lead me to envy others or compare myself to them?</li>
+                            <li>How can I use technology in a way that brings more light into my life?</li>
+                            <li>Does this use of technology foster lustful desires?</li>
+                            <li>Is my use of technology helping or hurting my relationships?</li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+        </details>
+
+        <!-- Section 6: Question Wall -->
+        <details class="lesson-section" id="sec-6">
+            <summary>
+                <div class="section-head">
+                    <div class="section-num">VI · The Question Wall</div>
+                    <h2>Our class's reflective questions.</h2>
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                <div class="wall-head">
+                    <span class="wall-count" id="wall-count">0 questions</span>
+                    <button class="ghost" id="clear-wall">Clear wall</button>
+                </div>
+                <div class="wall" id="wall"></div>
+            </div>
+        </details>
+
+        <!-- Section 7: My Tech Audit -->
+        <details class="lesson-section" id="sec-7">
+            <summary>
+                <div class="section-head">
+                <div class="section-num">VII · My Tech Audit</div>
+                <h2>Evaluate honestly.</h2>
+                <p class="lead">Private to your device. Nothing is sent anywhere — your reflections stay on your phone or laptop.</p>
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="audit">
+                <div class="audit-col">
+                    <h4>How I use technology</h4>
+                    <p class="help">List the apps, sites, and ways you spend screen time. Be specific.</p>
+                    <textarea id="audit-uses" placeholder="• YouTube — 90 min/day&#10;• Group chats — checking constantly&#10;• Scripture app — 5 min&#10;…"></textarea>
+                    <div class="saved-tag" id="saved-uses">Saved.</div>
+                </div>
+                <div class="audit-col">
+                    <h4>Holding it against the wall</h4>
+                    <p class="help">Pick one or two questions from the wall. Where am I doing well? Where could I change?</p>
+                    <textarea id="audit-journal" placeholder="Pick a question and answer it honestly. Note any impressions from the Spirit."></textarea>
+                    <div class="saved-tag" id="saved-journal">Saved.</div>
+                </div>
+            </div>
+        
+            </div>
+        </details>
+
+        <!-- Section 8: Going Deeper -->
+        <details class="lesson-section" id="sec-8">
+            <summary>
+                <div class="section-head">
+                <div class="section-num">VIII · Going Deeper</div>
+                <h2><em>Things as They Really Are.</em></h2>
+                <p class="lead">Elder David A. Bednar gave two warnings about technology — fifteen years apart. <em>That was then. This is now.</em></p>
+            
+                    <span class="chevron" aria-hidden="true">▸</span>
+                </div>
+            </summary>
+            <div class="section-body">
+                            <div class="bednar-pair">
+                <article class="bednar-talk">
+                    <div class="bednar-year">2009 · That Was Then</div>
+                    <h3 class="bednar-title">Things as They Really Are</h3>
+                    <p class="bednar-venue">CES Fireside · BYU-Idaho · May 3, 2009 <span style="opacity:0.7;">(reprinted Ensign · June 2010)</span></p>
+                    <blockquote class="bednar-quote">I raise an apostolic voice of warning about the potentially stifling, suffocating, suppressing, and constraining impact of some kinds of cyberspace interactions and experiences upon our souls.</blockquote>
+                    <div class="bednar-actions">
+                        <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/ensign/2010/06/things-as-they-really-are?lang=eng" target="_blank" rel="noopener">Read</a>
+                        <a class="bednar-link" href="https://www.youtube.com/watch?v=CstRqAlAZf0" target="_blank" rel="noopener">Watch</a>
+                    </div>
+                </article>
+                <article class="bednar-talk">
+                    <div class="bednar-year">2024 · This Is Now</div>
+                    <h3 class="bednar-title">Things as They Really Are <span class="version">2.0</span></h3>
+                    <p class="bednar-venue">Worldwide Devotional for Young Adults · Nov 3, 2024</p>
+                    <blockquote class="bednar-quote">An AI companion is only a mathematical algorithm. It does not like you. It does not care about you. It does not really know if you exist or not. … It is a set of computer equations that will treat you as an object to be acted upon, if you let it.</blockquote>
+                    <div class="bednar-actions">
+                        <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener">Read</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="bednar-feature">
+                <blockquote>
+                    <p>AI is cloaked in the credibility and promises of scientific progress… we might naively be seduced into surrendering our precious moral agency to a technology that can <em>only think telestial</em>. By so doing, we may gradually be transformed from <em>agents who can act</em> into <em>objects that are only acted upon</em>.</p>
+                    <p>Artificial intelligence cannot simulate, imitate, or replace the influence of the Holy Ghost in our lives. No matter how sophisticated and elegant AI technology ultimately may become, it simply can never bear witness of the Father and the Son, reveal the truth of all things, or sanctify those who have repented and been baptized.</p>
+                </blockquote>
+                <cite>— Elder Bednar, <a href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener"><em>Things as They Really Are 2.0</em></a></cite>
+            </div>
+
+            <div class="bednar-feature feature-secondary">
+                <blockquote>
+                    <p>One of my great concerns is that overreliance on AI technology will cause us to become <em>spiritually slothful and shallow</em> — and to forfeit the blessings made possible through righteous work.</p>
+                    <p>A simple command spoken into your digital device, wait a few seconds or minutes, and you have what you need. <em>But do you really have what you need?</em></p>
+                </blockquote>
+                <cite>— Elder Bednar, <a href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener"><em>Things as They Really Are 2.0</em></a></cite>
+            </div>
+
+            <div class="bednar-practice">
+                <h4>Bednar's own practice</h4>
+                <p>"I personally do not use this technology to generate or draft my talks, articles, or content for other projects. This must be my diligent effort, my creative work, and, most importantly, my seeking to be open to inspiration from the Holy Ghost."</p>
+                <p>"I do use this technology to critique my work."</p>
+                <p class="practice-note">He used AI to analyze the tone of <em>this very talk</em> after writing it — and made several changes based on the feedback. The model: AI as a coach or editor, never as a ghostwriter.</p>
+            </div>
+
+            <div class="church-ai-links">
+                <h4>Where the Church stands on AI</h4>
+                <ul>
+                    <li>
+                        <a href="https://www.churchofjesuschrist.org/learn/artificial-intelligence?lang=eng" target="_blank" rel="noopener">
+                            <strong>Church · Learn — Artificial Intelligence</strong>
+                            <span>The Church's official guidance and principles for AI use.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://newsroom.churchofjesuschrist.org/article/church-jesus-christ-artificial-intelligence" target="_blank" rel="noopener">
+                            <strong>Newsroom · The Church and Artificial Intelligence</strong>
+                            <span>Elder Gerrit W. Gong on the Church's principles for using AI — transparency, faithfulness, accuracy, accountability.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.deseret.com/faith/2025/11/05/church-of-jesus-christ-wont-use-ai-to-create-images-of-jesus-or-conference-talks/" target="_blank" rel="noopener">
+                            <strong>Deseret News · Nov 5, 2025</strong>
+                            <span>"<em>The Church of Jesus Christ won't use AI to create images of Jesus or conference talks.</em>"</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bednar-questions">
+                <div class="bednar-questions-label">The same two questions in both talks</div>
+                <ol>
+                    <li>Does the use of various technologies and media <em>invite or impede</em> the constant companionship of the Holy Ghost in your life?</li>
+                    <li>Does the time you spend using various technologies and media <em>enlarge or restrict</em> your capacity to live, to love, and to serve in meaningful ways?</li>
+                </ol>
+            </div>
+        
+            </div>
+        </details>
+
+        <!-- Closing -->
+        <div class="closing">
+            <blockquote>
+                "Technological advances are amazing, but if we are not careful, they can distract us from fulfilling our divine potential. Using these appropriately can bring forth the power of heaven. Let us be careful and not casual in our use of technology."
+            </blockquote>
+            <cite>— Elder Peter M. Johnson, <a href="https://www.churchofjesuschrist.org/study/general-conference/2019/10/54johnson?lang=eng" target="_blank" rel="noopener">"Power to Overcome the Adversary,"</a> Nov. 2019</cite>
+        </div>
+
+        <footer>
+            <p><a href="/">← back to seminary resources</a></p>
+        </footer>
+    </main>
+
+    <div class="comic-modal" id="comic-modal" role="dialog" aria-modal="true" aria-label="Related comic" hidden>
+        <div class="comic-backdrop" data-close></div>
+        <div class="comic-card">
+            <button class="comic-close" data-close aria-label="Close">×</button>
+            <img class="comic-img" src="" alt="">
+            <p class="comic-credit" id="comic-credit"></p>
+        </div>
+    </div>
+
+    <!-- Field Guide modal -->
+    <div class="deep-modal" id="field-guide-modal" role="dialog" aria-modal="true" aria-labelledby="fg-title" hidden>
+        <div class="deep-backdrop" data-close></div>
+        <div class="deep-card">
+            <button class="deep-close" data-close aria-label="Close">×</button>
+            <div class="deep-content">
+                <header class="fg-header">
+                    <div class="eyebrow">Field guide</div>
+                    <h1 id="fg-title">The Screen Time Debate</h1>
+                    <p class="fg-tagline">A primer for teens who showed up to a debate already in progress.</p>
+                </header>
+
+                <div class="fg-content">
+                    <p>If you were born after about 2007, you arrived in the middle of an argument that started before you could read. Adults are loudly disagreeing about whether the phone in your pocket is mostly a tool, mostly a problem, or somewhere in between. Both sides have data. Both sides have smart people. Both sides think the other side is being either alarmist or naive.</p>
+                    <p>You deserve the actual map, not a sermon. This guide gives you the timeline, the strongest version of each major position, and the questions that are still genuinely open.</p>
+                </div>
+
+                <details class="fg-section" open>
+                    <summary><h2>Part 1 · The Timeline</h2></summary>
+
+                    <h3>The deep roots (1943–2000)</h3>
+                    <p>The arguments your parents are having about TikTok in 2026 are recognizably the same arguments thinkers were having about industrialization, mass media, and television decades before any of you were born.</p>
+                    <ul>
+                        <li><strong>1943:</strong> C.S. Lewis publishes <em>The Abolition of Man.</em> When humans stop being treated as ends in themselves and start being treated as raw material to be shaped, you get a civilization that produces "men without chests." Foreshadows every modern argument about algorithmic feeds and AI companions. Under 100 pages.</li>
+                        <li><strong>1974:</strong> Robert Pirsig publishes <em>Zen and the Art of Motorcycle Maintenance.</em> Distinguishes technology that <em>extends</em> human capability from technology that <em>diminishes</em> it.</li>
+                        <li><strong>1985:</strong> Neil Postman publishes <em>Amusing Ourselves to Death.</em> TV is restructuring discourse around entertainment values. Substitute "smartphone" for "television" and the argument transfers with little adjustment.</li>
+                        <li><strong>1995:</strong> Robert Putnam publishes "Bowling Alone." Civic life has been collapsing since the 1960s; TV is a major culprit. Empirical predecessor of the modern screen-and-mental-health argument.</li>
+                        <li><strong>1995:</strong> Sherry Turkle publishes <em>Life on the Screen.</em> Three decades of work on mediated identity begin.</li>
+                    </ul>
+
+                    <h3>The setup years (2000–2008)</h3>
+                    <ul>
+                        <li><strong>2000:</strong> Putnam's <em>Bowling Alone</em> book expands the essay.</li>
+                        <li><strong>2000–2005:</strong> Home internet goes mainstream. Most concerns about kids and screens are about <em>content</em>.</li>
+                        <li><strong>2004:</strong> Facebook launches at Harvard.</li>
+                        <li><strong>2006:</strong> Facebook opens to everyone 13+.</li>
+                        <li><strong>2007 (June):</strong> The original iPhone launches.</li>
+                        <li><strong>2008:</strong> App Store opens. The smartphone becomes a platform.</li>
+                    </ul>
+
+                    <h3>The hinge years (2009–2013)</h3>
+                    <p>This is the period the rest of the debate is about.</p>
+                    <ul>
+                        <li><strong>2009 (May 3):</strong> Elder David A. Bednar gives <em>"Things as They Really Are"</em> at BYU-Idaho. He warns that virtual experience can disconnect people from their bodies and from real relationships. <em>A year and a half before Instagram exists.</em></li>
+                        <li><strong>2010 (June):</strong> iPhone 4 launches with a front-facing camera. Selfies become possible. Social comparison becomes visual and constant.</li>
+                        <li><strong>2010:</strong> Nicholas Carr publishes <em>The Shallows.</em> The internet is rewiring cognition for shallowness. Pulitzer finalist.</li>
+                        <li><strong>2010:</strong> Jaron Lanier publishes <em>You Are Not a Gadget.</em></li>
+                        <li><strong>2010 (October):</strong> Instagram launches.</li>
+                        <li><strong>2011:</strong> Snapchat launches.</li>
+                        <li><strong>2011:</strong> Sherry Turkle publishes <em>Alone Together.</em> Connection-through-screens corrodes connection-in-person.</li>
+                        <li><strong>2012:</strong> Facebook buys Instagram. Smartphone ownership crosses 50% of US adults.</li>
+                        <li><strong>2012–2013:</strong> Adolescent mental-health metrics in the US, UK, Canada, Australia, and the Nordics begin turning sharply upward, in lockstep across multiple countries. Whatever caused this, it happened roughly here.</li>
+                        <li><strong>2013 (Feb):</strong> Tristan Harris writes "A Call to Minimize Distraction" inside Google. Becomes its first "design ethicist."</li>
+                    </ul>
+
+                    <h3>The "is this real?" years (2014–2019)</h3>
+                    <ul>
+                        <li><strong>2014:</strong> <em>Musical.ly</em> launches (later TikTok).</li>
+                        <li><strong>2016:</strong> Cal Newport publishes <em>Deep Work.</em></li>
+                        <li><strong>2017:</strong> Jean Twenge: "Have Smartphones Destroyed a Generation?" in <em>The Atlantic.</em> First mainstream alarm bell.</li>
+                        <li><strong>2018:</strong> Przybylski &amp; Orben find screen time correlates with well-being at about r = -0.05 — <em>about the same as eating potatoes.</em> The methodologists' rallying cry: the effects are tiny.</li>
+                        <li><strong>2018:</strong> Tristan Harris co-founds the Center for Humane Technology.</li>
+                        <li><strong>2018:</strong> Lanier publishes <em>Ten Arguments for Deleting Your Social Media Accounts Right Now.</em></li>
+                        <li><strong>2018:</strong> TikTok launches globally. The recommendation algorithm is qualitatively more aggressive than anything before.</li>
+                        <li><strong>2019:</strong> Newport publishes <em>Digital Minimalism.</em></li>
+                    </ul>
+
+                    <h3>The pandemic years (2020–2022)</h3>
+                    <ul>
+                        <li><strong>2020:</strong> COVID. Screen time roughly doubles overnight. Phones become not optional.</li>
+                        <li><strong>2020 (Sept):</strong> Netflix releases <em>The Social Dilemma.</em> Reaches over 100 million people. The argument goes mainstream.</li>
+                        <li><strong>2021 (Sept):</strong> Frances Haugen leaks internal Facebook research showing the company knew Instagram was harmful to teen girls.</li>
+                        <li><strong>2022:</strong> Braghieri, Levy &amp; Makarin publish causal evidence using Facebook's college-by-college rollout. Earlier-rollout schools showed worse student mental health.</li>
+                    </ul>
+
+                    <h3>The action years (2023–2026)</h3>
+                    <ul>
+                        <li><strong>2023:</strong> US Surgeon General Vivek Murthy issues advisory on social media and youth mental health.</li>
+                        <li><strong>2024 (Mar):</strong> Jonathan Haidt publishes <em>The Anxious Generation.</em> 50+ weeks on NYT bestseller list. No smartphone before 14, no social before 16, phone-free schools.</li>
+                        <li><strong>2024 (Apr):</strong> Candice Odgers publishes a sharp critique in <em>Nature.</em> Other researchers pile on.</li>
+                        <li><strong>2024 (Nov 3):</strong> Elder Bednar gives <em>"Things as They Really Are 2.0"</em> — extends the warning to AI. The danger isn't just disembodiment; it's <em>de-agentification</em>.</li>
+                        <li><strong>2024 (Nov):</strong> Australia bans social media for everyone under 16.</li>
+                        <li><strong>2025 (Feb):</strong> UK SMART Schools study in <em>Lancet</em>: phone bans alone don't help, because they don't actually reduce phone use much.</li>
+                        <li><strong>2025 (May):</strong> <em>Vasconcellos et al.</em> in <em>Psychological Bulletin:</em> the relationship is bidirectional. Phones make kids feel worse <em>and</em> kids who feel worse use phones more.</li>
+                        <li><strong>2025:</strong> By October, 31 US states + DC have laws restricting phones in K–12 schools.</li>
+                        <li><strong>2026 (where you are now):</strong> Empirical debate unresolved. Policy debate has moved ahead of the evidence. The kids who grew up inside this experiment are old enough to start telling us what it was like.</li>
+                    </ul>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 2 · The Steelman of Each View</h2></summary>
+
+                    <h3>View A · "It's basically the phones / the design."</h3>
+                    <p><em>Turkle, Lanier, Harris, Bednar, Twenge, Haidt.</em></p>
+                    <p>Adolescent mental health, especially for girls, broke around 2012 in essentially every developed country with data. That's not a coincidence. Whatever caused it has to be (1) international, (2) sharp in time, (3) bigger for girls than boys. Smartphones reaching saturation between 2010 and 2013 fits all three better than any other candidate.</p>
+                    <p>The mechanism is plausible: the human social brain evolved for embodied, face-to-face interaction. Inserting a 24/7 personalized adversarial optimization system into that brain during the most developmentally sensitive period of adolescence should leave marks. It has.</p>
+                    <p>Effect sizes look small in studies, but that's partly because <em>"screen time"</em> is measured terribly, average screen time conflates Bluey with TikTok algorithmic surge, and small effects across whole populations are public health emergencies — that's the regime where lead in gasoline lived.</p>
+                    <div class="fg-pullout">The Bednar variant: this isn't primarily an empirical question. Technology that disembodies you and erodes your agency is bad for you regardless of what the meta-analyses ultimately conclude, because it's bad for you at the level of what humans are <em>for</em>.</div>
+                    <h4>Practical conclusions</h4>
+                    <ul>
+                        <li>Delay smartphones until 14ish</li>
+                        <li>Delay social media until 16ish</li>
+                        <li>Phones out of bedrooms at night</li>
+                        <li>Phone-free schools</li>
+                        <li>Coordinate with other parents so opting out isn't social suicide</li>
+                        <li>Prioritize unstructured outdoor time, in-person friendships, creative work</li>
+                    </ul>
+
+                    <h3>View B · "It's complicated, the panic is overblown."</h3>
+                    <p><em>Odgers, Przybylski, Orben, Ferguson.</em></p>
+                    <p>Every generation of adults panics about a new medium. Plato thought writing would destroy memory. Victorians thought novels would derange young women. The 1950s thought comic books caused delinquency. The 1980s feared D&amp;D. The 1990s blamed video games for school shootings. <em>Each panic was wrong.</em> The prior should be skepticism.</p>
+                    <p>Effect sizes really are small in well-conducted studies (r = 0.05 to 0.15) — about the same as eating potatoes or being born in an even-numbered month. The 2012 mental-health break is real, but lots of things changed around 2012: anemic post-2008 recovery, helicopter parenting, religious participation collapsing, free-range play declining, medicalization-as-identity going viral.</p>
+                    <p>Also: the bidirectional finding (Vasconcellos 2025) matters. Depressed kids use phones to cope <em>at least as much</em> as phones make kids depressed. Banning the phone of a depressed kid is like banning aspirin during a headache epidemic.</p>
+                    <h4>Practical conclusions</h4>
+                    <ul>
+                        <li>Don't panic</li>
+                        <li>Focus on <em>content</em> and <em>context</em> over total time</li>
+                        <li>Active creation good (Minecraft, coding, video editing); passive algorithmic consumption bad</li>
+                        <li>Sleep matters most — phones out of bedrooms is the high-leverage move</li>
+                        <li>Address underlying mental health, not just the symptom</li>
+                        <li>Teach kids to use technology well, not to fear it</li>
+                    </ul>
+
+                    <h3>View C · "The medium is the message — this one is genuinely different."</h3>
+                    <p>Both sides above are missing something. The Haidt camp is right that something changed. The methodologists are right that "screen time" is a useless category. What unifies these is the recognition that <em>this technology is structurally different from every prior technology</em>.</p>
+                    <p>Three properties make algorithmic media a new category:</p>
+                    <ul>
+                        <li><strong>Adversarial and personalized.</strong> TikTok doesn't show you what's popular. It shows you, specifically, the next clip that maximizes the probability <em>you</em> keep watching. The objective function is your continued attention. The system optimizes against your impulse control with the full force of modern machine learning.</li>
+                        <li><strong>Variable ratio reinforcement.</strong> The same conditioning schedule slot machines use. Skinner discovered it in the 1950s training pigeons. The most addictive operant schedule known to behavioral psychology. Now applied to your attention 16 hours a day starting at age 11.</li>
+                        <li><strong>Socially inescapable.</strong> When TV came along, the kid without a TV could still be in the conversation. The kid without Instagram is <em>literally not in the social graph.</em></li>
+                    </ul>
+                    <p>Bednar's 2024 frame names this: technology that turns <em>agents who act</em> into <em>objects that are acted upon.</em> The category isn't "screen vs. paper." It's "tool that extends human agency vs. system that erodes it." A flight simulator extends agency. A spreadsheet extends agency. <em>Minecraft</em> extends agency. An AI girlfriend, an algorithmic feed, and a slot machine erode it.</p>
+                    <h4>Practical conclusions</h4>
+                    <ul>
+                        <li>The question isn't "how many minutes?" It's <em>"who is acting on whom?"</em></li>
+                        <li>Active creation, communication with people you actually know, and learning are fine</li>
+                        <li>Passive algorithmic feeds and AI-generated parasocial relationships are dangerous in a structurally new way</li>
+                        <li>The right comparison isn't to TV or comics — it's to slot machines and addictive substances</li>
+                        <li>Ages 10–16 are the period when the developing brain is most vulnerable to habit-formation by adversarial systems</li>
+                    </ul>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 3 · What Both Sides Agree On</h2></summary>
+                    <p>The consensus is larger than the public debate suggests:</p>
+                    <ul>
+                        <li><strong>Sleep is sacred.</strong> Phones in bedrooms reduce sleep. Sleep deprivation has <em>large</em> effects on adolescent mood and cognition.</li>
+                        <li><strong>Under-5 is different.</strong> Heavy passive screen exposure displaces language development and parent-child interaction.</li>
+                        <li><strong>Content matters more than minutes.</strong> Two hours building things in <em>Minecraft</em> is not the same as two hours getting algorithmically surged on TikTok.</li>
+                        <li><strong>Heavy use (3+ hours/day on social) correlates with worse outcomes for adolescent girls.</strong> The argument is about <em>how much</em> and <em>via what mechanism</em>, not whether.</li>
+                        <li><strong>The teen mental-health rise after 2012 is real.</strong> Even the methodologists acknowledge the effect.</li>
+                        <li><strong>Active creation is better than passive consumption.</strong> Near-unanimous finding.</li>
+                        <li><strong>Face-to-face friendships matter more than online ones.</strong> In-person social networks are protective; purely online ones are not.</li>
+                    </ul>
+                    <p>If you do nothing else, optimize on these.</p>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 4 · The Questions Still Open</h2></summary>
+                    <p>Honest people genuinely don't know the answers to these yet.</p>
+                    <ul>
+                        <li>How much of the 2012 mental-health break is phones, vs. everything else that changed?</li>
+                        <li>Are the effects "addiction" in any clinically meaningful sense?</li>
+                        <li>What's the right age to introduce smartphones? Social media? AI?</li>
+                        <li>How much can good parenting and good content choices mitigate algorithmic-feed harm?</li>
+                        <li>What will AI companions do to people who grow up with them as the default?</li>
+                        <li>Is there a way to redesign these systems to be non-adversarial without breaking their business models?</li>
+                        <li>Are some kids constitutionally more vulnerable than others, and can we identify them in advance?</li>
+                    </ul>
+                    <p>If anyone tells you they know the answer to any of these with confidence, they're selling you something.</p>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>Part 5 · Notes for the Person Living Through This</h2></summary>
+                    <p><strong>You are not stupid for liking your phone.</strong> It was designed by some of the smartest people in the world to be liked. Hundreds of billions of dollars went into making it as compelling as possible. If a small piece of glass and metal can hold the attention of a being with the spiritual stature of a son or daughter of God, that's not your character flaw — that's their engineering.</p>
+                    <p><strong>You also are not powerless.</strong> The fact that the design is adversarial doesn't mean you can't act inside it. People have always faced engineered temptations — alcohol, gambling, processed food, addictive drugs. Each generation figures out how to relate to its particular set. Yours is harder than your parents' was, in some ways. That's not unfair, that's just the lot you drew.</p>
+                    <p><strong>The adults arguing about this are not your enemies.</strong> Even the ones who sound preachy. They're trying to figure out, mostly in real time, what's happening to you. They have less information than you'd think. The ones worth listening to are the ones who admit that.</p>
+                    <p><strong>You have access to something useful that the researchers don't have:</strong> your own actual experience. You know whether scrolling makes you feel better or worse. You know whether you're more or less of a person after an hour in the feed. That's not anecdote — that's data the studies can't measure.</p>
+                    <div class="fg-pullout">
+                        Two diagnostic questions, courtesy of Elder Bednar:<br>
+                        1. Does this technology <em>invite</em> or <em>impede</em> the constant companionship of the Holy Ghost in my life?<br>
+                        2. Does the time I spend on it <em>enlarge</em> or <em>restrict</em> my capacity to live, to love, and to serve in meaningful ways?
+                    </div>
+                    <p>You can ask these about a specific app, a specific platform, a specific evening. The answers won't always be the same. <em>Minecraft</em> with friends might enlarge; an hour of doomscrolling might restrict. The questions are tools for you, not rules for you.</p>
+                    <p><strong>The deepest thing in this whole debate:</strong> the argument isn't really about screens. It's about what humans are <em>for.</em> Are we creatures whose purpose is to be entertained, optimized for, and acted upon? Or are we creatures whose purpose is to act, choose, create, love, suffer, grow, and become? The technology industry, mostly without meaning to, has built a default answer to that question. You don't have to accept it.</p>
+                </details>
+
+                <details class="fg-section">
+                    <summary><h2>A short reading list for the curious</h2></summary>
+                    <ul>
+                        <li>C.S. Lewis, <em>The Abolition of Man</em> (1943) — the philosophical foundation; under 100 pages</li>
+                        <li>Robert Pirsig, <em>Zen and the Art of Motorcycle Maintenance</em> (1974)</li>
+                        <li>Neil Postman, <em>Amusing Ourselves to Death</em> (1985)</li>
+                        <li>Robert Putnam, <em>Bowling Alone</em> (essay 1995, book 2000)</li>
+                        <li>Sherry Turkle, <em>Alone Together</em> (2011) — the academic anchor</li>
+                        <li>Nicholas Carr, <em>The Shallows</em> (2010)</li>
+                        <li>Jaron Lanier, <em>You Are Not a Gadget</em> (2010); <em>Ten Arguments for Deleting Your Social Media Accounts</em> (2018)</li>
+                        <li>David A. Bednar, <em>Things as They Really Are</em> (2009)</li>
+                        <li>Cal Newport, <em>Deep Work</em> (2016) and <em>Digital Minimalism</em> (2019)</li>
+                        <li><em>The Social Dilemma</em> (Netflix, 2020)</li>
+                        <li>Center for Humane Technology &amp; the <em>Your Undivided Attention</em> podcast</li>
+                        <li>Jonathan Haidt, <em>The Anxious Generation</em> (2024)</li>
+                        <li>Candice Odgers, "The great rewiring," <em>Nature</em> (2024)</li>
+                        <li>David A. Bednar, <em>Things as They Really Are 2.0</em> (2024)</li>
+                    </ul>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+    (function() {
+        // ============ Self-referencing QR ============
+        var qrUrl = window.location.origin + window.location.pathname;
+        document.getElementById('qr-url').textContent = qrUrl;
+        try {
+            if (typeof QRCode !== 'undefined') {
+                new QRCode(document.getElementById('qrcode'), {
+                    text: qrUrl,
+                    width: 130,
+                    height: 130,
+                    colorDark: '#1f1a16',
+                    colorLight: '#fdfaf0',
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            }
+        } catch (err) {
+            console.warn('QR code failed to render:', err);
+        }
+
+        // ============ The five reflective passages ============
+        const passages = [
+            {
+                ref: 'Isaiah 55:2 · 2 Nephi 9:51',
+                links: [
+                    ['Isaiah 55:2', 'https://www.churchofjesuschrist.org/study/scriptures/ot/isa/55?lang=eng&id=p2#p2'],
+                    ['2 Nephi 9:51', 'https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/9?lang=eng&id=p51#p51']
+                ],
+                verse: '"Wherefore do ye spend money for that which is not bread? and your labour for that which satisfieth not?…"',
+                example: 'e.g. Will using technology this way bring me satisfaction or leave me feeling empty?'
+            },
+            {
+                ref: 'Matthew 22:36–39',
+                links: [['Matthew 22:36–39', 'https://www.churchofjesuschrist.org/study/scriptures/nt/matt/22?lang=eng&id=p36-p39#p36']],
+                verse: '"Thou shalt love the Lord thy God with all thy heart… and thy neighbour as thyself."',
+                example: 'e.g. Is my use of technology distracting me from showing love for God or others?'
+            },
+            {
+                ref: 'Moroni 7:45',
+                links: [['Moroni 7:45', 'https://www.churchofjesuschrist.org/study/scriptures/bofm/moro/7?lang=eng&id=p45#p45']],
+                verse: '"And charity… envieth not, is not puffed up, seeketh not her own…"',
+                example: 'e.g. Will this lead me to envy others or compare myself to them?'
+            },
+            {
+                ref: 'Doctrine and Covenants 50:23–25',
+                links: [['Doctrine and Covenants 50:23–25', 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/50?lang=eng&id=p23-p25#p23']],
+                verse: '"That which doth not edify is not of God, and is darkness. That which is of God is light…"',
+                example: 'e.g. Does this use bring more light into my life?'
+            },
+            {
+                ref: 'Doctrine and Covenants 63:16',
+                links: [['Doctrine and Covenants 63:16', 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/63?lang=eng&id=p16#p16']],
+                verse: '"He that looketh on a woman to lust after her… shall not have the Spirit, but shall deny the faith."',
+                example: 'e.g. Does this use foster lustful desires?'
+            },
+            {
+                ref: 'For the Strength of Youth · "Walk in God\'s light"',
+                links: [['For the Strength of Youth · "Walk in God\'s light"', 'https://www.churchofjesuschrist.org/study/manual/for-the-strength-of-youth/walk-in-gods-light?lang=eng']],
+                verse: 'Read one paragraph under "Invitations" in this section.',
+                example: 'e.g. Is my use of technology helping or hurting my relationships?'
+            }
+        ];
+
+        function renderRefLinks(p) {
+            return p.links.map(([label, url]) =>
+                `<a href="${url}" target="_blank" rel="noopener">${label}</a>`
+            ).join(' · ');
+        }
+
+        // ============ Storage ============
+        const STORE_QUESTIONS = 'crossroads.questions.v1';
+        const STORE_USES = 'crossroads.uses.v1';
+        const STORE_JOURNAL = 'crossroads.journal.v1';
+
+        function loadQuestions() {
+            try { return JSON.parse(localStorage.getItem(STORE_QUESTIONS) || '[]'); }
+            catch { return []; }
+        }
+        function saveQuestions(qs) {
+            localStorage.setItem(STORE_QUESTIONS, JSON.stringify(qs));
+        }
+
+        // ============ Reflective library (flat list of all passages) ============
+        const libraryEl = document.getElementById('reflective-library-list');
+        passages.forEach((p) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="ref">${renderRefLinks(p)}</span>
+                <span class="verse">${p.verse}</span>
+            `;
+            libraryEl.appendChild(li);
+        });
+
+        // ============ Wall rendering ============
+        const wallEl = document.getElementById('wall');
+        const wallCountEl = document.getElementById('wall-count');
+
+        function renderWall() {
+            const qs = loadQuestions();
+            wallCountEl.textContent = qs.length === 1 ? '1 question' : `${qs.length} questions`;
+            if (qs.length === 0) {
+                wallEl.innerHTML = '<div class="empty-wall">The wall is empty. Submit a question above to begin.</div>';
+                return;
+            }
+            wallEl.innerHTML = '';
+            qs.slice().reverse().forEach((q) => {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.innerHTML = `
+                    <span class="pin"></span>
+                    ${escapeHtml(q.text)}
+                    ${q.source ? `<span class="source">${escapeHtml(q.source)}</span>` : ''}
+                `;
+                wallEl.appendChild(note);
+            });
+        }
+        function escapeHtml(s) {
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        // ============ Single reflective composer ============
+        const reflectiveInput = document.getElementById('reflective-input');
+        const reflectiveSubmit = document.getElementById('reflective-submit');
+        const placeholderExamples = [
+            'e.g. Will using technology this way bring me satisfaction or leave me feeling empty?',
+            'e.g. Is my use of technology distracting me from showing love for God or others?',
+            'e.g. Will this lead me to envy others or compare myself to them?',
+            'e.g. Does this use bring more light into my life?',
+            'e.g. Is my use of technology helping or hurting my relationships?'
+        ];
+        let placeholderIdx = 0;
+        reflectiveInput.placeholder = placeholderExamples[0];
+        setInterval(() => {
+            if (reflectiveInput.value || document.activeElement === reflectiveInput) return;
+            placeholderIdx = (placeholderIdx + 1) % placeholderExamples.length;
+            reflectiveInput.placeholder = placeholderExamples[placeholderIdx];
+        }, 5000);
+
+        function submitReflectiveQuestion() {
+            const text = reflectiveInput.value.trim();
+            if (!text) return;
+            const qs = loadQuestions();
+            qs.push({ text, source: '', ts: Date.now() });
+            saveQuestions(qs);
+            renderWall();
+            reflectiveInput.value = '';
+            reflectiveInput.focus();
+        }
+        reflectiveSubmit.addEventListener('click', submitReflectiveQuestion);
+        reflectiveInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                submitReflectiveQuestion();
+                e.preventDefault();
+            }
+        });
+
+        document.getElementById('clear-wall').addEventListener('click', () => {
+            if (confirm('Clear all questions from the wall? (Use this between classes.)')) {
+                saveQuestions([]);
+                renderWall();
+            }
+        });
+
+        renderWall();
+
+        // ============ Audit (private journal) ============
+        function bindJournal(textareaId, storeKey, savedTagId) {
+            const ta = document.getElementById(textareaId);
+            const tag = document.getElementById(savedTagId);
+            ta.value = localStorage.getItem(storeKey) || '';
+            let timer;
+            ta.addEventListener('input', () => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    localStorage.setItem(storeKey, ta.value);
+                    tag.classList.add('show');
+                    setTimeout(() => tag.classList.remove('show'), 1500);
+                }, 400);
+            });
+        }
+        bindJournal('audit-uses', STORE_USES, 'saved-uses');
+        bindJournal('audit-journal', STORE_JOURNAL, 'saved-journal');
+
+        // ============ Self-quiz ============
+        const quizCategories = [
+            {
+                key: 'purpose',
+                name: 'Purpose',
+                desc: "I can use technology with a purpose. It doesn't control me.",
+                questions: [
+                    "I know how long I will spend on a device when I turn it on.",
+                    "I know why I am using a device.",
+                    "I am spending only the time I need to on a device.",
+                    "I do not catch myself pointlessly scrolling on a device.",
+                    "I feel good about what I am doing when I am on a device."
+                ],
+                tips: [
+                    "Set an intention before unlocking your phone — name out loud what you're opening it for.",
+                    "Try the Why / What / How long check: ask yourself the three questions before you start.",
+                    "If you catch yourself scrolling without a reason, just close the app — even if it's a small win."
+                ]
+            },
+            {
+                key: 'plan',
+                name: 'Plan',
+                desc: 'When I plan ahead, I feel better and make better choices.',
+                questions: [
+                    "I give myself a daily limit for screen time.",
+                    "I mostly follow and contact only close family and friends while on my phone.",
+                    "I have device-free areas at home.",
+                    "I set up a charging station, away from my bed, so my device is plugged in and out of reach at night.",
+                    "I use filters to block inappropriate or unsafe applications and content."
+                ],
+                tips: [
+                    "Set a daily screen-time limit in your phone's settings tonight.",
+                    "Pick one device-free zone (the dinner table, your bed, etc.) and protect it.",
+                    "Move your charger out of your bedroom — a small change with a big effect on sleep."
+                ]
+            },
+            {
+                key: 'pause',
+                name: 'Pause',
+                desc: "It's OK for me to pause and take a break.",
+                questions: [
+                    "I recognize my emotions when I see content that is explicit or makes me feel bad, lonely, or weird.",
+                    "I listen to the Spirit for guidance when I am on a device.",
+                    "I turn off or silence my device when I see content that is explicit or makes me feel bad, lonely, uncomfortable, or unable to feel the Holy Ghost.",
+                    "I can leave my device in a different room or go outside without the device if needed.",
+                    "I am open to talking to a friend or family member about how I am feeling, especially in person when needed."
+                ],
+                tips: [
+                    "Try a short fast — even an hour without the phone can reset your mood.",
+                    "Practice naming the emotion out loud when something on a screen makes you feel bad. Then close it.",
+                    "Pick one trusted person you'll talk to (in person) when something online lands hard."
+                ]
+            }
+        ];
+        const quizLabels = ['', 'Never', 'Sometimes', 'Often', 'Almost always', 'Always'];
+        const STORE_QUIZ = 'crossroads.quiz.v1';
+
+        function loadQuiz() {
+            try { return JSON.parse(localStorage.getItem(STORE_QUIZ) || '{}'); }
+            catch { return {}; }
+        }
+        function saveQuiz(state) {
+            localStorage.setItem(STORE_QUIZ, JSON.stringify(state));
+        }
+
+        const quizState = loadQuiz();
+        const quizContainer = document.getElementById('quiz-categories');
+        const quizSummary = document.getElementById('quiz-summary');
+
+        quizCategories.forEach((cat) => {
+            const catEl = document.createElement('div');
+            catEl.className = 'quiz-cat';
+            catEl.innerHTML = `
+                <div class="quiz-cat-head">
+                    <h3>${cat.name}</h3>
+                    <span class="desc">${cat.desc}</span>
+                    <span class="score" data-score="${cat.key}">— / 25</span>
+                </div>
+                <div class="quiz-rows">
+                    ${cat.questions.map((q, qi) => {
+                        const id = `${cat.key}-${qi}`;
+                        const stored = quizState[id];
+                        const val = stored != null ? stored : 3;
+                        const touched = stored != null;
+                        return `
+                            <div class="quiz-row">
+                                <div class="quiz-statement">${escapeHtml(q)}</div>
+                                <input type="range" min="1" max="5" step="1" value="${val}"
+                                       class="quiz-slider${touched ? '' : ' untouched'}"
+                                       data-id="${id}" data-cat="${cat.key}"
+                                       aria-label="${escapeHtml(q)}">
+                                <div class="quiz-value${touched ? ' set' : ''}" data-value="${id}">${touched ? `${val} — ${quizLabels[val]}` : '—'}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            quizContainer.appendChild(catEl);
+        });
+
+        function recalcQuiz() {
+            const state = loadQuiz();
+            let weakest = null;
+            let weakestScore = Infinity;
+            let allAnsweredCount = 0;
+            let totalQuestions = 0;
+            const summaries = [];
+
+            quizCategories.forEach((cat) => {
+                let total = 0;
+                let answered = 0;
+                cat.questions.forEach((_, qi) => {
+                    totalQuestions++;
+                    const id = `${cat.key}-${qi}`;
+                    if (state[id] != null) {
+                        total += state[id];
+                        answered++;
+                        allAnsweredCount++;
+                    }
+                });
+                const scoreEl = document.querySelector(`[data-score="${cat.key}"]`);
+                if (answered === cat.questions.length) {
+                    scoreEl.textContent = `${total} / 25`;
+                    if (total < weakestScore) {
+                        weakestScore = total;
+                        weakest = cat;
+                    }
+                } else {
+                    scoreEl.textContent = answered === 0 ? '— / 25' : `${total} / ${answered * 5} (so far)`;
+                }
+                summaries.push({ cat, total, answered });
+            });
+
+            // Render summary
+            if (allAnsweredCount === 0) {
+                quizSummary.className = 'quiz-summary empty';
+                quizSummary.innerHTML = 'Drag a slider to begin. As you answer, your weakest area will surface here with ideas for goals.';
+                return;
+            }
+
+            const allDone = allAnsweredCount === totalQuestions;
+            const bars = summaries.map(({ cat, total, answered }) => {
+                const max = answered === cat.questions.length ? 25 : answered * 5;
+                const pct = max > 0 ? (total / 25) * 100 : 0;
+                return `
+                    <div class="quiz-bar">
+                        <div class="label">${cat.name}</div>
+                        <div class="track"><div class="fill" style="width: ${pct}%"></div></div>
+                        <div class="num">${total} / 25${answered < cat.questions.length ? ` (${answered}/5)` : ''}</div>
+                    </div>
+                `;
+            }).join('');
+
+            quizSummary.className = 'quiz-summary';
+            if (allDone && weakest) {
+                quizSummary.innerHTML = `
+                    <h4>Your weakest area: <span style="color:var(--seal)">${weakest.name}</span></h4>
+                    <p class="focus">${escapeHtml(weakest.desc)}</p>
+                    <div class="quiz-bars">${bars}</div>
+                    <p class="tip" style="margin-top:14px;font-weight:600;font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--seal);">Goal ideas</p>
+                    ${weakest.tips.map(t => `<p class="tip">• ${escapeHtml(t)}</p>`).join('')}
+                `;
+            } else {
+                quizSummary.innerHTML = `
+                    <h4>Running tally</h4>
+                    <p class="focus">${allAnsweredCount} of ${totalQuestions} answered. Keep going to see your weakest area.</p>
+                    <div class="quiz-bars">${bars}</div>
+                `;
+            }
+        }
+
+        quizContainer.addEventListener('input', (e) => {
+            if (!e.target.matches('.quiz-slider')) return;
+            const id = e.target.dataset.id;
+            const val = +e.target.value;
+            const state = loadQuiz();
+            state[id] = val;
+            saveQuiz(state);
+            e.target.classList.remove('untouched');
+            const valEl = document.querySelector(`[data-value="${id}"]`);
+            valEl.textContent = `${val} — ${quizLabels[val]}`;
+            valEl.classList.add('set');
+            recalcQuiz();
+        });
+
+        recalcQuiz();
+
+        // ============ Comic modal ============
+        const comics = {
+            'halo-panic': {
+                src: '/assets/haloScreentime.jpg',
+                alt: 'Penny Arcade comic about media reaction to youth tech panic',
+                credit: 'via <a href="https://www.penny-arcade.com" target="_blank" rel="noopener">Penny Arcade</a>'
+            },
+            'screentime-panic': {
+                src: '/assets/screentime-paper-quantification.jpg',
+                alt: 'Penny Arcade comic about screentime quantification',
+                credit: 'via <a href="https://www.penny-arcade.com" target="_blank" rel="noopener">Penny Arcade</a>'
+            }
+        };
+        const comicModal = document.getElementById('comic-modal');
+        const comicImg = comicModal.querySelector('.comic-img');
+        const comicCredit = comicModal.querySelector('.comic-credit');
+        let lastFocused = null;
+
+        function openComic(key) {
+            const comic = comics[key];
+            if (!comic) return;
+            lastFocused = document.activeElement;
+            comicImg.src = comic.src;
+            comicImg.alt = comic.alt;
+            comicCredit.innerHTML = comic.credit;
+            comicModal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            comicModal.querySelector('.comic-close').focus();
+        }
+        function closeComic() {
+            comicModal.hidden = true;
+            document.body.style.overflow = '';
+            comicImg.removeAttribute('src');
+            if (lastFocused) lastFocused.focus();
+        }
+
+        // Field guide modal (shares the same backdrop/close mechanics)
+        const fieldGuideModal = document.getElementById('field-guide-modal');
+        function openFieldGuide() {
+            lastFocused = document.activeElement;
+            fieldGuideModal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            fieldGuideModal.querySelector('.deep-close').focus();
+        }
+        function closeFieldGuide() {
+            fieldGuideModal.hidden = true;
+            document.body.style.overflow = '';
+            if (lastFocused) lastFocused.focus();
+        }
+        function anyModalOpen() {
+            return !comicModal.hidden || !fieldGuideModal.hidden;
+        }
+        function closeAnyModal() {
+            if (!comicModal.hidden) closeComic();
+            if (!fieldGuideModal.hidden) closeFieldGuide();
+        }
+
+        document.addEventListener('click', (e) => {
+            const comicTrigger = e.target.closest('[data-comic]');
+            if (comicTrigger) {
+                e.preventDefault();
+                openComic(comicTrigger.dataset.comic);
+                return;
+            }
+            const modalTrigger = e.target.closest('[data-modal]');
+            if (modalTrigger) {
+                e.preventDefault();
+                if (modalTrigger.dataset.modal === 'field-guide') openFieldGuide();
+                return;
+            }
+            if (e.target.closest('[data-close]')) {
+                closeAnyModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && anyModalOpen()) closeAnyModal();
+        });
+
+        // ============ TOC navigation + expand/collapse all ============
+        function openSectionFromHash(hash) {
+            if (!hash) return;
+            const id = hash.replace('#', '');
+            const target = document.getElementById(id);
+            if (target && target.tagName.toLowerCase() === 'details') {
+                target.open = true;
+            }
+        }
+        document.querySelectorAll('.toc a').forEach(a => {
+            a.addEventListener('click', () => {
+                openSectionFromHash(a.getAttribute('href'));
+            });
+        });
+        window.addEventListener('hashchange', () => openSectionFromHash(window.location.hash));
+        if (window.location.hash) openSectionFromHash(window.location.hash);
+
+        document.querySelectorAll('[data-toggle-all]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const open = btn.dataset.toggleAll === 'open';
+                document.querySelectorAll('.lesson-section').forEach(d => {
+                    d.open = open;
+                });
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

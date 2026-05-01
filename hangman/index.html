@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verse Hangman</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .phrase {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 30px 20px;
+            margin-bottom: 14px;
+            text-align: center;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 8px 18px -10px rgba(31, 26, 22, 0.3);
+            min-height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+        }
+        .phrase .word {
+            display: inline-flex;
+            gap: 4px;
+        }
+        .phrase .slot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 32px;
+            border-bottom: 2px solid var(--ink);
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--ink);
+        }
+        .phrase .slot.space { width: 0; border: none; }
+        .strikes {
+            text-align: center;
+            margin-bottom: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+        }
+        .strikes .marks {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 1.4rem;
+            letter-spacing: 0.4em;
+        }
+        .keyboard { display: grid; gap: 6px; }
+        .kb-row { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
+        .key {
+            min-width: 32px;
+            height: 44px;
+            padding: 0 8px;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            border: 1px solid rgba(120, 102, 80, 0.3);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.94rem;
+            color: var(--ink);
+            cursor: pointer;
+            user-select: none;
+        }
+        .key:disabled { opacity: 0.5; cursor: not-allowed; }
+        .key.hit { background-color: var(--moss); color: #fff; border-color: var(--moss); background-image: none; }
+        .key.miss { background-color: var(--seal); color: #fff; border-color: var(--seal); background-image: none; }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Verse Hangman</h1>
+            <p class="subtitle">Guess letters to reveal the scripture phrase. Six wrong and you're out.</p>
+        </header>
+
+        <div class="score-strip">
+            <div class="stat"><div class="label">Solved</div><div class="val" id="solved">0</div></div>
+            <div class="stat"><div class="label">Best</div><div class="val" id="best">0</div></div>
+        </div>
+
+        <div class="phrase" id="phrase"></div>
+        <div class="strikes">Strikes <span class="marks" id="strikes"></span></div>
+        <div class="keyboard" id="keyboard"></div>
+        <div class="message" id="message"></div>
+        <div id="result" class="result" hidden>
+            <h3 id="result-title"></h3>
+            <div class="ref" id="result-ref"></div>
+            <blockquote id="result-verse"></blockquote>
+            <button class="btn" id="next">Next phrase</button>
+        </div>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        const PHRASES = [
+            { phrase: 'BE STILL AND KNOW THAT I AM GOD', ref: 'Psalm 46:10', verse: 'Be still, and know that I am God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/ps/46?lang=eng&id=p10#p10' },
+            { phrase: 'TRUST IN THE LORD WITH ALL THINE HEART', ref: 'Proverbs 3:5', verse: 'Trust in the Lord with all thine heart; and lean not unto thine own understanding.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/prov/3?lang=eng&id=p5#p5' },
+            { phrase: 'I WILL GO AND DO', ref: '1 Nephi 3:7', verse: 'I will go and do the things which the Lord hath commanded.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/1-ne/3?lang=eng&id=p7#p7' },
+            { phrase: 'FAITH IS THE SUBSTANCE OF THINGS HOPED FOR', ref: 'Hebrews 11:1', verse: 'Now faith is the substance of things hoped for, the evidence of things not seen.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/heb/11?lang=eng&id=p1#p1' },
+            { phrase: 'PEACE I LEAVE WITH YOU', ref: 'John 14:27', verse: 'Peace I leave with you, my peace I give unto you.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/john/14?lang=eng&id=p27#p27' },
+            { phrase: 'THE WORTH OF SOULS IS GREAT', ref: 'D&C 18:10', verse: 'Remember the worth of souls is great in the sight of God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/18?lang=eng&id=p10#p10' },
+            { phrase: 'STAND YE IN HOLY PLACES', ref: 'D&C 87:8', verse: 'Wherefore, stand ye in holy places, and be not moved.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/87?lang=eng&id=p8#p8' },
+            { phrase: 'YE SHALL KNOW THE TRUTH', ref: 'John 8:32', verse: 'And ye shall know the truth, and the truth shall make you free.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/john/8?lang=eng&id=p32#p32' },
+            { phrase: 'FOR GOD SO LOVED THE WORLD', ref: 'John 3:16', verse: 'For God so loved the world, that he gave his only begotten Son.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/john/3?lang=eng&id=p16#p16' },
+            { phrase: 'IF ANY OF YOU LACK WISDOM', ref: 'James 1:5', verse: 'If any of you lack wisdom, let him ask of God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/james/1?lang=eng&id=p5#p5' },
+            { phrase: 'BY GRACE ARE YE SAVED', ref: 'Ephesians 2:8', verse: 'For by grace are ye saved through faith.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/eph/2?lang=eng&id=p8#p8' },
+            { phrase: 'AFTER ALL WE CAN DO', ref: '2 Nephi 25:23', verse: 'It is by grace that we are saved, after all we can do.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/25?lang=eng&id=p23#p23' },
+            { phrase: 'FEAST UPON THE WORDS OF CHRIST', ref: '2 Nephi 32:3', verse: 'Feast upon the words of Christ; for the words of Christ will tell you all things what ye should do.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/32?lang=eng&id=p3#p3' },
+            { phrase: 'SEEK LEARNING BY STUDY AND BY FAITH', ref: 'D&C 88:118', verse: 'Seek learning, even by study and also by faith.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/88?lang=eng&id=p118#p118' },
+            { phrase: 'I AM THE WAY THE TRUTH AND THE LIFE', ref: 'John 14:6', verse: 'I am the way, the truth, and the life.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/john/14?lang=eng&id=p6#p6' }
+        ];
+
+        const STORE = 'hangman.best.v1';
+        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let solved = 0;
+        let pool = [];
+        let target = null;
+        let strikes = 0;
+        let guessed = new Set();
+
+        const phraseEl = document.getElementById('phrase');
+        const kbEl = document.getElementById('keyboard');
+        const message = document.getElementById('message');
+        const strikesEl = document.getElementById('strikes');
+        const result = document.getElementById('result');
+        const solvedEl = document.getElementById('solved');
+        const bestEl = document.getElementById('best');
+        bestEl.textContent = best;
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function renderPhrase() {
+            phraseEl.innerHTML = '';
+            target.phrase.split(' ').forEach(word => {
+                const w = document.createElement('span');
+                w.className = 'word';
+                for (const ch of word) {
+                    const slot = document.createElement('span');
+                    slot.className = 'slot';
+                    if (/[A-Z]/.test(ch)) {
+                        if (guessed.has(ch)) slot.textContent = ch;
+                    } else {
+                        slot.textContent = ch;
+                        slot.style.borderBottom = 'none';
+                    }
+                    w.appendChild(slot);
+                }
+                phraseEl.appendChild(w);
+            });
+        }
+
+        function renderStrikes() {
+            strikesEl.textContent = '✕ '.repeat(strikes) + '· '.repeat(6 - strikes);
+        }
+
+        function renderKeyboard() {
+            kbEl.innerHTML = '';
+            const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+            for (const r of rows) {
+                const row = document.createElement('div');
+                row.className = 'kb-row';
+                for (const ch of r) {
+                    const k = document.createElement('button');
+                    k.className = 'key';
+                    k.textContent = ch;
+                    k.addEventListener('click', () => guess(ch));
+                    if (guessed.has(ch)) {
+                        k.disabled = true;
+                        k.classList.add(target.phrase.includes(ch) ? 'hit' : 'miss');
+                    }
+                    row.appendChild(k);
+                }
+                kbEl.appendChild(row);
+            }
+        }
+
+        function guess(ch) {
+            if (guessed.has(ch)) return;
+            guessed.add(ch);
+            if (!target.phrase.includes(ch)) strikes++;
+            renderPhrase();
+            renderKeyboard();
+            renderStrikes();
+            checkEnd();
+        }
+
+        function checkEnd() {
+            const won = target.phrase.split('').every(ch => !/[A-Z]/.test(ch) || guessed.has(ch));
+            if (won) {
+                solved++;
+                solvedEl.textContent = solved;
+                if (solved > best) {
+                    best = solved;
+                    localStorage.setItem(STORE, best);
+                    bestEl.textContent = best;
+                }
+                showResult(true);
+            } else if (strikes >= 6) {
+                showResult(false);
+            }
+        }
+
+        function showResult(won) {
+            document.getElementById('result-title').textContent = won ? '✓ Solved.' : '✗ Out of strikes.';
+            document.getElementById('result-ref').innerHTML = `<a href="${target.link}" target="_blank" rel="noopener">${target.ref}</a>`;
+            document.getElementById('result-verse').textContent = `"${target.verse}"`;
+            result.hidden = false;
+        }
+
+        function newRound() {
+            if (pool.length === 0) pool = shuffle(PHRASES.slice());
+            target = pool.pop();
+            strikes = 0;
+            guessed = new Set();
+            result.hidden = true;
+            message.textContent = '';
+            renderPhrase();
+            renderStrikes();
+            renderKeyboard();
+        }
+
+        document.getElementById('next').addEventListener('click', newRound);
+        document.addEventListener('keydown', (e) => {
+            if (e.target.matches('button')) return;
+            if (/^[a-zA-Z]$/.test(e.key)) guess(e.key.toUpperCase());
+        });
+        newRound();
+    })();
+    </script>
+</body>
+</html>

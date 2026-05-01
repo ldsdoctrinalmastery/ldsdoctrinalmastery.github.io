@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scripture Connections</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .item {
+            aspect-ratio: 4/3;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--ink);
+            cursor: pointer;
+            user-select: none;
+            border: 2px solid transparent;
+            transition: transform 0.08s, border-color 0.15s;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 4px 10px -6px rgba(31, 26, 22, 0.2);
+            line-height: 1.2;
+        }
+        .item:hover { border-color: var(--seal); }
+        .item.selected { border-color: var(--ink); background-color: var(--paper-deep); }
+        .item.shake { animation: shake 0.5s ease; }
+        @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+        .group {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr;
+            padding: 14px 18px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .group.g0 { background-color: var(--moss); }
+        .group.g1 { background-color: var(--gold); }
+        .group.g2 { background-color: var(--seal); }
+        .group.g3 { background-color: var(--indigo); }
+        .group .theme {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .group .members {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+        }
+        .controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+        .controls button { flex: 0 0 auto; min-width: 110px; }
+        .mistakes {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .mistake-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--seal);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .mistake-dot.spent { background-color: rgba(120, 102, 80, 0.3); }
+        @media (max-width: 540px) {
+            .item { font-size: 0.66rem; padding: 4px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Scripture Connections</h1>
+            <p class="subtitle">Group sixteen items into four sets of four. Four mistakes allowed.</p>
+        </header>
+
+        <div class="score-strip">
+            <div class="stat"><div class="label">Solved</div><div class="val" id="solved">0/4</div></div>
+            <div class="stat"><div class="label">Mistakes</div><div class="val" id="mistakes-left">4</div></div>
+        </div>
+
+        <div class="mistakes" id="mistakes-row"></div>
+
+        <div class="grid" id="grid"></div>
+
+        <div class="controls">
+            <button class="btn ghost" id="shuffle">Shuffle</button>
+            <button class="btn ghost" id="deselect">Deselect</button>
+            <button class="btn" id="submit">Submit</button>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div id="result" class="result" hidden>
+            <h3 id="result-title"></h3>
+            <button class="btn" id="next-puzzle" style="margin-top:14px;">Next puzzle</button>
+        </div>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        const PUZZLES = [
+            {
+                groups: [
+                    { theme: 'Books of the Old Testament', members: ['Genesis', 'Exodus', 'Isaiah', 'Daniel'] },
+                    { theme: 'Books of the New Testament', members: ['Acts', 'Romans', 'James', 'Hebrews'] },
+                    { theme: 'Books of the Book of Mormon', members: ['Alma', 'Ether', 'Helaman', 'Moroni'] },
+                    { theme: 'Things to feast upon', members: ['Words', 'Bread', 'Manna', 'Fatness'] }
+                ]
+            },
+            {
+                groups: [
+                    { theme: 'Old Testament prophets', members: ['Moses', 'Elijah', 'Isaiah', 'Daniel'] },
+                    { theme: 'Book of Mormon prophets', members: ['Lehi', 'Nephi', 'Alma', 'Mormon'] },
+                    { theme: 'Modern-day prophets', members: ['Joseph', 'Brigham', 'Spencer', 'Russell'] },
+                    { theme: 'Things Lehi saw in his dream', members: ['Tree', 'Rod', 'Mist', 'Building'] }
+                ]
+            },
+            {
+                groups: [
+                    { theme: 'Words of trust (KJV)', members: ['Trust', 'Believe', 'Hope', 'Faith'] },
+                    { theme: 'Old Testament places', members: ['Sinai', 'Eden', 'Zion', 'Bethel'] },
+                    { theme: 'Book of Mormon cities', members: ['Zarahemla', 'Bountiful', 'Nephi', 'Ammonihah'] },
+                    { theme: 'Christ\'s "I am" statements', members: ['Way', 'Truth', 'Life', 'Light'] }
+                ]
+            },
+            {
+                groups: [
+                    { theme: 'Doctrinal Mastery refs (D&C)', members: ['D&C 1:30', 'D&C 18:10', 'D&C 88:118', 'D&C 89:18'] },
+                    { theme: 'Doctrinal Mastery refs (BoM)', members: ['1 Ne 3:7', '2 Ne 32:3', 'Mosiah 2:17', 'Moroni 10:5'] },
+                    { theme: 'Doctrinal Mastery refs (NT)', members: ['Matt 16:18', 'John 14:6', 'James 1:5', 'Heb 11:1'] },
+                    { theme: 'Doctrinal Mastery refs (OT)', members: ['Exodus 19:5', 'Joshua 24:15', 'Isaiah 53:5', 'Amos 3:7'] }
+                ]
+            },
+            {
+                groups: [
+                    { theme: 'Fruits of the Spirit', members: ['Love', 'Joy', 'Peace', 'Patience'] },
+                    { theme: 'Articles of Faith subjects', members: ['Godhead', 'Atonement', 'Gathering', 'Resurrection'] },
+                    { theme: 'Tools of an apostle', members: ['Keys', 'Mantle', 'Calling', 'Witness'] },
+                    { theme: '___ of God', members: ['Word', 'Lamb', 'Gift', 'Power'] }
+                ]
+            }
+        ];
+
+        const STORE_PUZZLE = 'connections.puzzle.v1';
+        let puzzleIdx = parseInt(localStorage.getItem(STORE_PUZZLE) || '0', 10) % PUZZLES.length;
+        let puzzle = null;
+        let items = [];
+        let selected = new Set();
+        let solvedGroups = [];
+        let mistakes = 0;
+        const MAX_MISTAKES = 4;
+
+        const grid = document.getElementById('grid');
+        const message = document.getElementById('message');
+        const solvedEl = document.getElementById('solved');
+        const mistakesLeftEl = document.getElementById('mistakes-left');
+        const mistakesRow = document.getElementById('mistakes-row');
+        const result = document.getElementById('result');
+
+        function shuffle(arr) {
+            arr = arr.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function loadPuzzle(idx) {
+            puzzle = PUZZLES[idx % PUZZLES.length];
+            items = [];
+            puzzle.groups.forEach((g, gi) => g.members.forEach(m => items.push({ text: m, group: gi })));
+            items = shuffle(items);
+            selected.clear();
+            solvedGroups = [];
+            mistakes = 0;
+            render();
+            renderMistakes();
+            solvedEl.textContent = '0/4';
+            mistakesLeftEl.textContent = MAX_MISTAKES;
+            message.textContent = '';
+            result.hidden = true;
+        }
+
+        function render() {
+            grid.innerHTML = '';
+            // Render solved groups first
+            solvedGroups.forEach(gi => {
+                const group = puzzle.groups[gi];
+                const el = document.createElement('div');
+                el.className = `group g${gi}`;
+                el.innerHTML = `<div class="theme">${group.theme}</div><div class="members">${group.members.join(' · ')}</div>`;
+                grid.appendChild(el);
+            });
+            // Then unsolved items
+            items.filter(it => !solvedGroups.includes(it.group)).forEach(it => {
+                const el = document.createElement('div');
+                el.className = 'item';
+                el.textContent = it.text;
+                el.dataset.text = it.text;
+                if (selected.has(it.text)) el.classList.add('selected');
+                el.addEventListener('click', () => toggle(it.text));
+                grid.appendChild(el);
+            });
+        }
+
+        function renderMistakes() {
+            mistakesRow.innerHTML = '';
+            for (let i = 0; i < MAX_MISTAKES; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'mistake-dot' + (i < mistakes ? ' spent' : '');
+                mistakesRow.appendChild(dot);
+            }
+        }
+
+        function toggle(text) {
+            if (selected.has(text)) selected.delete(text);
+            else if (selected.size < 4) selected.add(text);
+            render();
+        }
+
+        function submit() {
+            if (selected.size !== 4) return flash('Select 4 items.');
+            const sels = items.filter(it => selected.has(it.text));
+            const groups = new Set(sels.map(s => s.group));
+            if (groups.size === 1) {
+                const gi = sels[0].group;
+                solvedGroups.push(gi);
+                selected.clear();
+                solvedEl.textContent = `${solvedGroups.length}/4`;
+                if (solvedGroups.length === 4) win();
+                else flash('✓ Group solved.');
+            } else {
+                mistakes++;
+                mistakesLeftEl.textContent = MAX_MISTAKES - mistakes;
+                renderMistakes();
+                grid.querySelectorAll('.item.selected').forEach(el => {
+                    el.classList.add('shake');
+                    setTimeout(() => el.classList.remove('shake'), 500);
+                });
+                if (mistakes >= MAX_MISTAKES) {
+                    flash('Out of mistakes.');
+                    revealAll();
+                    return;
+                }
+                // count by group to give a hint about "one off"?
+                const counts = {};
+                sels.forEach(s => counts[s.group] = (counts[s.group] || 0) + 1);
+                const max = Math.max(...Object.values(counts));
+                flash(max === 3 ? '✗ One away.' : '✗ Try again.');
+            }
+            render();
+        }
+
+        function flash(msg) {
+            message.textContent = msg;
+            setTimeout(() => { if (message.textContent === msg) message.textContent = ''; }, 1800);
+        }
+
+        function revealAll() {
+            // Reveal remaining groups but don't count as solved
+            puzzle.groups.forEach((g, gi) => {
+                if (!solvedGroups.includes(gi)) solvedGroups.push(gi);
+            });
+            selected.clear();
+            render();
+            document.getElementById('result-title').textContent = `Out of mistakes`;
+            result.hidden = false;
+        }
+
+        function win() {
+            document.getElementById('result-title').textContent = `✓ Solved with ${MAX_MISTAKES - mistakes} mistakes left.`;
+            result.hidden = false;
+        }
+
+        document.getElementById('shuffle').addEventListener('click', () => {
+            items = shuffle(items);
+            render();
+        });
+        document.getElementById('deselect').addEventListener('click', () => { selected.clear(); render(); });
+        document.getElementById('submit').addEventListener('click', submit);
+        document.getElementById('next-puzzle').addEventListener('click', () => {
+            puzzleIdx = (puzzleIdx + 1) % PUZZLES.length;
+            localStorage.setItem(STORE_PUZZLE, puzzleIdx);
+            loadPuzzle(puzzleIdx);
+        });
+
+        loadPuzzle(puzzleIdx);
+    })();
+    </script>
+</body>
+</html>

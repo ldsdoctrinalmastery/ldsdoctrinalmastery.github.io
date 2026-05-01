@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seminary Resources</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #f3ead4;
+            --paper-soft: #eadfc1;
+            --paper-card: #fbf5e6;
+            --ink: #1f1a16;
+            --muted: #786650;
+            --rule: rgba(31, 26, 22, 0.18);
+            --sky-top: #d59c8b;
+            --sky-mid: #e8c2ac;
+            --sky-low: #c5cdce;
+            --hill-far: #95a3aa;
+            --hill-mid: #5b7281;
+            --hill-near: #2f4a55;
+            --pine: #18272d;
+            --water-glow: #c5a89a;
+            --seal: #8d3530;
+            --seal-soft: rgba(141, 53, 48, 0.85);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            color: var(--ink);
+            font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body { background: transparent; }
+        a { color: inherit; }
+
+        /* === Fixed full-page background ==================================== */
+        /* Drop /assets/hero-landing.webp in to override the gradient. */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-color: var(--paper);
+            background-image: linear-gradient(
+                180deg,
+                var(--sky-top) 0%,
+                var(--sky-mid) 45%,
+                var(--sky-low) 100%
+            );
+        }
+        .bg.has-image {
+            background-image:
+                linear-gradient(180deg, rgba(243, 234, 212, 0.05) 0%, rgba(243, 234, 212, 0.18) 100%),
+                url('/assets/hero-landing.webp'),
+                linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-low) 100%);
+            background-size: cover, cover, auto;
+            background-position: center, 25% center, center;
+            background-repeat: no-repeat;
+        }
+
+        /* === Title card (now in normal flow) =============================== */
+        .title-card {
+            background: var(--paper-card);
+            padding: 32px 40px 28px;
+            border: 1px solid var(--rule);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 18px 36px -22px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.18);
+            position: relative;
+        }
+        .title-card::before {
+            content: '';
+            position: absolute;
+            top: 14px; right: 14px;
+            width: 36px; height: 42px;
+            background: var(--seal-soft);
+            border-radius: 2px;
+            box-shadow: inset 0 0 0 1.5px rgba(255,235,220,0.4);
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            letter-spacing: 0.005em;
+            line-height: 1.05;
+            color: var(--ink);
+        }
+        .tagline {
+            margin-top: 12px;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1.05rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            max-width: 50ch;
+        }
+
+        /* === Page (vertical stack of paper cards over the bg) ============== */
+        .page {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 56px 32px 24px;
+        }
+
+        /* === QR (paper card wrapping label, frame, url) =================== */
+        .qr-block {
+            margin: 36px auto 0;
+            max-width: 460px;
+            background: var(--paper-card);
+            padding: 28px 28px 26px;
+            text-align: center;
+            border: 1px solid var(--rule);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 14px 28px -14px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.15);
+        }
+        .qr-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--seal);
+            margin-bottom: 18px;
+        }
+        .qr-frame {
+            background: #fdfaf0;
+            padding: 16px;
+            display: inline-block;
+            line-height: 0;
+            border-radius: 2px;
+            box-shadow: 0 4px 10px -4px rgba(31, 26, 22, 0.25);
+        }
+        #qrcode { width: 260px; height: 260px; }
+        #qrcode canvas, #qrcode img { display: block; width: 260px; height: 260px; }
+        .qr-url {
+            margin-top: 16px;
+            font-family: 'Inter', ui-monospace, monospace;
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: var(--muted);
+            word-break: break-all;
+        }
+
+        /* === Sections (heading is its own paper tab over the bg) ========== */
+        .section { margin-top: 56px; }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.55rem;
+            letter-spacing: 0.005em;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            color: var(--ink);
+            background: var(--paper-card);
+            padding: 14px 22px 12px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .section-meta {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-left: auto;
+        }
+
+        /* === Cards ========================================================= */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 22px;
+        }
+        .card {
+            display: block;
+            background: var(--paper-card);
+            padding: 26px 28px 22px;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 2px;
+            position: relative;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 20px -10px rgba(31, 26, 22, 0.35),
+                0 2px 4px -2px rgba(31, 26, 22, 0.12);
+        }
+        .card:hover, .card:focus-visible {
+            transform: translateY(-4px);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 18px 32px -14px rgba(31, 26, 22, 0.4),
+                0 6px 12px -4px rgba(31, 26, 22, 0.18);
+            outline: none;
+        }
+        .card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            line-height: 1.15;
+        }
+        .card p {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 0.92rem;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+        .card .tag {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.65rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 10px;
+        }
+
+        /* === Footer ======================================================== */
+        footer {
+            margin: 64px auto 30px;
+            padding: 14px 24px;
+            text-align: center;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            max-width: 480px;
+            background: var(--paper-card);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        footer .dot {
+            color: var(--seal);
+            margin: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            .title-card { padding: 24px 24px 20px; }
+            .page { padding: 36px 18px 20px; }
+            .qr-block { padding: 22px 22px 20px; }
+            #qrcode { width: 220px; height: 220px; }
+            #qrcode canvas, #qrcode img { width: 220px; height: 220px; }
+            .section-meta { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+
+    <main class="page">
+        <header class="title-card">
+            <h1>Seminary Resources</h1>
+            <p class="tagline">Lessons, presentations, and games for Doctrinal Mastery — Forrest Walker's classroom.</p>
+        </header>
+
+        <div class="qr-block">
+            <div class="qr-label">Scan to open</div>
+            <div class="qr-frame">
+                <div id="qrcode" role="img" aria-label="QR code for this page"></div>
+            </div>
+            <div class="qr-url" id="qr-url"></div>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">Today's Lesson <span class="section-meta">For the Strength of Youth</span></h2>
+            <div class="grid">
+                <a class="card" href="/crossroads/">
+                    <span class="tag">Lesson 174 · May 1</span>
+                    <h3>Crossroads — Taking Charge of Technology</h3>
+                    <p>Reading, reflection, and a class question wall built around being purposeful with technology.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Games <span class="section-meta">Practice &amp; Play</span></h2>
+            <div class="grid">
+                <a class="card" href="/battle/">
+                    <span class="tag">Multiplayer</span>
+                    <h3>Scripture Battle Royale</h3>
+                    <p>D&amp;C Doctrinal Mastery battle game. Single player or peer-to-peer multiplayer rooms.</p>
+                </a>
+                <a class="card" href="/wordle/">
+                    <span class="tag">Daily · Solo</span>
+                    <h3>Scripture Wordle</h3>
+                    <p>Six tries to guess a 5-letter word hiding in scripture. Pick OT, NT, BoM, D&amp;C, or all four.</p>
+                </a>
+                <a class="card" href="/connections/">
+                    <span class="tag">Puzzle · Daily</span>
+                    <h3>Scripture Connections</h3>
+                    <p>Sixteen items, four hidden groups. Sort prophets, places, books, themes. Four mistakes allowed.</p>
+                </a>
+                <a class="card" href="/bee/">
+                    <span class="tag">Word · Solo</span>
+                    <h3>Scripture Spelling Bee</h3>
+                    <p>Seven letters, one in gold. Make every word you can — must include the gold one. Pangrams score big.</p>
+                </a>
+                <a class="card" href="/higher-lower/">
+                    <span class="tag">Quick · Solo</span>
+                    <h3>Higher · Lower</h3>
+                    <p>Two D&amp;C sections. Which has more verses? Streak as long as you can.</p>
+                </a>
+                <a class="card" href="/speed-sort/">
+                    <span class="tag">Timer · 30 sec</span>
+                    <h3>Speed Sort</h3>
+                    <p>Tap which standard work each reference belongs to. As many as you can in thirty seconds.</p>
+                </a>
+                <a class="card" href="/find-the-fake/">
+                    <span class="tag">Discernment</span>
+                    <h3>Find the Fake</h3>
+                    <p>Four scripture-flavored statements. One is invented. Spot the imposter.</p>
+                </a>
+                <a class="card" href="/two-truths/">
+                    <span class="tag">Recognition</span>
+                    <h3>Two Truths and a Verse</h3>
+                    <p>Three statements. Two invented, one real. Pick the actual scripture.</p>
+                </a>
+                <a class="card" href="/hangman/">
+                    <span class="tag">Letters · Solo</span>
+                    <h3>Verse Hangman</h3>
+                    <p>Guess the letters of a scripture phrase. Six wrong and you're out.</p>
+                </a>
+                <a class="card" href="/memory/">
+                    <span class="tag">Match · Solo</span>
+                    <h3>Memory Pairs</h3>
+                    <p>Flip cards to match each reference with its key phrase. Track your fewest moves.</p>
+                </a>
+                <a class="card" href="/bingo/">
+                    <span class="tag">Class · Print</span>
+                    <h3>Doctrinal Mastery Bingo</h3>
+                    <p>5×5 boards from 30 references. Play live in class or print fresh cards each round.</p>
+                </a>
+                <a class="card" href="/type-race/">
+                    <span class="tag">Speed · Solo</span>
+                    <h3>Verse Type Race</h3>
+                    <p>Type the verse exactly. WPM and accuracy tracked. Surprisingly memorizing.</p>
+                </a>
+                <a class="card" href="/stained-glass/">
+                    <span class="tag">Show · Art</span>
+                    <h3>Stained Glass</h3>
+                    <p>Paste a verse. Get a procedural mosaic — colors and shapes drawn from the text. Beautiful as a class opener.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Lessons &amp; Tools <span class="section-meta">Study &amp; Reflect</span></h2>
+            <div class="grid">
+                <a class="card" href="/remember2/">
+                    <span class="tag">FHE / Lesson</span>
+                    <h3>Remember, Remember</h3>
+                    <p>Word cloud and analysis tool inspired by Elder Wong's April 2026 conference talk.</p>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>ldsdoctrinalmastery.github.io <span class="dot">·</span> made for the classroom</p>
+        </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+        (function() {
+            var url = window.location.origin + window.location.pathname;
+            document.getElementById('qr-url').textContent = url;
+            new QRCode(document.getElementById('qrcode'), {
+                text: url,
+                width: 260,
+                height: 260,
+                colorDark: '#1f1a16',
+                colorLight: '#fdfaf0',
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        })();
+    </script>
+</body>
+</html>
