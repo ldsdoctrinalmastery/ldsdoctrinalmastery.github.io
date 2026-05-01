@@ -876,6 +876,169 @@
         }
         .saved-tag.show { opacity: 1; }
 
+        /* === Opening (warm-up cards before Section I) ===================== */
+        .opening-head h2 {
+            font-style: italic;
+        }
+        .opening-cards {
+            display: grid;
+            gap: 16px;
+        }
+        .opening-card {
+            background: var(--paper-card);
+            padding: 24px 28px 22px 60px;
+            position: relative;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.3);
+        }
+        .opening-num {
+            position: absolute;
+            top: 22px;
+            left: 22px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--seal);
+            color: var(--paper-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .opening-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        .opening-card p, .opening-card li {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: #2c2620;
+        }
+        .opening-card p + p { margin-top: 10px; }
+        .opening-card em { color: var(--seal); font-style: italic; font-weight: 600; }
+        .opening-card strong { font-weight: 600; }
+
+        .gratitude-prompts {
+            list-style: none;
+            margin: 12px 0;
+            padding: 0;
+        }
+        .gratitude-prompts li {
+            position: relative;
+            padding: 8px 0 8px 26px;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.18);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+        }
+        .gratitude-prompts li:last-child { border-bottom: none; }
+        .gratitude-prompts li::before {
+            content: '·';
+            position: absolute;
+            left: 4px;
+            top: 6px;
+            font-size: 1.5rem;
+            color: var(--seal);
+            line-height: 1;
+        }
+
+        .opening-action {
+            margin-top: 16px;
+            padding: 14px 18px;
+            background: #fff5d4;
+            border-left: 3px solid var(--seal);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            line-height: 1.45;
+            color: var(--ink);
+        }
+        .opening-action strong { color: var(--seal); }
+
+        .lovingkindness {
+            list-style: none;
+            counter-reset: lk;
+            padding: 0;
+            margin: 12px 0;
+        }
+        .lovingkindness li {
+            counter-increment: lk;
+            position: relative;
+            padding: 6px 0 6px 36px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--ink);
+        }
+        .lovingkindness li::before {
+            content: counter(lk);
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 22px;
+            height: 22px;
+            border: 1px solid var(--seal);
+            border-radius: 50%;
+            color: var(--seal);
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 0.72rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lovingkindness-mantra {
+            margin-top: 14px;
+            padding: 14px 18px;
+            background: var(--paper-deep);
+            border-left: 3px solid var(--seal);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.12rem;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        .opening-question {
+            margin: 12px 0 6px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            line-height: 1.25;
+            color: var(--ink);
+        }
+        .opening-card details {
+            margin-top: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            color: var(--muted);
+        }
+        .opening-card details summary {
+            cursor: pointer;
+            color: var(--seal);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            list-style: none;
+        }
+        .opening-card details summary::-webkit-details-marker { display: none; }
+        .opening-card details summary::before { content: '▸ '; }
+        .opening-card details[open] summary::before { content: '▾ '; }
+        .opening-card details ul {
+            margin: 10px 0 0 0;
+            padding-left: 18px;
+            list-style: square;
+        }
+        .opening-card details ul li {
+            font-size: 0.86rem;
+            line-height: 1.55;
+            padding: 2px 0;
+        }
+
         /* === Bednar — Things as They Really Are pair ====================== */
         .bednar-pair {
             display: grid;
@@ -969,6 +1132,59 @@
             box-shadow:
                 0 1px 0 rgba(255,255,255,0.7) inset,
                 0 8px 18px -10px rgba(31, 26, 22, 0.35);
+        }
+        .bednar-feature {
+            margin-top: 22px;
+            background: var(--paper-card);
+            padding: 32px 40px 28px;
+            position: relative;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 10px 24px -12px rgba(31, 26, 22, 0.4);
+        }
+        .bednar-feature::before {
+            content: '“';
+            position: absolute;
+            top: -12px;
+            left: 28px;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 5rem;
+            line-height: 1;
+            color: var(--seal);
+            background: var(--paper-card);
+            padding: 0 10px;
+        }
+        .bednar-feature blockquote p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.22rem;
+            line-height: 1.5;
+            color: var(--ink);
+            font-style: italic;
+        }
+        .bednar-feature blockquote p + p {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(120, 102, 80, 0.25);
+        }
+        .bednar-feature em {
+            color: var(--seal);
+            font-style: italic;
+            font-weight: 600;
+        }
+        .bednar-feature cite {
+            display: block;
+            margin-top: 16px;
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+        }
+        .bednar-feature cite a {
+            color: var(--seal);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
         }
         .bednar-questions-label {
             font-family: 'Inter', sans-serif;
@@ -1090,6 +1306,64 @@
             </div>
             <div class="qr-url" id="qr-url"></div>
         </div>
+
+        <!-- Opening: warm-ups before Section I -->
+        <section class="opening">
+            <div class="section-head opening-head">
+                <div class="section-num">Open · Before We Begin</div>
+                <h2>Three small things.</h2>
+                <p class="lead">Two warm-ups and a question — to settle the room and tee up the lesson.</p>
+            </div>
+
+            <div class="opening-cards">
+                <div class="opening-card">
+                    <div class="opening-num">1</div>
+                    <h3>A Moment of Gratitude</h3>
+                    <p>Bring three things to mind, one at a time:</p>
+                    <ul class="gratitude-prompts">
+                        <li>A <strong>fun trip</strong> you've been on.</li>
+                        <li>A <strong>delicious meal</strong> you've had.</li>
+                        <li>A <strong>wonderful gift</strong> from a parent, leader, or mentor.</li>
+                    </ul>
+                    <p>Pick one. Now picture <em>everything</em> that went into making it happen — the funds someone provided, the opportunity opened, the research, the planning, the work, the love. Sit with that for a moment.</p>
+                    <div class="opening-action">
+                        <strong>Now: pull out your phone and text the person who made it happen. Thank them. Right now, while we wait.</strong> Gratitude attitude.
+                    </div>
+                </div>
+
+                <div class="opening-card">
+                    <div class="opening-num">2</div>
+                    <h3>Loving-Kindness</h3>
+                    <p>Close your eyes for thirty seconds. Silently offer the same simple wish — to four different people in turn:</p>
+                    <ol class="lovingkindness">
+                        <li>To <strong>yourself</strong></li>
+                        <li>To <strong>someone you love</strong></li>
+                        <li>To <strong>someone you barely know</strong></li>
+                        <li>To <strong>someone who has been hard to love</strong></li>
+                    </ol>
+                    <p class="lovingkindness-mantra">"May they be happy. May they be safe. May they be loved. May they be at peace."</p>
+                </div>
+
+                <div class="opening-card">
+                    <div class="opening-num">3</div>
+                    <h3>A Question to Open the Floor</h3>
+                    <p class="opening-question">When were parents <em>first</em> concerned about technology?</p>
+                    <p>It goes back a lot further than smartphones. Or TV. Or radio.</p>
+                    <details>
+                        <summary>A few historical worries (for the teacher)</summary>
+                        <ul>
+                            <li><strong>~370 BC</strong> — Plato (in <em>Phaedrus</em>) had Socrates warn that <em>writing</em> would destroy memory and produce people who only seemed wise.</li>
+                            <li><strong>1700s</strong> — Newspapers and novels were blamed for moral decline, especially among young women.</li>
+                            <li><strong>1950s</strong> — Comic books were said to cause juvenile delinquency (Senate hearings, public burnings).</li>
+                            <li><strong>1960s–80s</strong> — Television, then rock music, then video arcades.</li>
+                            <li><strong>1990s</strong> — The Internet, AOL, chat rooms.</li>
+                            <li><strong>2000s–10s</strong> — Halo, World of Warcraft, Facebook, smartphones, TikTok.</li>
+                        </ul>
+                        <p style="margin-top:8px;">Every generation has its tech panic. Some panics turned out warranted; some did not. <em>Discuss:</em> how do we tell the difference?</p>
+                    </details>
+                </div>
+            </div>
+        </section>
 
         <!-- Section 1 -->
         <section>
@@ -1249,6 +1523,14 @@
                     <blockquote class="bednar-quote">An AI companion is only a mathematical algorithm. It does not like you. It does not care about you. It does not really know if you exist or not. … It is a set of computer equations that will treat you as an object to be acted upon, if you let it.</blockquote>
                     <a class="bednar-link" href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener">Read the full talk</a>
                 </article>
+            </div>
+
+            <div class="bednar-feature">
+                <blockquote>
+                    <p>AI is cloaked in the credibility and promises of scientific progress… we might naively be seduced into surrendering our precious moral agency to a technology that can <em>only think telestial</em>. By so doing, we may gradually be transformed from <em>agents who can act</em> into <em>objects that are only acted upon</em>.</p>
+                    <p>Artificial intelligence cannot simulate, imitate, or replace the influence of the Holy Ghost in our lives. No matter how sophisticated and elegant AI technology ultimately may become, it simply can never bear witness of the Father and the Son, reveal the truth of all things, or sanctify those who have repented and been baptized.</p>
+                </blockquote>
+                <cite>— Elder Bednar, <a href="https://www.churchofjesuschrist.org/study/broadcasts/worldwide-devotional-for-young-adults/2024/11/13bednar?lang=eng" target="_blank" rel="noopener"><em>Things as They Really Are 2.0</em></a></cite>
             </div>
 
             <div class="bednar-questions">
