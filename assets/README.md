@@ -1,19 +1,21 @@
-# Hero images
+# Background images
 
-Drop your Hasui (or other) hero photos in here:
+The pages look for these files. If they're missing, the page falls back to a clean dawn-sky gradient.
 
-- `hero-landing.jpg` — used by `/index.html`
-- `hero-crossroads.jpg` — used by `/crossroads/index.html`
+| File | Used by |
+|---|---|
+| `hero-landing.webp` | `/index.html` |
+| `hero-crossing.webp` | `/crossroads/index.html` |
 
-If a file is missing, the page falls back to a clean dawn-sky gradient.
+## Easiest way to drop them in
 
-## Recommended
+1. Save the JPG/PNG locally (right-click → Save image from Wikipedia, the Met, the Library of Congress, etc.)
+2. Convert + resize to webp on your machine. One-liner with ImageMagick: `magick input.jpg -resize 1920x -quality 80 hero-landing.webp` — or use https://squoosh.app in a browser.
+3. Drop the resulting `.webp` into this `assets/` folder and commit.
 
-- ~1600px wide, JPG, optimized to 200–400 KB
-- Compose so the lower-third has visual room — that's where the title card overlaps
-- Public domain Kawase Hasui prints work beautifully (Wikimedia Commons, Library of Congress)
+## Suggested matches (Hasui prints, public domain)
 
-## Suggested matches
+- **Landing page** (`hero-landing.webp`): atmospheric coastal/twilight — *Pine Islands at Matsushima* (the boat-with-pink-clouds print) or *Tsuki no Matsushima*
+- **Crossroads page** (`hero-crossroads.webp`): forest path — *Nikkō Kaidō* / *An Avenue at Nikkō* (1930)
 
-- Landing page: a calm coastal/twilight scene (e.g. *Pine Islands at Matsushima*, the boat-with-pink-clouds print)
-- Crossroads page: a path-through-trees scene (e.g. *Nikkō Kaidō* / *Avenue at Nikkō*)
+Both are on Wikimedia Commons. Target ~1600–1920px wide, ≤400 KB. Compose so the upper portion of the image has the visual focus — the content column lays on top starting near the top.
