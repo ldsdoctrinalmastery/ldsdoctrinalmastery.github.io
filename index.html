@@ -2,269 +2,208 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scripture Battle Royale</title>
-   
-    <!--
-    Scripture Battle Royale - P2P Multiplayer Game
-   
-    Requirements for multiplayer:
-    - Modern browser with ES modules support (Chrome 61+, Firefox 60+, Safari 11+)
-    - JavaScript enabled
-    - Allow third-party scripts from unpkg.com CDN
-   
-    If multiplayer doesn't work:
-    1. Try Chrome or Firefox (recommended)
-    2. Disable ad blockers temporarily
-    3. Check browser console for specific errors
-    4. Download and host the file locally
-    -->
-   
-    <link rel="stylesheet" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDS Seminary Resources</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-2: #1e293b;
+            --card: #1e293b;
+            --card-hover: #334155;
+            --accent: #fcd34d;
+            --accent-2: #f59e0b;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            background: radial-gradient(ellipse at top, var(--bg-2) 0%, var(--bg) 60%);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+        header {
+            text-align: center;
+            padding: 24px 0 8px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+        }
+        .tagline {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+        .qr-block {
+            margin: 40px auto 56px;
+            max-width: 380px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 28px;
+            text-align: center;
+            box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6);
+        }
+        .qr-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-2);
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+        #qrcode {
+            background: #fff;
+            padding: 14px;
+            border-radius: 14px;
+            display: inline-block;
+            line-height: 0;
+            width: 288px;
+            height: 288px;
+        }
+        #qrcode canvas, #qrcode img { display: block; width: 260px; height: 260px; }
+        .qr-url {
+            margin-top: 14px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.85rem;
+            color: var(--muted);
+            word-break: break-all;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin: 36px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+        .card {
+            display: block;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+        }
+        .card:hover,
+        .card:focus-visible {
+            transform: translateY(-3px);
+            background: var(--card-hover);
+            border-color: var(--accent);
+            outline: none;
+        }
+        .card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+        .card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+        .card p {
+            font-size: 0.92rem;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+        .card .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-2);
+            background: rgba(245, 158, 11, 0.12);
+            padding: 3px 8px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+        }
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        @media (max-width: 480px) {
+            .container { padding: 28px 16px 60px; }
+            #qrcode { width: 248px; height: 248px; }
+            #qrcode canvas, #qrcode img { width: 220px; height: 220px; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="login-screen">
-        <h1>Scripture Battle Royale</h1>
-        <p class="subtitle" style="text-align: center; margin-bottom: 15px;">D&C Scripture Mastery Game</p>
-       
-        <div class="login-form">
-            <!-- Game Mode Selection -->
-            <div>
-                <label>Game Mode:</label>
-                <div class="game-mode-buttons">
-                    <button type="button" id="single-player-btn" class="mode-btn active">Single Player</button>
-                    <button type="button" id="multiplayer-btn" class="mode-btn">Multiplayer</button>
-                </div>
-            </div>
-           
-            <!-- Multiplayer Options (hidden by default) -->
-            <div id="multiplayer-options" style="display: none;">
-                <div class="multiplayer-choice">
-                    <button type="button" id="create-room-btn">Create Room</button>
-                    <button type="button" id="join-room-btn">Join Room</button>
-                </div>
-               
-                <!-- Trystero info -->
-                <div style="margin: 10px 0; padding: 8px; background-color: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 4px; font-size: 0.85em; color: #2e7d32;">
-                    <strong>✨ Serverless P2P:</strong> Uses BitTorrent trackers - no central server needed!
-                    <br>Works across different networks, VPNs, mobile data, etc.
-                    <br><small style="color: #666;">Note: Requires modern browser (Chrome/Firefox recommended)</small>
-                </div>
-               
-                <!-- Loading issues help -->
-                <details style="margin: 10px 0; font-size: 0.85em;">
-                    <summary style="cursor: pointer; color: #1976d2;">Having trouble? Click here for help</summary>
-                    <div style="margin-top: 10px; padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
-                        <p><strong>If multiplayer isn't working:</strong></p>
-                        <ol style="margin: 5px 0; padding-left: 20px;">
-                            <li>Make sure you're using Chrome or Firefox (Safari may have issues)</li>
-                            <li>Try opening the game in a new incognito/private window</li>
-                            <li>Check if your browser blocks third-party scripts</li>
-                            <li>Disable any ad blockers temporarily</li>
-                            <li>If at school/work, the network may block P2P connections</li>
-                        </ol>
-                        <p style="margin-top: 10px;"><strong>Alternative:</strong> You can download this HTML file and run it locally!</p>
-                    </div>
-                </details>
-               
-                <div id="room-code-section" style="display: none;">
-                    <p>Share this code with friends:</p>
-                    <p id="room-code-display"></p>
-                    <button type="button" id="copy-code-btn">Copy Code</button>
-                </div>
-               
-                <div id="join-room-section" style="display: none;">
-                    <input type="text" id="room-code-input" placeholder="Enter room code" maxlength="6">
-                    <button type="button" id="connect-btn">Connect</button>
-                </div>
-               
-                <div id="connected-players" style="display: none;">
-                    <h3>Players in Room:</h3>
-                    <ul id="player-list"></ul>
-                </div>
-               
-                <div style="margin-top: 15px; font-size: 0.9em; color: #666;">
-                    <p>Connection Tips:</p>
-                    <ul style="text-align: left; margin: 5px 0;">
-                        <li>Works across different networks (WiFi, mobile data, etc.)</li>
-                        <li>For best performance, use same WiFi network</li>
-                        <li>Connection may take 5-10 seconds to establish</li>
-                        <li>Use Chrome or Firefox for best compatibility</li>
-                    </ul>
-                </div>
-            </div>
-           
-            <div>
-                <label for="player-name">Your Name:</label>
-                <input type="text" id="player-name" placeholder="Enter your name">
-            </div>
-           
-            <div>
-                <label for="player-color">Choose Your Color:</label>
-                <select id="player-color">
-                    <option value="#FF5733">Red</option>
-                    <option value="#33FF57">Green</option>
-                    <option value="#3357FF">Blue</option>
-                    <option value="#FF33F5">Pink</option>
-                    <option value="#F5FF33">Yellow</option>
-                    <option value="#33FFF5">Cyan</option>
-                    <option value="#FF8333">Orange</option>
-                    <option value="#8333FF">Purple</option>
-                </select>
-            </div>
-           
-            <button id="join-game">Start Game</button>
+    <div class="container">
+        <header>
+            <h1>LDS Seminary Resources</h1>
+            <p class="tagline">Lessons, presentations &amp; games for Doctrinal Mastery</p>
+        </header>
+
+        <div class="qr-block">
+            <div class="qr-label">Scan to open on your device</div>
+            <div id="qrcode" role="img" aria-label="QR code for this page"></div>
+            <div class="qr-url" id="qr-url"></div>
         </div>
-    </div>
-   
-    <!-- Game Screen -->
-    <div id="game-screen">
-        <div id="game-container">
-            <canvas id="game-canvas"></canvas>
-           
-            <div id="game-timer">60</div>
-           
-            <div id="leaderboard">
-                <h3>Leaderboard</h3>
-                <ol id="leaderboard-list">
-                    <!-- Leaderboard entries will be here -->
-                </ol>
-            </div>
-           
-            <div id="player-stats">
-                <h3 id="player-name-display">Player</h3>
-                <p>Points: <span id="player-points">10</span></p>
-                <p>Position: <span id="player-position">X: 0, Y: 0</span></p>
-            </div>
-           
-            <!-- Touch Controls -->
-            <div id="touch-controls">
-                <div id="joystick-area">
-                    <div id="joystick-knob"></div>
-                </div>
-            </div>
+
+        <h2 class="section-title">Games</h2>
+        <div class="grid">
+            <a class="card" href="/battle/">
+                <div class="icon" aria-hidden="true">⚔️</div>
+                <span class="tag">Multiplayer</span>
+                <h3>Scripture Battle Royale</h3>
+                <p>D&amp;C Doctrinal Mastery battle game. Single player or P2P multiplayer rooms.</p>
+            </a>
         </div>
-    </div>
-   
-    <!-- Battle Screen -->
-    <div id="battle-screen">
-        <div class="battle-container">
-            <div class="battle-phase" id="battle-phase-1">
-                <h2>Scripture Battle!</h2>
-                <div class="battle-header">
-                    <div class="battle-player">
-                        <h3 id="player1-name">Player 1</h3>
-                        <p>Points: <span id="player1-points">10</span></p>
-                    </div>
-                    <div class="battle-player">
-                        <h3 id="player2-name">Player 2</h3>
-                        <p>Points: <span id="player2-points">10</span></p>
-                    </div>
-                </div>
-               
-                <div id="battle-timer">15</div>
-               
-                <div class="battle-question">
-                    <h3 id="question-text">Question text goes here</h3>
-                    <p id="scripture-reference" class="hidden">D&C 1:1</p>
-                </div>
-               
-                <div class="battle-answers" id="answers-container">
-                    <!-- Answer buttons will be generated here -->
-                </div>
-            </div>
-           
-            <div class="battle-phase hidden" id="battle-phase-2">
-                <h2>Battle Results</h2>
-                <div id="result-message">You won!</div>
-                <button id="return-to-game">Return to Game</button>
-            </div>
+
+        <h2 class="section-title">Lessons &amp; Tools</h2>
+        <div class="grid">
+            <a class="card" href="/remember2/">
+                <div class="icon" aria-hidden="true">📖</div>
+                <span class="tag">FHE / Lesson</span>
+                <h3>Remember, Remember</h3>
+                <p>Word cloud &amp; analysis tool inspired by Elder Wong's April 2026 conference talk.</p>
+            </a>
         </div>
+
+        <footer>
+            <p>ldsdoctrinalmastery.github.io</p>
+        </footer>
     </div>
-   
-    <!-- Game Over Screen -->
-    <div id="game-over-screen">
-        <div class="game-over-container">
-            <h1>Game Over!</h1>
-            <p>Time's up! Let's see how you did.</p>
-           
-            <div class="final-stats">
-                <p>Your final score: <span id="final-score">0</span> points</p>
-                <p>Battles won: <span id="battles-won">0</span></p>
-                <p>Battles lost: <span id="battles-lost">0</span></p>
-            </div>
-           
-            <div class="final-leaderboard">
-                <h3>Final Leaderboard</h3>
-                <ul id="final-leaderboard-list">
-                    <!-- Final leaderboard entries will be here -->
-                </ul>
-            </div>
-           
-            <button id="play-again-btn">Play Again</button>
-        </div>
-    </div>
-   
-    <!-- Load JavaScript files -->
-    <script src="js/config.js"></script>
-    <script src="js/scriptures.js"></script>
-    <script src="js/gameState.js"></script>
-    <script src="js/multiplayer.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/battle.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/main.js"></script>
-   
-    <!-- Load Trystero for P2P multiplayer -->
-    <script type="module">
-        // Modern browsers - load Trystero as ES module with specific version
-        async function loadTrystero() {
-            try {
-                // Try specific version first
-                const {joinRoom} = await import('./trystero-torrent.min.js');
-                window.trysteroTorrent = {joinRoom};
-                window.trysteroLoaded = true;
-                console.log('Trystero v0.18.0 loaded successfully');
-                return true;
-            } catch (e1) {
-                console.warn('Failed to load Trystero v0.18.0, trying latest...', e1);
-                try {
-                    // Try latest version
-                    const {joinRoom} = await import('./trystero-torrent.min.js');
-                    window.trysteroTorrent = {joinRoom};
-                    window.trysteroLoaded = true;
-                    console.log('Trystero latest loaded successfully');
-                    return true;
-                } catch (e2) {
-                    console.error('Failed to load Trystero:', e2);
-                    window.trysteroLoadFailed = true;
-                    return false;
-                }
-            }
-        }
-       
-        // Load and initialize
-        loadTrystero().then(() => {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => window.initializeApp());
-            } else {
-                window.initializeApp();
-            }
-        });
-    </script>
-   
-    <!-- Fallback for older browsers -->
-    <script nomodule>
-        console.warn('Browser does not support ES modules. Multiplayer will not be available.');
-        window.trysteroLoadFailed = true;
-       
-        // Initialize when ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                if (window.initializeApp) window.initializeApp();
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+        (function() {
+            var url = window.location.origin + window.location.pathname;
+            document.getElementById('qr-url').textContent = url;
+            new QRCode(document.getElementById('qrcode'), {
+                text: url,
+                width: 260,
+                height: 260,
+                colorDark: '#0f172a',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.M
             });
-        }
+        })();
     </script>
 </body>
 </html>
