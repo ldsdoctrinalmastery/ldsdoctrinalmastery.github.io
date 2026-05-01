@@ -66,6 +66,47 @@
             background-repeat: no-repeat;
         }
 
+        /* === QR card (self-referencing, for students to scan) ============= */
+        .qr-block {
+            margin: 28px auto 0;
+            max-width: 360px;
+            background: var(--paper-card);
+            padding: 22px 22px 20px;
+            text-align: center;
+            border: 1px solid var(--rule);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 12px 24px -14px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.15);
+        }
+        .qr-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--seal);
+            margin-bottom: 14px;
+        }
+        .qr-frame {
+            background: #fdfaf0;
+            padding: 14px;
+            display: inline-block;
+            line-height: 0;
+            border-radius: 2px;
+            box-shadow: 0 4px 10px -4px rgba(31, 26, 22, 0.25);
+        }
+        #qrcode { width: 200px; height: 200px; }
+        #qrcode canvas, #qrcode img { display: block; width: 200px; height: 200px; }
+        .qr-url {
+            margin-top: 12px;
+            font-family: 'Inter', ui-monospace, monospace;
+            font-weight: 400;
+            font-size: 0.74rem;
+            color: var(--muted);
+            word-break: break-all;
+        }
+
         /* === Title card (now in normal flow) =============================== */
         .title-card {
             background: var(--paper-card);
@@ -1042,6 +1083,14 @@
             <a class="lesson-link" href="https://www.churchofjesuschrist.org/study/manual/old-testament-seminary-student-manual-2026/63-for-the-strength-of-youth/634-taking-charge-of-technology?lang=eng" target="_blank" rel="noopener">Read the lesson on ChurchofJesusChrist.org</a>
         </header>
 
+        <div class="qr-block">
+            <div class="qr-label">Scan to follow along</div>
+            <div class="qr-frame">
+                <div id="qrcode" role="img" aria-label="QR code for this lesson page"></div>
+            </div>
+            <div class="qr-url" id="qr-url"></div>
+        </div>
+
         <!-- Section 1 -->
         <section>
             <div class="section-head">
@@ -1233,8 +1282,21 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script>
     (function() {
+        // ============ Self-referencing QR ============
+        var qrUrl = window.location.origin + window.location.pathname;
+        document.getElementById('qr-url').textContent = qrUrl;
+        new QRCode(document.getElementById('qrcode'), {
+            text: qrUrl,
+            width: 200,
+            height: 200,
+            colorDark: '#1f1a16',
+            colorLight: '#fdfaf0',
+            correctLevel: QRCode.CorrectLevel.M
+        });
+
         // ============ The five reflective passages ============
         const passages = [
             {
