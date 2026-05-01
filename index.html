@@ -6,236 +6,350 @@
     <title>Seminary Resources</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --paper: #efe6cf;
-            --paper-tint: rgba(255, 255, 255, 0.45);
-            --ink: #1c1815;
-            --seal: #b8302a;
-            --seal-deep: #8b1f1c;
-            --indigo: #1c3a5e;
-            --indigo-mist: rgba(28, 58, 94, 0.12);
-            --muted: #6e5e47;
-            --rule: rgba(28, 24, 21, 0.85);
+            --paper: #f3ead4;
+            --paper-soft: #eadfc1;
+            --paper-card: #fbf5e6;
+            --ink: #1f1a16;
+            --muted: #786650;
+            --rule: rgba(31, 26, 22, 0.18);
+            --sky-top: #d59c8b;
+            --sky-mid: #e8c2ac;
+            --sky-low: #c5cdce;
+            --hill-far: #95a3aa;
+            --hill-mid: #5b7281;
+            --hill-near: #2f4a55;
+            --pine: #18272d;
+            --water-glow: #c5a89a;
+            --seal: #8d3530;
+            --seal-soft: rgba(141, 53, 48, 0.85);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
-            background-color: var(--paper);
+            background: var(--paper);
             color: var(--ink);
-            font-family: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', 'Times New Roman', serif;
-            min-height: 100vh;
+            font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
             -webkit-font-smoothing: antialiased;
-            background-image:
-                radial-gradient(ellipse at 18% 22%, rgba(184, 48, 42, 0.04) 0%, transparent 45%),
-                radial-gradient(ellipse at 82% 78%, rgba(28, 58, 94, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
+        a { color: inherit; }
+
+        /* === Hero: dawn sky + layered landscape ============================ */
+        .hero {
+            position: relative;
+            height: 360px;
+            background: linear-gradient(
+                180deg,
+                var(--sky-top) 0%,
+                #e1b39e 22%,
+                var(--sky-mid) 45%,
+                #d6c2b0 65%,
+                var(--sky-low) 100%
+            );
+            overflow: hidden;
+        }
+        .hero-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 65% 30%, rgba(255, 230, 210, 0.35) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 60%, rgba(143, 165, 180, 0.18) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        /* Subtle paper grain */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 12% 18%, rgba(255,255,255,0.04) 0 1px, transparent 1px),
+                radial-gradient(circle at 78% 60%, rgba(0,0,0,0.04) 0 1px, transparent 1px),
+                radial-gradient(circle at 32% 82%, rgba(255,255,255,0.03) 0 1px, transparent 1px);
+            background-size: 4px 4px, 5px 5px, 6px 6px;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        /* === Title block over hero =========================================== */
+        .title-band {
+            position: relative;
+            margin-top: -88px;
+            padding: 0 32px;
+            z-index: 10;
+        }
+        .title-inner {
+            max-width: 980px;
+            margin: 0 auto;
+            background: var(--paper-card);
+            padding: 32px 40px 28px;
+            border: 1px solid var(--rule);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 18px 36px -22px rgba(31, 26, 22, 0.35),
+                0 4px 8px -4px rgba(31, 26, 22, 0.15);
+            position: relative;
+        }
+        .title-inner::before {
+            content: '';
+            position: absolute;
+            top: 14px; right: 14px;
+            width: 36px; height: 42px;
+            background: var(--seal-soft);
+            color: var(--paper-card);
+            border-radius: 2px;
+            box-shadow: inset 0 0 0 1.5px rgba(255,235,220,0.4);
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            letter-spacing: 0.005em;
+            line-height: 1.05;
+            color: var(--ink);
+        }
+        .tagline {
+            margin-top: 12px;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1.05rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            max-width: 50ch;
+        }
+
+        /* === Body container ================================================ */
         .container {
             max-width: 980px;
             margin: 0 auto;
-            padding: 64px 32px 32px;
+            padding: 56px 32px 24px;
         }
-        header {
-            display: flex;
-            align-items: flex-start;
-            gap: 28px;
-            padding-bottom: 36px;
-            border-bottom: 1.5px solid var(--rule);
-        }
-        .title-block { flex: 1; min-width: 0; }
-        h1 {
-            font-weight: 800;
-            font-size: clamp(2.3rem, 5.4vw, 3.6rem);
-            letter-spacing: -0.01em;
-            line-height: 1.05;
-        }
-        .tagline {
-            margin-top: 14px;
-            font-size: 1.02rem;
-            color: var(--muted);
-            font-style: italic;
-            max-width: 38ch;
-        }
-        .hanko {
-            flex-shrink: 0;
-            width: 76px;
-            height: 76px;
-        }
+
+        /* === QR ============================================================ */
         .qr-block {
-            margin: 56px auto 24px;
-            max-width: 420px;
+            margin: 0 auto 24px;
+            max-width: 440px;
             text-align: center;
         }
         .qr-label {
-            font-size: 0.74rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.32em;
+            letter-spacing: 0.3em;
             color: var(--seal);
             margin-bottom: 18px;
-            font-weight: 700;
         }
         .qr-frame {
             background: #fdfaf0;
             padding: 22px;
             display: inline-block;
             line-height: 0;
-            position: relative;
-            border: 1px solid var(--ink);
-            box-shadow: 8px 8px 0 var(--indigo);
+            border-radius: 2px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 14px 28px -14px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.15);
         }
-        .qr-frame::before, .qr-frame::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-        }
-        .qr-frame::before {
-            top: -7px; left: -7px;
-            border-top: 2px solid var(--seal);
-            border-left: 2px solid var(--seal);
-        }
-        .qr-frame::after {
-            bottom: -7px; right: -7px;
-            border-bottom: 2px solid var(--seal);
-            border-right: 2px solid var(--seal);
-        }
-        #qrcode {
-            width: 260px;
-            height: 260px;
-        }
+        #qrcode { width: 260px; height: 260px; }
         #qrcode canvas, #qrcode img { display: block; width: 260px; height: 260px; }
         .qr-url {
             margin-top: 18px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 0.82rem;
+            font-family: 'Inter', ui-monospace, monospace;
+            font-weight: 300;
+            font-size: 0.8rem;
             color: var(--muted);
             word-break: break-all;
         }
+
+        /* === Sections ====================================================== */
         .section { margin-top: 64px; }
         .section-title {
-            font-weight: 700;
-            font-size: 1.55rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 1.7rem;
+            letter-spacing: 0.005em;
+            margin-bottom: 22px;
             display: flex;
             align-items: baseline;
-            gap: 14px;
-            margin-bottom: 22px;
+            gap: 16px;
+            color: var(--ink);
         }
         .section-title::before {
             content: '';
-            width: 7px;
-            height: 7px;
+            width: 28px;
+            height: 1px;
             background: var(--seal);
-            border-radius: 50%;
-            transform: translateY(-3px);
+            transform: translateY(-6px);
             flex-shrink: 0;
         }
-        .section-title .ja {
-            font-size: 0.85rem;
-            color: var(--muted);
+        .section-meta {
+            font-family: 'Inter', sans-serif;
             font-weight: 400;
-            letter-spacing: 0.2em;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
             margin-left: auto;
         }
+
+        /* === Cards ========================================================= */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 18px;
+            gap: 22px;
         }
         .card {
             display: block;
-            background: var(--paper-tint);
-            border: 1px solid var(--ink);
-            padding: 24px 26px 22px;
+            background: var(--paper-card);
+            padding: 26px 28px 22px;
             text-decoration: none;
             color: inherit;
+            border-radius: 2px;
             position: relative;
-            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 8px 20px -10px rgba(31, 26, 22, 0.35),
+                0 2px 4px -2px rgba(31, 26, 22, 0.12);
         }
         .card:hover, .card:focus-visible {
-            transform: translate(-3px, -3px);
-            box-shadow: 6px 6px 0 var(--indigo);
-            background: rgba(255, 255, 255, 0.6);
+            transform: translateY(-4px);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.7) inset,
+                0 18px 32px -14px rgba(31, 26, 22, 0.4),
+                0 6px 12px -4px rgba(31, 26, 22, 0.18);
             outline: none;
         }
         .card h3 {
-            font-weight: 700;
-            font-size: 1.2rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 1.3rem;
             margin-bottom: 8px;
-            padding-right: 36px;
+            line-height: 1.15;
         }
         .card p {
-            font-size: 0.93rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 0.92rem;
             color: var(--muted);
             line-height: 1.55;
         }
-        .card .seal {
-            position: absolute;
-            top: 16px; right: 16px;
-            width: 28px;
-            height: 32px;
-            background: var(--seal);
-            color: #fdfaf0;
-            font-size: 0.95rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Shippori Mincho B1', 'Hiragino Mincho ProN', serif;
-            box-shadow: inset 0 0 0 1px var(--seal-deep);
+        .card .tag {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.65rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 10px;
         }
-        .seigaiha {
-            margin: 72px 0 0;
-            display: block;
-            width: 100%;
-            height: 36px;
-            opacity: 0.55;
-        }
+
+        /* === Footer ======================================================== */
         footer {
-            margin-top: 18px;
-            padding-top: 18px;
+            margin-top: 80px;
+            padding: 28px 32px 36px;
             text-align: center;
             color: var(--muted);
-            font-size: 0.82rem;
-            font-style: italic;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            border-top: 1px solid var(--rule);
+            max-width: 980px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        footer .vert {
-            display: inline-block;
-            margin: 0 10px;
+        footer .dot {
             color: var(--seal);
-            font-style: normal;
+            margin: 0 10px;
         }
-        @media (max-width: 540px) {
-            .container { padding: 36px 20px 28px; }
-            header { gap: 16px; padding-bottom: 28px; }
-            .hanko { width: 58px; height: 58px; }
-            .qr-block { margin-top: 40px; }
-            .qr-frame { padding: 16px; box-shadow: 6px 6px 0 var(--indigo); }
+
+        @media (max-width: 600px) {
+            .hero { height: 280px; }
+            .title-band { margin-top: -64px; padding: 0 18px; }
+            .title-inner { padding: 24px 24px 20px; }
+            .container { padding: 36px 18px 20px; }
             #qrcode { width: 220px; height: 220px; }
             #qrcode canvas, #qrcode img { width: 220px; height: 220px; }
-            .section-title .ja { display: none; }
+            .section-meta { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="title-block">
-                <h1>Seminary Resources</h1>
-                <p class="tagline">Lessons, presentations, and games for Doctrinal Mastery — Forrest Walker's classroom.</p>
-            </div>
-            <svg class="hanko" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Seal: study">
-                <rect x="2" y="2" width="72" height="72" rx="3" fill="#b8302a" stroke="#7a1a17" stroke-width="1.2"/>
-                <path d="M14 22 Q22 18 30 22 M46 22 Q54 18 62 22"
-                      stroke="#fdfaf0" stroke-width="3.2" stroke-linecap="round" fill="none"/>
-                <path d="M38 18 L38 30" stroke="#fdfaf0" stroke-width="3.2" stroke-linecap="round"/>
-                <path d="M16 36 L60 36" stroke="#fdfaf0" stroke-width="3.6" stroke-linecap="round"/>
-                <path d="M22 44 L54 44" stroke="#fdfaf0" stroke-width="2.8" stroke-linecap="round"/>
-                <path d="M30 50 L46 50" stroke="#fdfaf0" stroke-width="2.4" stroke-linecap="round"/>
-                <path d="M38 36 L38 62" stroke="#fdfaf0" stroke-width="3.6" stroke-linecap="round"/>
-                <path d="M28 58 Q38 64 48 58" stroke="#fdfaf0" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-            </svg>
-        </header>
+    <div class="hero" aria-hidden="true">
+        <svg class="hero-svg" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice">
+            <!-- distant misty mountains -->
+            <path d="M0,360 L0,210
+                     C 90,195 180,205 280,190
+                     C 360,178 430,188 520,178
+                     C 600,170 680,182 770,176
+                     C 860,170 950,182 1040,176
+                     C 1110,172 1170,180 1200,178
+                     L1200,360 Z"
+                  fill="#95a3aa" opacity="0.5"/>
+            <!-- mid hills -->
+            <path d="M0,360 L0,250
+                     C 110,238 220,248 320,242
+                     C 420,236 510,250 610,242
+                     C 720,234 820,250 920,244
+                     C 1020,238 1120,250 1200,246
+                     L1200,360 Z"
+                  fill="#5b7281" opacity="0.78"/>
+            <!-- nearer hills (front island silhouette, centered) -->
+            <path d="M0,360 L0,288
+                     C 60,282 130,286 200,284
+                     C 240,282 270,278 285,272
+                     L 295,266
+                     L 305,260 L 320,256 L 335,250 L 355,244 L 380,240 L 410,238
+                     L 440,242 L 470,250 L 495,256 L 515,262 L 530,268
+                     L 545,274
+                     C 600,278 660,280 720,282
+                     C 800,284 880,280 960,284
+                     C 1060,288 1140,286 1200,288
+                     L1200,360 Z"
+                  fill="#2f4a55"/>
+            <!-- pine silhouettes on near hill -->
+            <g fill="#18272d">
+                <!-- left grove -->
+                <path d="M 360,260 l -8 0 l 4 -10 l -6 0 l 4 -12 l -5 0 l 7 -16 l 7 16 l -5 0 l 4 12 l -6 0 l 4 10 z"/>
+                <path d="M 380,254 l -7 0 l 3 -8 l -5 0 l 3 -10 l -4 0 l 6 -14 l 6 14 l -4 0 l 3 10 l -5 0 l 3 8 z"/>
+                <path d="M 398,258 l -7 0 l 3 -9 l -5 0 l 4 -11 l -4 0 l 5 -13 l 5 13 l -4 0 l 4 11 l -5 0 l 3 9 z"/>
+                <path d="M 418,252 l -8 0 l 3 -10 l -5 0 l 4 -13 l -5 0 l 6 -16 l 6 16 l -5 0 l 4 13 l -5 0 l 3 10 z"/>
+                <!-- foreground accent pine -->
+                <path d="M 440,262 l -10 0 l 4 -12 l -7 0 l 5 -15 l -5 0 l 7 -20 l 7 20 l -5 0 l 5 15 l -7 0 l 4 12 z"/>
+                <path d="M 460,256 l -8 0 l 3 -10 l -6 0 l 4 -12 l -4 0 l 6 -16 l 6 16 l -4 0 l 4 12 l -6 0 l 3 10 z"/>
+            </g>
+            <!-- soft cloud bands -->
+            <g opacity="0.55">
+                <path d="M 80,80 C 160,72 240,86 340,80 C 420,76 480,90 560,82 C 480,108 360,108 280,104 C 200,100 130,98 80,92 Z" fill="#f5dac6"/>
+                <path d="M 700,60 C 780,55 860,70 960,64 C 1040,60 1100,72 1180,68 C 1100,90 1000,90 920,86 C 840,82 770,82 700,76 Z" fill="#f5dac6" opacity="0.85"/>
+                <path d="M 380,140 C 460,134 540,148 640,142 C 720,138 780,150 860,144 C 780,164 680,164 600,160 C 520,156 450,156 380,152 Z" fill="#fcebd6" opacity="0.7"/>
+            </g>
+            <!-- subtle horizon glow -->
+            <ellipse cx="780" cy="200" rx="280" ry="36" fill="#f6d4b6" opacity="0.4"/>
+        </svg>
+        <div class="hero-overlay"></div>
+    </div>
 
+    <div class="title-band">
+        <div class="title-inner">
+            <h1>Seminary Resources</h1>
+            <p class="tagline">Lessons, presentations, and games for Doctrinal Mastery — Forrest Walker's classroom.</p>
+        </div>
+    </div>
+
+    <div class="container">
         <div class="qr-block">
             <div class="qr-label">Scan to open</div>
             <div class="qr-frame">
@@ -245,10 +359,21 @@
         </div>
 
         <section class="section">
-            <h2 class="section-title">Games <span class="ja">遊</span></h2>
+            <h2 class="section-title">Today's Lesson <span class="section-meta">For the Strength of Youth</span></h2>
+            <div class="grid">
+                <a class="card" href="/crossroads/">
+                    <span class="tag">Lesson 174 · May 1</span>
+                    <h3>Crossroads — Taking Charge of Technology</h3>
+                    <p>Reading, reflection, and a class question wall built around being purposeful with technology.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Games <span class="section-meta">Practice &amp; Play</span></h2>
             <div class="grid">
                 <a class="card" href="/battle/">
-                    <span class="seal" aria-hidden="true">武</span>
+                    <span class="tag">Multiplayer</span>
                     <h3>Scripture Battle Royale</h3>
                     <p>D&amp;C Doctrinal Mastery battle game. Single player or peer-to-peer multiplayer rooms.</p>
                 </a>
@@ -256,34 +381,20 @@
         </section>
 
         <section class="section">
-            <h2 class="section-title">Lessons &amp; Tools <span class="ja">学</span></h2>
+            <h2 class="section-title">Lessons &amp; Tools <span class="section-meta">Study &amp; Reflect</span></h2>
             <div class="grid">
                 <a class="card" href="/remember2/">
-                    <span class="seal" aria-hidden="true">記</span>
+                    <span class="tag">FHE / Lesson</span>
                     <h3>Remember, Remember</h3>
                     <p>Word cloud and analysis tool inspired by Elder Wong's April 2026 conference talk.</p>
                 </a>
             </div>
         </section>
-
-        <svg class="seigaiha" viewBox="0 0 240 36" preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-                <pattern id="wave" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-                    <circle cx="16" cy="32" r="14" fill="none" stroke="#1c3a5e" stroke-width="1.2"/>
-                    <circle cx="0"  cy="32" r="14" fill="none" stroke="#1c3a5e" stroke-width="1.2"/>
-                    <circle cx="32" cy="32" r="14" fill="none" stroke="#1c3a5e" stroke-width="1.2"/>
-                    <circle cx="16" cy="32" r="9"  fill="none" stroke="#1c3a5e" stroke-width="1"/>
-                    <circle cx="0"  cy="32" r="9"  fill="none" stroke="#1c3a5e" stroke-width="1"/>
-                    <circle cx="32" cy="32" r="9"  fill="none" stroke="#1c3a5e" stroke-width="1"/>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#wave)"/>
-        </svg>
-
-        <footer>
-            <p>ldsdoctrinalmastery.github.io <span class="vert">·</span> made for the classroom</p>
-        </footer>
     </div>
+
+    <footer>
+        <p>ldsdoctrinalmastery.github.io <span class="dot">·</span> made for the classroom</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script>
@@ -294,7 +405,7 @@
                 text: url,
                 width: 260,
                 height: 260,
-                colorDark: '#1c1815',
+                colorDark: '#1f1a16',
                 colorLight: '#fdfaf0',
                 correctLevel: QRCode.CorrectLevel.M
             });
