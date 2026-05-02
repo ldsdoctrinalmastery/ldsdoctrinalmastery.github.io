@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stained Glass — From a Verse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .input-card {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 22px 26px 20px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 8px 18px -10px rgba(31, 26, 22, 0.3);
+        }
+        .input-card textarea {
+            width: 100%;
+            min-height: 90px;
+            padding: 14px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.06rem;
+            background-color: #fffcf3;
+            border: 1px solid var(--rule);
+            border-radius: 2px;
+            color: var(--ink);
+            resize: vertical;
+        }
+        .input-card textarea:focus { outline: none; border-color: var(--seal); box-shadow: 0 0 0 1px rgba(141, 53, 48, 0.25); }
+        .input-card .row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .input-card .row button { flex: 1; min-width: 130px; }
+        .glass-frame {
+            background-color: #1a1815;
+            padding: 18px;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 16px 30px -14px rgba(0,0,0,0.5);
+            border: 8px solid #2a2620;
+            border-radius: 4px;
+            margin-bottom: 14px;
+        }
+        .glass-frame svg { display: block; width: 100%; height: auto; }
+        .stats {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 14px 22px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 6px 14px -8px rgba(31, 26, 22, 0.25);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.84rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        .stats strong { color: var(--ink); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Stained Glass</h1>
+            <p class="subtitle">Paste a verse. Watch its words become a glass mosaic — colors and shapes drawn from the text itself.</p>
+        </header>
+
+        <div class="input-card">
+            <textarea id="text" placeholder="Paste a scripture, a paragraph, anything. The result is deterministic — same text, same window."></textarea>
+            <div class="row">
+                <button class="btn ghost" id="sample">Try a sample</button>
+                <button class="btn ghost" id="download">Download SVG</button>
+                <button class="btn" id="generate">Generate</button>
+            </div>
+        </div>
+
+        <div class="glass-frame"><div id="glass"></div></div>
+
+        <div class="stats" id="stats"></div>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        const SAMPLES = [
+            'Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.',
+            'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.',
+            'Trust in the Lord with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.',
+            'I will go and do the things which the Lord hath commanded, for I know that the Lord giveth no commandments unto the children of men, save he shall prepare a way for them that they may accomplish the thing which he commandeth them.',
+            'Now faith is the substance of things hoped for, the evidence of things not seen.'
+        ];
+
+        // Color palettes — pick by hash of text
+        const PALETTES = [
+            ['#1a3a5c', '#3d5e7e', '#88b0d0', '#c1272d', '#e8c34a', '#f4ecd0'], // prussian + vermilion + gold
+            ['#2a3d5f', '#5c7593', '#a4c1d8', '#8d3530', '#c89a3e', '#efe6cf'], // muted blue + soft red
+            ['#1f4d3c', '#3d8068', '#8db8a4', '#b8302a', '#d4a655', '#f3ead4'], // moss green + vermilion
+            ['#2c1e3f', '#553f6f', '#9b85b3', '#c44a3c', '#e0b243', '#f0e6d0'], // royal purple + persimmon
+            ['#0d2a3e', '#2e5673', '#6e9bb6', '#c12d3d', '#d9b14a', '#f4e8cc']  // navy + carmine
+        ];
+
+        function hash32(str) {
+            let h = 5381;
+            for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i);
+            return h >>> 0;
+        }
+
+        // Mulberry32 PRNG
+        function rng(seed) {
+            return function() {
+                seed = (seed + 0x6D2B79F5) >>> 0;
+                let t = seed;
+                t = Math.imul(t ^ (t >>> 15), t | 1);
+                t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+        }
+
+        function generate(text) {
+            text = text.trim();
+            if (!text) return;
+            const h = hash32(text);
+            const r = rng(h);
+            const palette = PALETTES[h % PALETTES.length];
+
+            // Stats
+            const words = text.split(/\s+/).filter(Boolean);
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            const chars = text.length;
+            const uniqueWords = new Set(words.map(w => w.toLowerCase().replace(/[^a-z]/g, ''))).size;
+
+            // Update stats display
+            document.getElementById('stats').innerHTML = `
+                <strong>${words.length}</strong> words ·
+                <strong>${uniqueWords}</strong> unique ·
+                <strong>${sentences.length}</strong> sentences ·
+                <strong>${chars}</strong> characters ·
+                palette <strong>${(h % PALETTES.length) + 1}/${PALETTES.length}</strong>
+            `;
+
+            // Build SVG. Two-pane window with traceable shape grid driven by word lengths.
+            const W = 800, H = 600;
+            const cols = Math.max(8, Math.min(20, Math.round(Math.sqrt(words.length * 1.6))));
+            const rows = Math.max(6, Math.min(20, Math.ceil(words.length / cols * 1.2)));
+            const cellW = W / cols, cellH = H / rows;
+
+            let shapes = '';
+            // Iterate cells with subdivisions based on word length
+            let wi = 0;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const word = words[wi % words.length] || '';
+                    wi++;
+                    const len = word.length || 1;
+                    const x = col * cellW;
+                    const y = row * cellH;
+                    const colorIdx = (len + col + row) % palette.length;
+                    const color = palette[colorIdx];
+                    // Choose a shape pattern based on word length
+                    const variant = len % 6;
+                    if (variant === 0) {
+                        // Rectangle (split horizontally)
+                        const split = cellH * (0.3 + r() * 0.4);
+                        shapes += `<rect x="${x}" y="${y}" width="${cellW}" height="${split}" fill="${color}" />`;
+                        shapes += `<rect x="${x}" y="${y + split}" width="${cellW}" height="${cellH - split}" fill="${palette[(colorIdx + 1) % palette.length]}" />`;
+                    } else if (variant === 1) {
+                        // Diagonal triangles
+                        shapes += `<polygon points="${x},${y} ${x + cellW},${y} ${x},${y + cellH}" fill="${color}" />`;
+                        shapes += `<polygon points="${x + cellW},${y} ${x + cellW},${y + cellH} ${x},${y + cellH}" fill="${palette[(colorIdx + 2) % palette.length]}" />`;
+                    } else if (variant === 2) {
+                        // Center diamond
+                        const cx = x + cellW / 2, cy = y + cellH / 2;
+                        shapes += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" fill="${palette[(colorIdx + 3) % palette.length]}" />`;
+                        shapes += `<polygon points="${cx},${y + 4} ${x + cellW - 4},${cy} ${cx},${y + cellH - 4} ${x + 4},${cy}" fill="${color}" />`;
+                    } else if (variant === 3) {
+                        // Circle in cell
+                        const cx = x + cellW / 2, cy = y + cellH / 2;
+                        const radius = Math.min(cellW, cellH) * 0.42;
+                        shapes += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" fill="${palette[(colorIdx + 4) % palette.length]}" />`;
+                        shapes += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${color}" />`;
+                    } else if (variant === 4) {
+                        // Wedge from corner
+                        shapes += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" fill="${color}" />`;
+                        shapes += `<polygon points="${x},${y} ${x + cellW * 0.7},${y} ${x},${y + cellH * 0.7}" fill="${palette[(colorIdx + 1) % palette.length]}" />`;
+                    } else {
+                        // Vertical split
+                        const split = cellW * (0.3 + r() * 0.4);
+                        shapes += `<rect x="${x}" y="${y}" width="${split}" height="${cellH}" fill="${color}" />`;
+                        shapes += `<rect x="${x + split}" y="${y}" width="${cellW - split}" height="${cellH}" fill="${palette[(colorIdx + 2) % palette.length]}" />`;
+                    }
+                }
+            }
+
+            // Lead lines: grid lines drawn over the shapes in dark
+            let lead = '';
+            for (let row = 0; row <= rows; row++) {
+                lead += `<line x1="0" y1="${row * cellH}" x2="${W}" y2="${row * cellH}" stroke="#1a1815" stroke-width="2" />`;
+            }
+            for (let col = 0; col <= cols; col++) {
+                lead += `<line x1="${col * cellW}" y1="0" x2="${col * cellW}" y2="${H}" stroke="#1a1815" stroke-width="2" />`;
+            }
+
+            // Frame border (thicker)
+            lead += `<rect x="0" y="0" width="${W}" height="${H}" fill="none" stroke="#0a0805" stroke-width="6" />`;
+
+            const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${shapes}${lead}</svg>`;
+            document.getElementById('glass').innerHTML = svg;
+            // Stash for download
+            window._glassSvg = svg;
+        }
+
+        document.getElementById('generate').addEventListener('click', () => {
+            generate(document.getElementById('text').value);
+        });
+        document.getElementById('sample').addEventListener('click', () => {
+            const s = SAMPLES[Math.floor(Math.random() * SAMPLES.length)];
+            document.getElementById('text').value = s;
+            generate(s);
+        });
+        document.getElementById('download').addEventListener('click', () => {
+            if (!window._glassSvg) return;
+            const blob = new Blob([window._glassSvg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stained-glass.svg';
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        });
+        document.getElementById('text').addEventListener('input', () => {
+            // Live regenerate as user types (debounced)
+            clearTimeout(window._glassTimer);
+            window._glassTimer = setTimeout(() => generate(document.getElementById('text').value), 250);
+        });
+
+        // Boot with a sample
+        const initial = SAMPLES[0];
+        document.getElementById('text').value = initial;
+        generate(initial);
+    })();
+    </script>
+</body>
+</html>

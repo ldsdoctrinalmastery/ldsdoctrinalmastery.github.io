@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Higher · Lower — D&amp;C Sections</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .page { max-width: 720px; }
+        .arena {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .pane {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 22px 18px 18px;
+            text-align: center;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 10px 22px -12px rgba(31, 26, 22, 0.35);
+            min-height: 200px;
+        }
+        .pane .label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.66rem;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .pane .ref {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+        .pane .topic {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 0.94rem;
+            line-height: 1.4;
+            margin-bottom: 14px;
+            min-height: 38px;
+        }
+        .pane .verses {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 2.4rem;
+            color: var(--seal);
+            line-height: 1;
+        }
+        .pane .verses-label {
+            display: block;
+            margin-top: 4px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .pane .hidden {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 2.4rem;
+            color: var(--muted);
+        }
+        .choice {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .choice .btn { padding: 14px 16px; font-size: 0.78rem; }
+        .ref-link {
+            margin-top: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+        .ref-link a { color: var(--seal); text-decoration: none; border-bottom: 1px dotted rgba(141, 53, 48, 0.4); }
+        @media (max-width: 540px) {
+            .arena { grid-template-columns: 1fr; }
+            .pane .ref { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Higher · Lower</h1>
+            <p class="subtitle">Which D&amp;C section has more verses? Streak as long as you can.</p>
+        </header>
+
+        <div class="score-strip">
+            <div class="stat"><div class="label">Streak</div><div class="val" id="streak">0</div></div>
+            <div class="stat"><div class="label">Best</div><div class="val" id="best">0</div></div>
+        </div>
+
+        <div class="arena">
+            <div class="pane" id="pane-a">
+                <div class="label">Known</div>
+                <div class="ref" id="ref-a"></div>
+                <div class="topic" id="topic-a"></div>
+                <div class="verses" id="verses-a"></div>
+                <span class="verses-label">verses</span>
+            </div>
+            <div class="pane" id="pane-b">
+                <div class="label">?</div>
+                <div class="ref" id="ref-b"></div>
+                <div class="topic" id="topic-b"></div>
+                <div class="hidden" id="verses-b">—</div>
+                <span class="verses-label">verses</span>
+            </div>
+        </div>
+
+        <div class="choice">
+            <button class="btn" id="higher">B is HIGHER</button>
+            <button class="btn ghost" id="lower">B is LOWER</button>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div id="result" class="result" hidden>
+            <h3 id="result-title"></h3>
+            <div class="ref-link" id="result-link"></div>
+            <button class="btn" id="play-again" style="margin-top: 12px;">Play again</button>
+        </div>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        // Curated D&C sections with verse counts and a brief topic gloss
+        const SECTIONS = [
+            { n: 1, v: 39, topic: 'The Lord\'s preface to the Doctrine and Covenants' },
+            { n: 4, v: 7, topic: 'A marvelous work is about to come forth' },
+            { n: 6, v: 37, topic: 'To Oliver Cowdery — seek and ye shall find' },
+            { n: 13, v: 1, topic: 'Aaronic Priesthood restored' },
+            { n: 18, v: 47, topic: 'The worth of souls is great' },
+            { n: 19, v: 41, topic: 'Christ\'s atonement and suffering' },
+            { n: 20, v: 84, topic: 'Articles and covenants of the Church' },
+            { n: 25, v: 16, topic: 'Emma Smith\'s calling — an elect lady' },
+            { n: 27, v: 18, topic: 'The whole armor of God' },
+            { n: 38, v: 42, topic: 'Gather to Ohio — be one' },
+            { n: 42, v: 93, topic: 'The law of the Church' },
+            { n: 49, v: 28, topic: 'To the Shakers' },
+            { n: 50, v: 46, topic: 'That which is of God is light' },
+            { n: 58, v: 65, topic: 'Anxiously engaged in a good cause' },
+            { n: 63, v: 66, topic: 'Faith comes not by signs' },
+            { n: 76, v: 119, topic: 'The Vision — three degrees of glory' },
+            { n: 84, v: 120, topic: 'Oath and covenant of the priesthood' },
+            { n: 88, v: 141, topic: 'The Olive Leaf' },
+            { n: 89, v: 21, topic: 'The Word of Wisdom' },
+            { n: 93, v: 53, topic: 'Truth — knowledge of things as they are' },
+            { n: 107, v: 100, topic: 'Priesthood offices and quorums' },
+            { n: 109, v: 80, topic: 'Kirtland Temple dedicatory prayer' },
+            { n: 110, v: 16, topic: 'Visions in the Kirtland Temple' },
+            { n: 121, v: 46, topic: 'O God, where art thou? — Liberty Jail' },
+            { n: 122, v: 9, topic: 'Liberty Jail — all these things shall give thee experience' },
+            { n: 127, v: 12, topic: 'Baptism for the dead' },
+            { n: 128, v: 25, topic: 'Records and baptism for the dead' },
+            { n: 130, v: 23, topic: 'Items of instruction — earth shall be sanctified' },
+            { n: 131, v: 8, topic: 'Three heavens within the celestial' },
+            { n: 132, v: 66, topic: 'New and everlasting covenant of marriage' },
+            { n: 133, v: 74, topic: 'The Appendix — preparation for the Second Coming' },
+            { n: 137, v: 10, topic: 'Vision of the celestial kingdom' },
+            { n: 138, v: 60, topic: 'Joseph F. Smith\'s vision of the spirit world' }
+        ];
+
+        const STORE = 'highlow.best.v1';
+        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let streak = 0;
+        let a = null, b = null;
+
+        const refA = document.getElementById('ref-a');
+        const refB = document.getElementById('ref-b');
+        const topicA = document.getElementById('topic-a');
+        const topicB = document.getElementById('topic-b');
+        const versesA = document.getElementById('verses-a');
+        const versesB = document.getElementById('verses-b');
+        const streakEl = document.getElementById('streak');
+        const bestEl = document.getElementById('best');
+        const message = document.getElementById('message');
+        const result = document.getElementById('result');
+        const resultTitle = document.getElementById('result-title');
+        const resultLink = document.getElementById('result-link');
+
+        bestEl.textContent = best;
+
+        function pick(notSection) {
+            let p;
+            do { p = SECTIONS[Math.floor(Math.random() * SECTIONS.length)]; }
+            while (notSection && p.n === notSection.n);
+            return p;
+        }
+
+        function render() {
+            refA.textContent = `D&C ${a.n}`;
+            topicA.textContent = a.topic;
+            versesA.textContent = a.v;
+            refB.textContent = `D&C ${b.n}`;
+            topicB.textContent = b.topic;
+            versesB.textContent = '—';
+            versesB.className = 'hidden';
+            streakEl.textContent = streak;
+        }
+
+        function newGame() {
+            streak = 0;
+            a = pick();
+            b = pick(a);
+            result.hidden = true;
+            message.textContent = '';
+            render();
+            setControls(true);
+        }
+
+        function setControls(enabled) {
+            document.getElementById('higher').disabled = !enabled;
+            document.getElementById('lower').disabled = !enabled;
+        }
+
+        function guess(higher) {
+            setControls(false);
+            const correct = higher ? (b.v >= a.v) : (b.v <= a.v);
+            versesB.textContent = b.v;
+            versesB.className = 'verses';
+
+            if (correct) {
+                streak++;
+                if (streak > best) {
+                    best = streak;
+                    localStorage.setItem(STORE, best);
+                    bestEl.textContent = best;
+                }
+                message.textContent = b.v === a.v ? 'Tie counts! ✓' : 'Correct!';
+                streakEl.textContent = streak;
+                setTimeout(() => {
+                    a = b;
+                    b = pick(a);
+                    render();
+                    message.textContent = '';
+                    setControls(true);
+                }, 1100);
+            } else {
+                resultTitle.textContent = `Streak: ${streak}`;
+                resultLink.innerHTML = `D&C ${a.n} → ${a.v} verses · D&C ${b.n} → ${b.v} verses · <a href="https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/${b.n}?lang=eng" target="_blank" rel="noopener">read D&C ${b.n} →</a>`;
+                result.hidden = false;
+                message.textContent = 'Wrong.';
+            }
+        }
+
+        document.getElementById('higher').addEventListener('click', () => guess(true));
+        document.getElementById('lower').addEventListener('click', () => guess(false));
+        document.getElementById('play-again').addEventListener('click', newGame);
+
+        newGame();
+    })();
+    </script>
+</body>
+</html>

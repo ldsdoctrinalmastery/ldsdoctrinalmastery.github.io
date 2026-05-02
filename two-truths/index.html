@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Truths and a Verse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .candidates { display: grid; gap: 12px; margin-bottom: 14px; }
+        .cand {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 18px 22px;
+            border-left: 3px solid rgba(120, 102, 80, 0.3);
+            cursor: pointer;
+            transition: border-color 0.15s;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.04rem;
+            line-height: 1.5;
+            user-select: none;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 6px 14px -10px rgba(31, 26, 22, 0.25);
+        }
+        .cand:hover { border-color: var(--seal); }
+        .cand.real { border-color: var(--moss); background-color: rgba(93, 111, 76, 0.12); }
+        .cand.fake { border-color: var(--seal); background-color: rgba(141, 53, 48, 0.12); opacity: 0.65; }
+        .cand .tag {
+            display: block;
+            margin-top: 8px;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+        .cand.real .tag { color: var(--moss); }
+        .cand.fake .tag { color: var(--seal); }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Two Truths and a Verse</h1>
+            <p class="subtitle">Two are invented. One is scripture. Pick the real one.</p>
+        </header>
+
+        <div class="score-strip">
+            <div class="stat"><div class="label">Streak</div><div class="val" id="streak">0</div></div>
+            <div class="stat"><div class="label">Best</div><div class="val" id="best">0</div></div>
+        </div>
+
+        <div class="candidates" id="candidates"></div>
+        <div class="message" id="message"></div>
+        <button class="btn full" id="next" hidden>Next round</button>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        // 1 real verse + 2 fakes (scripture-flavored).
+        const ROUNDS = [
+            {
+                real: { text: 'I will go and do the things which the Lord hath commanded.', ref: '1 Nephi 3:7' },
+                fakes: ['I will arise and meet what the Father hath set before me.', 'And I shall not turn aside from the path the Lord hath cleared.']
+            },
+            {
+                real: { text: 'Be still, and know that I am God.', ref: 'Psalm 46:10' },
+                fakes: ['Lift up thine eyes, and behold that I am near.', 'Hold thy tongue, and remember that I am Lord.']
+            },
+            {
+                real: { text: 'For we walk by faith, not by sight.', ref: '2 Corinthians 5:7' },
+                fakes: ['For ye are guided by the unseen, not the seen.', 'For our path is hewn by belief, and not by the eye.']
+            },
+            {
+                real: { text: 'Adam fell that men might be; and men are, that they might have joy.', ref: '2 Nephi 2:25' },
+                fakes: ['The fall came that we might learn; the rising came that we might love.', 'Adam fell that men might walk; and men walk, that they might choose.']
+            },
+            {
+                real: { text: 'Now faith is the substance of things hoped for, the evidence of things not seen.', ref: 'Hebrews 11:1' },
+                fakes: ['Faith is the foundation of things believed, the proof of things hoped after.', 'Faith is the soul of things expected, the witness of things invisible.']
+            },
+            {
+                real: { text: 'Stand ye in holy places, and be not moved.', ref: 'D&C 87:8' },
+                fakes: ['Set thy feet in sacred ground, and be not afraid.', 'Stand fast in the ways of the Lord, and be unmoved by the storm.']
+            },
+            {
+                real: { text: 'Trust in the Lord with all thine heart; and lean not unto thine own understanding.', ref: 'Proverbs 3:5' },
+                fakes: ['Trust in the Lord with all thy soul; and follow not the wisdom of thine own.', 'Place thy faith in the Most High; and turn not aside to thy own counsel.']
+            },
+            {
+                real: { text: 'Charity suffereth long, and is kind, and envieth not, and is not puffed up.', ref: 'Moroni 7:45' },
+                fakes: ['Charity is patient and gentle, and seeketh not for praise.', 'Love endureth long, and is meek, and remembereth not the wrong.']
+            },
+            {
+                real: { text: 'Seek learning, even by study and also by faith.', ref: 'D&C 88:118' },
+                fakes: ['Pursue wisdom, by labor and by trust in the Spirit.', 'Seek understanding, both by reason and by revelation.']
+            },
+            {
+                real: { text: 'My grace is sufficient for thee: for my strength is made perfect in weakness.', ref: '2 Corinthians 12:9' },
+                fakes: ['My grace shall be enough for thee, when thy heart is humble.', 'In thy weakness shall my power abide; lean ye on me.']
+            }
+        ];
+
+        const STORE = 'twotruths.best.v1';
+        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let streak = 0;
+        let pool = [];
+
+        const candEl = document.getElementById('candidates');
+        const streakEl = document.getElementById('streak');
+        const bestEl = document.getElementById('best');
+        const message = document.getElementById('message');
+        const nextBtn = document.getElementById('next');
+        bestEl.textContent = best;
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function nextRound() {
+            if (pool.length === 0) pool = shuffle(ROUNDS.slice());
+            const r = pool.pop();
+            const items = [
+                { text: r.real.text, ref: r.real.ref, real: true },
+                { text: r.fakes[0], ref: 'Invented', real: false },
+                { text: r.fakes[1], ref: 'Invented', real: false }
+            ];
+            shuffle(items);
+            candEl.innerHTML = '';
+            items.forEach((it) => {
+                const el = document.createElement('div');
+                el.className = 'cand';
+                el.dataset.real = it.real ? '1' : '0';
+                el.textContent = `"${it.text}"`;
+                el.addEventListener('click', () => {
+                    if (nextBtn.hidden === false) return;
+                    Array.from(candEl.children).forEach((c, i) => {
+                        c.classList.add(items[i].real ? 'real' : 'fake');
+                        const tag = document.createElement('span');
+                        tag.className = 'tag';
+                        tag.textContent = items[i].real ? items[i].ref : 'Invented';
+                        c.appendChild(tag);
+                    });
+                    if (it.real) {
+                        streak++;
+                        streakEl.textContent = streak;
+                        if (streak > best) {
+                            best = streak;
+                            localStorage.setItem(STORE, best);
+                            bestEl.textContent = best;
+                        }
+                        message.textContent = '✓ That\'s the real one.';
+                    } else {
+                        streak = 0;
+                        streakEl.textContent = streak;
+                        message.textContent = '✗ Invented. Streak reset.';
+                    }
+                    nextBtn.hidden = false;
+                });
+                candEl.appendChild(el);
+            });
+            nextBtn.hidden = true;
+            message.textContent = '';
+        }
+
+        nextBtn.addEventListener('click', nextRound);
+        nextRound();
+    })();
+    </script>
+</body>
+</html>

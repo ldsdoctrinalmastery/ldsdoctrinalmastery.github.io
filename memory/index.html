@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Pairs — Reference &amp; Phrase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .tile {
+            aspect-ratio: 3/4;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            border: 1px solid var(--rule);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            text-align: center;
+            transition: transform 0.2s, background-color 0.2s;
+            user-select: none;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 4px 10px -6px rgba(31, 26, 22, 0.2);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.84rem;
+            line-height: 1.25;
+            color: var(--ink);
+            position: relative;
+        }
+        .tile.face-down {
+            background-color: var(--ink);
+            color: transparent;
+            background-image: none;
+        }
+        .tile.face-down::after {
+            content: '☷';
+            color: var(--gold);
+            font-size: 1.4rem;
+        }
+        .tile.matched {
+            background-color: rgba(93, 111, 76, 0.2);
+            border-color: var(--moss);
+            cursor: default;
+        }
+        .tile.ref {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--seal);
+        }
+        @media (max-width: 540px) {
+            .grid { grid-template-columns: repeat(4, 1fr); gap: 5px; }
+            .tile { font-size: 0.7rem; padding: 4px; }
+            .tile.ref { font-size: 0.66rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Memory Pairs</h1>
+            <p class="subtitle">Match each scripture reference with its key phrase.</p>
+        </header>
+
+        <div class="score-strip">
+            <div class="stat"><div class="label">Moves</div><div class="val" id="moves">0</div></div>
+            <div class="stat"><div class="label">Best</div><div class="val" id="best">—</div></div>
+        </div>
+
+        <div class="grid" id="grid"></div>
+        <div class="message" id="message"></div>
+
+        <div id="result" class="result" hidden>
+            <h3 id="result-title"></h3>
+            <p id="result-summary" style="font-family:'Inter',sans-serif; font-size:0.92rem; color:var(--muted);"></p>
+            <button class="btn" id="play-again" style="margin-top:14px;">Shuffle &amp; play again</button>
+        </div>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        const PAIRS = [
+            { ref: 'Psalm 46:10', phrase: 'Be still, and know.' },
+            { ref: 'Proverbs 3:5', phrase: 'Trust in the Lord with all thine heart.' },
+            { ref: '1 Nephi 3:7', phrase: 'I will go and do.' },
+            { ref: 'Hebrews 11:1', phrase: 'Substance of things hoped for.' },
+            { ref: 'D&C 18:10', phrase: 'Worth of souls is great.' },
+            { ref: '2 Nephi 32:3', phrase: 'Feast upon the words of Christ.' },
+            { ref: 'D&C 88:118', phrase: 'Seek learning by study and faith.' },
+            { ref: 'James 1:5', phrase: 'If any of you lack wisdom.' }
+        ];
+
+        const STORE = 'memory.best.v1';
+        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let moves = 0;
+        let flipped = [];
+        let matched = 0;
+        let lock = false;
+
+        const grid = document.getElementById('grid');
+        const movesEl = document.getElementById('moves');
+        const bestEl = document.getElementById('best');
+        const message = document.getElementById('message');
+        const result = document.getElementById('result');
+        bestEl.textContent = best || '—';
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function build() {
+            const cards = [];
+            PAIRS.forEach((p, i) => {
+                cards.push({ id: i, type: 'ref', text: p.ref });
+                cards.push({ id: i, type: 'phrase', text: p.phrase });
+            });
+            shuffle(cards);
+            grid.innerHTML = '';
+            cards.forEach(c => {
+                const t = document.createElement('div');
+                t.className = 'tile face-down';
+                if (c.type === 'ref') t.classList.add('ref');
+                t.dataset.id = c.id;
+                t.dataset.text = c.text;
+                t.textContent = c.text;
+                t.addEventListener('click', () => flip(t));
+                grid.appendChild(t);
+            });
+            moves = 0;
+            matched = 0;
+            flipped = [];
+            movesEl.textContent = moves;
+            message.textContent = '';
+            result.hidden = true;
+        }
+
+        function flip(t) {
+            if (lock) return;
+            if (!t.classList.contains('face-down')) return;
+            t.classList.remove('face-down');
+            flipped.push(t);
+            if (flipped.length === 2) {
+                lock = true;
+                moves++;
+                movesEl.textContent = moves;
+                const [a, b] = flipped;
+                if (a.dataset.id === b.dataset.id) {
+                    setTimeout(() => {
+                        a.classList.add('matched');
+                        b.classList.add('matched');
+                        flipped = [];
+                        lock = false;
+                        matched++;
+                        if (matched === PAIRS.length) win();
+                    }, 350);
+                } else {
+                    setTimeout(() => {
+                        a.classList.add('face-down');
+                        b.classList.add('face-down');
+                        flipped = [];
+                        lock = false;
+                    }, 800);
+                }
+            }
+        }
+
+        function win() {
+            const isBest = !best || moves < best;
+            if (isBest) {
+                best = moves;
+                localStorage.setItem(STORE, best);
+                bestEl.textContent = best;
+            }
+            document.getElementById('result-title').textContent = `✓ Cleared in ${moves} moves`;
+            document.getElementById('result-summary').textContent = isBest
+                ? 'New personal best.'
+                : `Personal best: ${best} moves.`;
+            result.hidden = false;
+        }
+
+        document.getElementById('play-again').addEventListener('click', build);
+        build();
+    })();
+    </script>
+</body>
+</html>

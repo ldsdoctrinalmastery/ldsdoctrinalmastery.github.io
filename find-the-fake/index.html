@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find the Fake — Scripture or Imposter?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/games.css">
+    <style>
+        .candidates {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .cand {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 18px 22px;
+            border-left: 3px solid rgba(120, 102, 80, 0.3);
+            cursor: pointer;
+            transition: border-color 0.15s, transform 0.05s;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.04rem;
+            line-height: 1.5;
+            color: var(--ink);
+            user-select: none;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -10px rgba(31, 26, 22, 0.25);
+        }
+        .cand:hover { border-color: var(--seal); }
+        .cand.real { border-color: var(--moss); background-color: rgba(93, 111, 76, 0.12); }
+        .cand.fake { border-color: var(--seal); background-color: rgba(141, 53, 48, 0.12); }
+        .cand .tag {
+            display: block;
+            margin-top: 8px;
+            font-style: normal;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+        .cand.real .tag { color: var(--moss); }
+        .cand.fake .tag { color: var(--seal); }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+    <main class="page">
+        <header class="title-card">
+            <h1>Find the Fake</h1>
+            <p class="subtitle">One of these isn't a real verse. Spot the imposter.</p>
+        </header>
+
+        <div class="score-strip">
+            <div class="stat"><div class="label">Streak</div><div class="val" id="streak">0</div></div>
+            <div class="stat"><div class="label">Best</div><div class="val" id="best">0</div></div>
+        </div>
+
+        <div class="candidates" id="candidates"></div>
+        <div class="message" id="message"></div>
+        <button class="btn full" id="next" hidden>Next round</button>
+
+        <footer><p><a href="/">← back to seminary resources</a></p></footer>
+    </main>
+
+    <script>
+    (function() {
+        // 3 real verses + 1 fake. Fakes are scripture-flavored but invented.
+        const ROUNDS = [
+            {
+                items: [
+                    { text: 'Trust in the Lord with all thine heart; and lean not unto thine own understanding.', ref: 'Proverbs 3:5', real: true },
+                    { text: 'I am the way, the truth, and the life: no man cometh unto the Father, but by me.', ref: 'John 14:6', real: true },
+                    { text: 'And we know that all things work together for good to them that love God.', ref: 'Romans 8:28', real: true },
+                    { text: 'Prosperity walketh ever beside the diligent in heart.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'Be still, and know that I am God.', ref: 'Psalm 46:10', real: true },
+                    { text: 'Faith without works is dead, being alone.', ref: 'James 2:17', real: true },
+                    { text: 'Charity suffereth long, and is kind, envieth not, is not puffed up.', ref: 'Moroni 7:45', real: true },
+                    { text: 'The Lord hath joy in a willing servant who tarrieth not.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'For we walk by faith, not by sight.', ref: '2 Corinthians 5:7', real: true },
+                    { text: 'And whatsoever ye shall ask in my name, that will I do.', ref: 'John 14:13', real: true },
+                    { text: 'I have set thee for a light unto the Gentiles.', ref: 'Acts 13:47', real: true },
+                    { text: 'Behold, I make thee a fountain in the desert places.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'Remember the worth of souls is great in the sight of God.', ref: 'D&C 18:10', real: true },
+                    { text: 'Stand ye in holy places, and be not moved.', ref: 'D&C 87:8', real: true },
+                    { text: 'Seek learning, even by study and also by faith.', ref: 'D&C 88:118', real: true },
+                    { text: 'Walk daily in the steps of patience, for the slow tree beareth the sweetest fruit.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'I will go and do the things which the Lord hath commanded.', ref: '1 Nephi 3:7', real: true },
+                    { text: 'For we labor diligently to write, to persuade our children to believe in Christ.', ref: '2 Nephi 25:23', real: true },
+                    { text: 'When ye are in the service of your fellow beings ye are only in the service of your God.', ref: 'Mosiah 2:17', real: true },
+                    { text: 'And blessed are the merchants who give without measure.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.', ref: '2 Timothy 1:7', real: true },
+                    { text: 'Adam fell that men might be; and men are, that they might have joy.', ref: '2 Nephi 2:25', real: true },
+                    { text: 'For my thoughts are not your thoughts, neither are your ways my ways, saith the Lord.', ref: 'Isaiah 55:8', real: true },
+                    { text: 'And the foolish shall stumble at the tongue of the proud.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'Now faith is the substance of things hoped for, the evidence of things not seen.', ref: 'Hebrews 11:1', real: true },
+                    { text: 'And ye shall know the truth, and the truth shall make you free.', ref: 'John 8:32', real: true },
+                    { text: 'O God, I thank thee for thy unspeakable gift of perfect law.', ref: 'Imposter', real: false },
+                    { text: 'Wherefore, men are free according to the flesh; and all things are given them which are expedient unto man.', ref: '2 Nephi 2:27', real: true }
+                ]
+            },
+            {
+                items: [
+                    { text: 'Whatsoever things are true, whatsoever things are honest, whatsoever things are just… think on these things.', ref: 'Philippians 4:8', real: true },
+                    { text: 'My grace is sufficient for thee: for my strength is made perfect in weakness.', ref: '2 Corinthians 12:9', real: true },
+                    { text: 'Watch and pray, that ye enter not into temptation.', ref: 'Matthew 26:41', real: true },
+                    { text: 'For by patience and by song shall the kingdom be drawn out.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'For where two or three are gathered together in my name, there am I in the midst of them.', ref: 'Matthew 18:20', real: true },
+                    { text: 'Wherefore, do not spend money for that which is of no worth, nor your labor for that which cannot satisfy.', ref: '2 Nephi 9:51', real: true },
+                    { text: 'Bear ye one another\'s burdens, and so fulfil the law of Christ.', ref: 'Galatians 6:2', real: true },
+                    { text: 'And he that is rooted in the field shall not be moved by the fowls of the air.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'Adversity, when given to the meek, becomes a key in the door of glory.', ref: 'Imposter', real: false },
+                    { text: 'And if any of you lack wisdom, let him ask of God, that giveth to all men liberally.', ref: 'James 1:5', real: true },
+                    { text: 'I, the Lord, am bound when ye do what I say; but when ye do not what I say, ye have no promise.', ref: 'D&C 82:10', real: true },
+                    { text: 'For the Spirit speaketh the truth and lieth not. Wherefore, it speaketh of things as they really are.', ref: 'Jacob 4:13', real: true }
+                ]
+            }
+        ];
+
+        const STORE = 'fake.best.v1';
+        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let streak = 0;
+        let pool = [];
+
+        const candEl = document.getElementById('candidates');
+        const streakEl = document.getElementById('streak');
+        const bestEl = document.getElementById('best');
+        const message = document.getElementById('message');
+        const nextBtn = document.getElementById('next');
+        bestEl.textContent = best;
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function nextRound() {
+            if (pool.length === 0) pool = shuffle(ROUNDS.slice());
+            const round = pool.pop();
+            const items = shuffle(round.items.slice());
+            candEl.innerHTML = '';
+            items.forEach(it => {
+                const el = document.createElement('div');
+                el.className = 'cand';
+                el.dataset.real = it.real ? '1' : '0';
+                el.dataset.ref = it.ref;
+                el.textContent = `"${it.text}"`;
+                el.addEventListener('click', () => {
+                    if (nextBtn.hidden === false) return;
+                    items.forEach((it2, i) => {
+                        const c = candEl.children[i];
+                        c.classList.add(it2.real ? 'real' : 'fake');
+                        const tag = document.createElement('span');
+                        tag.className = 'tag';
+                        tag.textContent = it2.real ? it2.ref : 'Invented';
+                        c.appendChild(tag);
+                    });
+                    if (it.real === false) {
+                        streak++;
+                        streakEl.textContent = streak;
+                        if (streak > best) {
+                            best = streak;
+                            localStorage.setItem(STORE, best);
+                            bestEl.textContent = best;
+                        }
+                        message.textContent = '✓ Caught the imposter.';
+                    } else {
+                        streak = 0;
+                        streakEl.textContent = streak;
+                        message.textContent = '✗ That one\'s real. Streak reset.';
+                    }
+                    nextBtn.hidden = false;
+                });
+                candEl.appendChild(el);
+            });
+            nextBtn.hidden = true;
+            message.textContent = '';
+        }
+
+        nextBtn.addEventListener('click', nextRound);
+        nextRound();
+    })();
+    </script>
+</body>
+</html>
