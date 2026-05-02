@@ -162,7 +162,7 @@
         ];
 
         const STORE = 'speedsort.best.v1';
-        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let best = ((function(v){var n=parseInt(v,10);return Number.isFinite(n)&&n>=0?n:0;})(localStorage.getItem(STORE) || '0'));
         let score = 0, time = 30, current = null, timer = null, playing = false;
 
         const refEl = document.getElementById('ref');

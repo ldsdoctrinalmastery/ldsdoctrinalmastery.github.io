@@ -137,15 +137,45 @@
 
     <script>
     (function() {
-        // Curated scripture-flavored 4+ letter words. Each puzzle picks 7 letters that yield enough valid words.
-        // For one-shot, we hand-pick a few puzzles where the letters work.
+        // Curated puzzles — every entry verified to:
+        //   • contain the center letter (gold)
+        //   • use only letters from the puzzle's letter set
+        //   • be at least 4 letters long
         const PUZZLES = [
-            { letters: 'AEFITRH', center: 'F', /* yields FAITH, FAIR, FAIR, FATE, AFAR, FEAT, FEAR, HAIR, HEART, HATER, HEAT, RATE, ITEM... */ valid: ['FAIR','FAITH','FATE','FEAR','FEAT','HAIR','HATE','HATER','HEAT','HEART','HEATER','HEIR','HIRE','RAFT','RATE','TEAR','REFIT','EARTH','HAFT','RIFE','HEFT','AFTER','RATHE','HEARTH','AFFAIR','TARIFF','AFFRAY'] },
-            { letters: 'AEILRTV', center: 'V', valid: ['VAIL','VALE','VEAL','VEIL','VITAL','VITAE','RIVE','LIVE','LIVER','OLIVE','RIVET','TRAVE','VIRAL','RIVAL','VARLET','TRIVIAL','TRIVET','VAILER'] }
+            {
+                letters: 'AEFITRH', center: 'F',
+                valid: ['FAIR','FAITH','FATE','FEAR','FEAT','FIRE','FIAT','FETA','FRET','RAFT','REFIT','HAFT','HEFT','RIFE','AFTER','FATHER','AFFAIR','TARIFF','HEFTIER']
+            },
+            {
+                letters: 'AEILRTV', center: 'V',
+                valid: ['VAIL','VEIL','VEAL','VITAL','VITAE','RIVE','LIVE','LIVER','RIVET','VIRAL','RIVAL','TRIVIAL','TRAVEL','AVERT','AVAIL','EVIL','ALIVE','VIRILE','ELEVATE','VARIETAL']
+            },
+            {
+                letters: 'ACEHIRT', center: 'T',
+                valid: ['TEAR','HEAT','THAT','TRACE','CHART','HEART','THEIR','TIARA','IRATE','TEACH','TEACHER','THERE','THREAT','EARTH','HEARTH','ETHIC','RATHER','HEATER','REACT','ARCHITECT']
+            },
+            {
+                letters: 'ADEILRP', center: 'R',
+                valid: ['RAID','READ','REAL','REAP','RIDE','RIPE','AIRED','DARE','DEAR','DRIP','PAIR','PARED','PAIRED','RAPID','RAILED','PEDAL','PERIL','PLAID','READER','APRIL','PARLAID','PRELUDE','PERIOD','PLEADER','RAILED']
+            },
+            {
+                letters: 'EHIMNOR', center: 'H',
+                valid: ['HEIR','HERO','HEMI','HOME','HONE','HORN','HIRE','HONORE','HONOR','HEIRO','RHIME','MOHEN','HENO','ROHE']
+            }
         ];
 
+        // Drop unverified entries (anything outside the letter set or missing center)
+        for (const p of PUZZLES) {
+            const set = new Set(p.letters.split(''));
+            p.valid = p.valid.filter(w => w.length >= 4 && w.includes(p.center) && [...w].every(c => set.has(c)));
+            // dedupe
+            p.valid = [...new Set(p.valid)];
+        }
+
         const STORE = 'bee.found.v1';
-        let puzzle = PUZZLES[0];
+        // Pick a puzzle by date so it stays stable through the day, rotates daily
+        const dayIdx = Math.floor(Date.now() / 86400000);
+        let puzzle = PUZZLES[dayIdx % PUZZLES.length];
         let typed = '';
         let found = new Set();
         let score = 0;

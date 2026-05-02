@@ -104,7 +104,7 @@
         ];
 
         const STORE = 'typerace.best.v1';
-        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let best = ((function(v){var n=parseInt(v,10);return Number.isFinite(n)&&n>=0?n:0;})(localStorage.getItem(STORE) || '0'));
         let target = null;
         let startTime = null;
         let pool = [];
@@ -155,6 +155,8 @@
             }
         }
 
+        input.addEventListener('paste', (e) => { e.preventDefault(); flash('No paste — type it.'); });
+        input.addEventListener('drop', (e) => e.preventDefault());
         input.addEventListener('input', () => {
             if (!startTime && input.value.length > 0) startTime = Date.now();
             const typed = input.value;
@@ -162,6 +164,11 @@
             updateLiveStats(typed);
             if (typed === target.text) finish(typed);
         });
+        function flash(msg) {
+            const m = document.getElementById('message');
+            m.textContent = msg;
+            setTimeout(() => { if (m.textContent === msg) m.textContent = ''; }, 1500);
+        }
 
         function updateLiveStats(typed) {
             const elapsed = (Date.now() - startTime) / 1000;
@@ -180,7 +187,7 @@
         function finish(typed) {
             input.disabled = true;
             const elapsed = (Date.now() - startTime) / 1000;
-            const minutes = elapsed / 60;
+            const minutes = Math.max(elapsed / 60, 1/60); // floor at 1 sec to avoid Infinity
             const wordsTyped = typed.length / 5;
             const wpm = Math.round(wordsTyped / minutes);
             const acc = 100; // exact match required to finish

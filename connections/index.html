@@ -165,7 +165,7 @@
         ];
 
         const STORE_PUZZLE = 'connections.puzzle.v1';
-        let puzzleIdx = parseInt(localStorage.getItem(STORE_PUZZLE) || '0', 10) % PUZZLES.length;
+        let puzzleIdx = ((function(v){var n=parseInt(v,10);return Number.isFinite(n)&&n>=0?n:0;})(localStorage.getItem(STORE_PUZZLE) || '0')) % PUZZLES.length;
         let puzzle = null;
         let items = [];
         let selected = new Set();
@@ -192,7 +192,8 @@
         function loadPuzzle(idx) {
             puzzle = PUZZLES[idx % PUZZLES.length];
             items = [];
-            puzzle.groups.forEach((g, gi) => g.members.forEach(m => items.push({ text: m, group: gi })));
+            let id = 0;
+            puzzle.groups.forEach((g, gi) => g.members.forEach(m => items.push({ id: id++, text: m, group: gi })));
             items = shuffle(items);
             selected.clear();
             solvedGroups = [];
@@ -217,12 +218,14 @@
             });
             // Then unsolved items
             items.filter(it => !solvedGroups.includes(it.group)).forEach(it => {
-                const el = document.createElement('div');
+                const el = document.createElement('button');
                 el.className = 'item';
+                el.type = 'button';
                 el.textContent = it.text;
-                el.dataset.text = it.text;
-                if (selected.has(it.text)) el.classList.add('selected');
-                el.addEventListener('click', () => toggle(it.text));
+                el.dataset.id = it.id;
+                el.setAttribute('aria-label', it.text);
+                if (selected.has(it.id)) el.classList.add('selected');
+                el.addEventListener('click', () => toggle(it.id));
                 grid.appendChild(el);
             });
         }
@@ -236,15 +239,15 @@
             }
         }
 
-        function toggle(text) {
-            if (selected.has(text)) selected.delete(text);
-            else if (selected.size < 4) selected.add(text);
+        function toggle(id) {
+            if (selected.has(id)) selected.delete(id);
+            else if (selected.size < 4) selected.add(id);
             render();
         }
 
         function submit() {
             if (selected.size !== 4) return flash('Select 4 items.');
-            const sels = items.filter(it => selected.has(it.text));
+            const sels = items.filter(it => selected.has(it.id));
             const groups = new Set(sels.map(s => s.group));
             if (groups.size === 1) {
                 const gi = sels[0].group;

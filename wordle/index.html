@@ -441,15 +441,33 @@
         const resultEl = document.getElementById('result');
 
         // ============ Setup ============
+        // Track recent words to avoid immediate repeats
+        const RECENT_KEY = 'wordle.recent.v1';
+        function loadRecent() {
+            try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); }
+            catch { return []; }
+        }
+        function pushRecent(word) {
+            const recent = loadRecent();
+            recent.push(word);
+            // Keep last 5 (so up to 5 different recent picks excluded)
+            while (recent.length > 5) recent.shift();
+            localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
+        }
         function pickTarget() {
             const filtered = activeVolume === 'all'
                 ? POOL
                 : POOL.filter(e => e.vol === activeVolume);
-            return filtered[Math.floor(Math.random() * filtered.length)];
+            const recent = new Set(loadRecent());
+            // Try to pick something not recently played; if pool is too small, allow repeats
+            const fresh = filtered.filter(e => !recent.has(e.word));
+            const choices = fresh.length >= 2 ? fresh : filtered;
+            return choices[Math.floor(Math.random() * choices.length)];
         }
 
         function newGame() {
             target = pickTarget();
+            pushRecent(target.word);
             guesses = [];
             currentGuess = '';
             gameState = 'playing';
@@ -629,6 +647,7 @@
             document.querySelectorAll('#volume-picker button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             activeVolume = btn.dataset.vol;
+            btn.blur(); // prevent Enter from re-triggering volume change
             newGame();
         });
 

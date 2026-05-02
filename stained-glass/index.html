@@ -118,13 +118,20 @@
 
         function generate(text) {
             text = text.trim();
-            if (!text) return;
+            if (!text) {
+                document.getElementById('glass').innerHTML = '';
+                document.getElementById('stats').innerHTML = '<em>Type or paste something to see the window.</em>';
+                window._glassSvg = null;
+                return;
+            }
             const h = hash32(text);
             const r = rng(h);
             const palette = PALETTES[h % PALETTES.length];
 
             // Stats
-            const words = text.split(/\s+/).filter(Boolean);
+            let words = text.split(/\s+/).filter(Boolean);
+            // Cap word count for very long inputs to avoid lag
+            if (words.length > 1000) words = words.slice(0, 1000);
             const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
             const chars = text.length;
             const uniqueWords = new Set(words.map(w => w.toLowerCase().replace(/[^a-z]/g, ''))).size;
@@ -154,10 +161,10 @@
                     const len = word.length || 1;
                     const x = col * cellW;
                     const y = row * cellH;
-                    const colorIdx = (len + col + row) % palette.length;
+                    const colorIdx = (len + col + row + Math.floor(r() * 3)) % palette.length;
                     const color = palette[colorIdx];
-                    // Choose a shape pattern based on word length
-                    const variant = len % 6;
+                    // Variant blends word length with PRNG so 1-word inputs still get variety
+                    const variant = (len + Math.floor(r() * 6)) % 6;
                     if (variant === 0) {
                         // Rectangle (split horizontally)
                         const split = cellH * (0.3 + r() * 0.4);

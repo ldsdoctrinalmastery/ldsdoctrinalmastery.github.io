@@ -41,6 +41,43 @@
             color: var(--ink);
         }
         .phrase .slot.space { width: 0; border: none; }
+        .gallows-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 12px;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 14px 20px;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .gallows {
+            width: 110px;
+            height: 130px;
+            flex-shrink: 0;
+        }
+        .gallows path, .gallows line, .gallows circle {
+            stroke: var(--ink);
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+        }
+        .gallows .frame { stroke: #5b4a32; stroke-width: 4; }
+        .gallows .rope { stroke: #8a6d3a; }
+        .gallows .part { stroke: var(--seal); opacity: 0; transition: opacity 0.3s ease; }
+        .gallows .part.show { opacity: 1; }
+        .strike-counter {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--seal);
+            text-align: center;
+        }
+        .strike-counter strong { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; line-height: 1; margin-top: 4px; color: var(--ink); }
         .strikes {
             text-align: center;
             margin-bottom: 10px;
@@ -94,7 +131,24 @@
         </div>
 
         <div class="phrase" id="phrase"></div>
-        <div class="strikes">Strikes <span class="marks" id="strikes"></span></div>
+
+        <div class="gallows-wrap">
+            <svg class="gallows" id="gallows" viewBox="0 0 110 130" aria-hidden="true">
+                <line class="frame" x1="6"  y1="124" x2="60" y2="124"/>
+                <line class="frame" x1="20" y1="124" x2="20" y2="6"/>
+                <line class="frame" x1="20" y1="6"   x2="78" y2="6"/>
+                <line class="frame" x1="78" y1="6"   x2="34" y2="20"/>
+                <line class="rope"  x1="78" y1="6"   x2="78" y2="22"/>
+                <circle class="part" data-strike="1" cx="78" cy="32" r="9"/>
+                <line   class="part" data-strike="2" x1="78" y1="41" x2="78" y2="78"/>
+                <line   class="part" data-strike="3" x1="78" y1="50" x2="62" y2="62"/>
+                <line   class="part" data-strike="4" x1="78" y1="50" x2="94" y2="62"/>
+                <line   class="part" data-strike="5" x1="78" y1="78" x2="64" y2="98"/>
+                <line   class="part" data-strike="6" x1="78" y1="78" x2="92" y2="98"/>
+            </svg>
+            <div class="strike-counter">Strikes<strong id="strike-num">0 / 6</strong></div>
+        </div>
+
         <div class="keyboard" id="keyboard"></div>
         <div class="message" id="message"></div>
         <div id="result" class="result" hidden>
@@ -128,7 +182,7 @@
         ];
 
         const STORE = 'hangman.best.v1';
-        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let best = ((function(v){var n=parseInt(v,10);return Number.isFinite(n)&&n>=0?n:0;})(localStorage.getItem(STORE) || '0'));
         let solved = 0;
         let pool = [];
         let target = null;
@@ -138,10 +192,12 @@
         const phraseEl = document.getElementById('phrase');
         const kbEl = document.getElementById('keyboard');
         const message = document.getElementById('message');
-        const strikesEl = document.getElementById('strikes');
+        const strikeNumEl = document.getElementById('strike-num');
+        const gallowsEl = document.getElementById('gallows');
         const result = document.getElementById('result');
         const solvedEl = document.getElementById('solved');
         const bestEl = document.getElementById('best');
+        let gameOver = false;
         bestEl.textContent = best;
 
         function shuffle(arr) {
@@ -173,7 +229,11 @@
         }
 
         function renderStrikes() {
-            strikesEl.textContent = '✕ '.repeat(strikes) + '· '.repeat(6 - strikes);
+            strikeNumEl.textContent = `${strikes} / 6`;
+            gallowsEl.querySelectorAll('.part').forEach(p => {
+                if (parseInt(p.dataset.strike, 10) <= strikes) p.classList.add('show');
+                else p.classList.remove('show');
+            });
         }
 
         function renderKeyboard() {
@@ -198,7 +258,7 @@
         }
 
         function guess(ch) {
-            if (guessed.has(ch)) return;
+            if (gameOver || guessed.has(ch)) return;
             guessed.add(ch);
             if (!target.phrase.includes(ch)) strikes++;
             renderPhrase();
@@ -210,6 +270,7 @@
         function checkEnd() {
             const won = target.phrase.split('').every(ch => !/[A-Z]/.test(ch) || guessed.has(ch));
             if (won) {
+                gameOver = true;
                 solved++;
                 solvedEl.textContent = solved;
                 if (solved > best) {
@@ -219,6 +280,7 @@
                 }
                 showResult(true);
             } else if (strikes >= 6) {
+                gameOver = true;
                 showResult(false);
             }
         }
@@ -235,6 +297,7 @@
             target = pool.pop();
             strikes = 0;
             guessed = new Set();
+            gameOver = false;
             result.hidden = true;
             message.textContent = '';
             renderPhrase();

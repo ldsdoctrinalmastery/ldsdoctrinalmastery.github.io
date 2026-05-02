@@ -179,7 +179,7 @@
         ];
 
         const STORE = 'highlow.best.v1';
-        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let best = ((function(v){var n=parseInt(v,10);return Number.isFinite(n)&&n>=0?n:0;})(localStorage.getItem(STORE) || '0'));
         let streak = 0;
         let a = null, b = null;
 
@@ -200,8 +200,13 @@
 
         function pick(notSection) {
             let p;
-            do { p = SECTIONS[Math.floor(Math.random() * SECTIONS.length)]; }
-            while (notSection && p.n === notSection.n);
+            let attempts = 0;
+            do {
+                p = SECTIONS[Math.floor(Math.random() * SECTIONS.length)];
+                attempts++;
+                // Avoid same section AND same verse count (no ties on most picks)
+                if (notSection && p.n !== notSection.n && p.v !== notSection.v) break;
+            } while (notSection && (p.n === notSection.n || (p.v === notSection.v && attempts < 20)));
             return p;
         }
 

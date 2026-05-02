@@ -105,11 +105,39 @@
             {
                 real: { text: 'My grace is sufficient for thee: for my strength is made perfect in weakness.', ref: '2 Corinthians 12:9' },
                 fakes: ['My grace shall be enough for thee, when thy heart is humble.', 'In thy weakness shall my power abide; lean ye on me.']
+            },
+            {
+                real: { text: 'Wickedness never was happiness.', ref: 'Alma 41:10' },
+                fakes: ['Sin and joy abide not in the same chamber.', 'No iniquity bringeth lasting peace to the soul.']
+            },
+            {
+                real: { text: 'Pride goeth before destruction, and an haughty spirit before a fall.', ref: 'Proverbs 16:18' },
+                fakes: ['Before ruin cometh boasting; before the fall, an arrogant heart.', 'Where pride entereth, the door to wisdom shutteth.']
+            },
+            {
+                real: { text: 'Remember the worth of souls is great in the sight of God.', ref: 'D&C 18:10' },
+                fakes: ['The Lord seeth every soul as a treasure beyond price.', 'In the eyes of the Most High, no soul is small.']
+            },
+            {
+                real: { text: 'Look unto me in every thought; doubt not, fear not.', ref: 'D&C 6:36' },
+                fakes: ['Turn thy mind unto me, and thy fear shall depart.', 'Cast thine eyes upon the Lord; he is mighty to save.']
+            },
+            {
+                real: { text: 'For my yoke is easy, and my burden is light.', ref: 'Matthew 11:30' },
+                fakes: ['My commandments are not heavy, but a yoke of comfort.', 'In serving me ye shall find rest, for my work is gentle.']
+            },
+            {
+                real: { text: 'For with God nothing shall be impossible.', ref: 'Luke 1:37' },
+                fakes: ['No work is too great for the hand of the Lord.', 'There is no thing closed unto him that openeth all things.']
+            },
+            {
+                real: { text: 'And we know that all things work together for good to them that love God.', ref: 'Romans 8:28' },
+                fakes: ['He that loveth God shall find his pathways made straight.', 'For the saints, even storms become servants of mercy.']
             }
         ];
 
         const STORE = 'twotruths.best.v1';
-        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let best = ((function(v){var n=parseInt(v,10);return Number.isFinite(n)&&n>=0?n:0;})(localStorage.getItem(STORE) || '0'));
         let streak = 0;
         let pool = [];
 

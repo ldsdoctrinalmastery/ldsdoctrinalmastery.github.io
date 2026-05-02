@@ -152,11 +152,51 @@
                     { text: 'I, the Lord, am bound when ye do what I say; but when ye do not what I say, ye have no promise.', ref: 'D&C 82:10', real: true },
                     { text: 'For the Spirit speaketh the truth and lieth not. Wherefore, it speaketh of things as they really are.', ref: 'Jacob 4:13', real: true }
                 ]
+            },
+            {
+                items: [
+                    { text: 'I am the bread of life: he that cometh to me shall never hunger.', ref: 'John 6:35', real: true },
+                    { text: 'Let your light so shine before men, that they may see your good works.', ref: 'Matthew 5:16', real: true },
+                    { text: 'Behold, the lily fadeth not for those who labour in the morning of trust.', ref: 'Imposter', real: false },
+                    { text: 'For with God nothing shall be impossible.', ref: 'Luke 1:37', real: true }
+                ]
+            },
+            {
+                items: [
+                    { text: 'Wickedness never was happiness.', ref: 'Alma 41:10', real: true },
+                    { text: 'Pride goeth before destruction, and an haughty spirit before a fall.', ref: 'Proverbs 16:18', real: true },
+                    { text: 'For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.', ref: 'Romans 6:23', real: true },
+                    { text: 'The hand that turneth the wheel hath need of more than the wheel.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'For all have sinned, and come short of the glory of God.', ref: 'Romans 3:23', real: true },
+                    { text: 'A soft tongue breaketh the bone.', ref: 'Proverbs 25:15', real: true },
+                    { text: 'Therefore, what manner of men ought ye to be? Verily I say unto you, even as I am.', ref: '3 Nephi 27:27', real: true },
+                    { text: 'A patient heart turneth iron into wheat at the appointed hour.', ref: 'Imposter', real: false }
+                ]
+            },
+            {
+                items: [
+                    { text: 'Look unto me in every thought; doubt not, fear not.', ref: 'D&C 6:36', real: true },
+                    { text: 'But seek ye first the kingdom of God, and his righteousness.', ref: 'Matthew 6:33', real: true },
+                    { text: 'And the moon shall stand still until the meek be gathered home.', ref: 'Imposter', real: false },
+                    { text: 'O that ye would awake, and arise from the dust, and shake off the awful chains by which ye are bound.', ref: '2 Nephi 1:13', real: true }
+                ]
+            },
+            {
+                items: [
+                    { text: 'A merry heart maketh a cheerful countenance.', ref: 'Proverbs 15:13', real: true },
+                    { text: 'For my yoke is easy, and my burden is light.', ref: 'Matthew 11:30', real: true },
+                    { text: 'In the chamber of small things the Lord storeth up his treasures.', ref: 'Imposter', real: false },
+                    { text: 'And he that doeth not righteousness is not of God, neither he that loveth not his brother.', ref: '1 John 3:10', real: true }
+                ]
             }
         ];
 
         const STORE = 'fake.best.v1';
-        let best = parseInt(localStorage.getItem(STORE) || '0', 10);
+        let best = ((function(v){var n=parseInt(v,10);return Number.isFinite(n)&&n>=0?n:0;})(localStorage.getItem(STORE) || '0'));
         let streak = 0;
         let pool = [];
 
