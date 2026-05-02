@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scripture Wordle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #f3ead4;
+            --paper-soft: #eadfc1;
+            --paper-card: #fbf5e6;
+            --paper-deep: #ede0bf;
+            --ink: #1f1a16;
+            --muted: #786650;
+            --rule: rgba(31, 26, 22, 0.18);
+            --sky-top: #d59c8b;
+            --sky-mid: #e8c2ac;
+            --sky-low: #c5cdce;
+            --seal: #8d3530;
+            --gold: #b89968;
+            --indigo: #2f4a55;
+            --moss: #5d6f4c;
+            --tile-correct: #5d6f4c;
+            --tile-present: #b89968;
+            --tile-absent: #6e604a;
+            --washi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.36 0 0 0 0 0.30 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            color: var(--ink);
+            font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body { background: transparent; }
+        a { color: inherit; }
+
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-color: var(--paper);
+            background-image: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-low) 100%);
+        }
+        .bg.has-image {
+            background-image:
+                linear-gradient(180deg, rgba(243, 234, 212, 0.05) 0%, rgba(243, 234, 212, 0.18) 100%),
+                url('/assets/hero-landing.webp'),
+                linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-low) 100%);
+            background-size: cover, cover, auto;
+            background-position: center, 25% center, center;
+            background-repeat: no-repeat;
+        }
+
+        .page {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 32px 20px 32px;
+        }
+
+        .title-card {
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 22px 28px 20px;
+            border: 1px solid var(--rule);
+            margin-bottom: 18px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 12px 28px -16px rgba(31, 26, 22, 0.4),
+                0 4px 8px -4px rgba(31, 26, 22, 0.18);
+            text-align: center;
+        }
+        .title-card h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
+            line-height: 1.1;
+            color: var(--ink);
+        }
+        .title-card .subtitle {
+            margin-top: 6px;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 0.98rem;
+        }
+
+        .volume-picker {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 10px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        .volume-picker button {
+            flex: 1;
+            padding: 9px 4px;
+            background-color: transparent;
+            color: var(--muted);
+            border: 1px solid var(--rule);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .volume-picker button:hover {
+            color: var(--ink);
+            border-color: var(--seal);
+        }
+        .volume-picker button.active {
+            background-color: var(--ink);
+            color: var(--paper-card);
+            border-color: var(--ink);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 6px;
+            margin: 0 auto 14px;
+            max-width: 360px;
+            aspect-ratio: 5 / 6;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+        .tile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            border: 2px solid rgba(120, 102, 80, 0.3);
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: clamp(1.6rem, 7vw, 2.2rem);
+            color: var(--ink);
+            text-transform: uppercase;
+            user-select: none;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+        .tile.filled {
+            border-color: var(--ink);
+            transform: scale(1.04);
+        }
+        .tile.correct,
+        .tile.present,
+        .tile.absent {
+            color: #fff;
+            background-image: none;
+            border: 2px solid transparent;
+        }
+        .tile.correct { background-color: var(--tile-correct); }
+        .tile.present { background-color: var(--tile-present); }
+        .tile.absent { background-color: var(--tile-absent); }
+        .tile.flip {
+            animation: flip 0.5s ease forwards;
+        }
+        @keyframes flip {
+            0% { transform: rotateX(0); }
+            50% { transform: rotateX(-90deg); }
+            100% { transform: rotateX(0); }
+        }
+        .row.shake { animation: shake 0.4s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .row.bounce .tile.correct { animation: bounce 0.6s ease forwards; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .message {
+            min-height: 24px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.86rem;
+            color: var(--seal);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+        }
+
+        .keyboard {
+            display: grid;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .kb-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        .key {
+            min-width: 30px;
+            height: 50px;
+            padding: 0 8px;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            border: 1px solid rgba(120, 102, 80, 0.3);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--ink);
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.15s, color 0.15s, transform 0.05s;
+        }
+        .key.wide {
+            flex: 1.2;
+            font-size: 0.74rem;
+            letter-spacing: 0.1em;
+        }
+        .key:active { transform: scale(0.94); }
+        .key.correct,
+        .key.present,
+        .key.absent {
+            color: #fff;
+            background-image: none;
+            border-color: transparent;
+        }
+        .key.correct { background-color: var(--tile-correct); }
+        .key.present { background-color: var(--tile-present); }
+        .key.absent { background-color: var(--tile-absent); }
+
+        .result {
+            margin-top: 18px;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 22px 24px 18px;
+            border-left: 3px solid var(--seal);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 8px 18px -10px rgba(31, 26, 22, 0.3);
+        }
+        .result[hidden] { display: none; }
+        .result .verdict {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.74rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 8px;
+        }
+        .result .word {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+            letter-spacing: 0.04em;
+        }
+        .result .ref {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--seal);
+            margin-bottom: 12px;
+        }
+        .result .ref a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(141, 53, 48, 0.4);
+        }
+        .result .ref a::after {
+            content: '↗';
+            font-size: 0.78em;
+            opacity: 0.6;
+            margin-left: 3px;
+        }
+        .result blockquote {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.06rem;
+            line-height: 1.5;
+            color: var(--ink);
+            padding-bottom: 12px;
+            border-bottom: 1px dashed rgba(120, 102, 80, 0.3);
+            margin-bottom: 14px;
+        }
+        .result .word-found {
+            background-color: var(--tile-correct);
+            color: #fff;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-style: normal;
+            font-weight: 600;
+        }
+        .result .play-again {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--ink);
+            color: var(--paper-card);
+            border: none;
+            padding: 9px 18px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.76rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background-color 0.15s;
+        }
+        .result .play-again:hover { background-color: var(--seal); }
+
+        footer {
+            margin: 36px auto 20px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 500;
+            background-color: var(--paper-card);
+            background-image: var(--washi);
+            background-blend-mode: multiply;
+            padding: 12px 22px;
+            max-width: 360px;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.6) inset,
+                0 6px 14px -8px rgba(31, 26, 22, 0.25);
+        }
+        footer a { color: var(--seal); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 540px) {
+            .page { padding: 22px 14px 22px; }
+            .title-card { padding: 18px 22px 16px; }
+            .grid { max-width: 100%; }
+            .key { min-width: 26px; height: 44px; padding: 0 4px; font-size: 0.84rem; }
+            .key.wide { font-size: 0.66rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg has-image" aria-hidden="true"></div>
+
+    <main class="page">
+        <header class="title-card">
+            <h1>Scripture Wordle</h1>
+            <p class="subtitle">Guess the 5-letter word in 6 tries. The answer is hiding in scripture.</p>
+        </header>
+
+        <div class="volume-picker" id="volume-picker">
+            <button data-vol="all" class="active">All</button>
+            <button data-vol="ot">OT</button>
+            <button data-vol="nt">NT</button>
+            <button data-vol="bofm">BoM</button>
+            <button data-vol="dc">D&amp;C</button>
+        </div>
+
+        <div class="grid" id="grid" role="grid" aria-label="Wordle grid"></div>
+
+        <div class="message" id="message" aria-live="polite"></div>
+
+        <div class="keyboard" id="keyboard"></div>
+
+        <div class="result" id="result" hidden></div>
+
+        <footer>
+            <p><a href="/">← back to seminary resources</a></p>
+        </footer>
+    </main>
+
+    <script>
+    (function() {
+        // ============ Word pool ============
+        const POOL = [
+            // New Testament
+            { word: 'FAITH', vol: 'nt', ref: 'Hebrews 11:1', verse: 'Now ?? is the substance of things hoped for, the evidence of things not seen.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/heb/11?lang=eng&id=p1#p1' },
+            { word: 'TRUTH', vol: 'nt', ref: 'John 8:32', verse: 'And ye shall know the ??, and the ?? shall make you free.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/john/8?lang=eng&id=p32#p32' },
+            { word: 'GRACE', vol: 'nt', ref: 'Ephesians 2:8', verse: 'For by ?? are ye saved through faith; and that not of yourselves: it is the gift of God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/eph/2?lang=eng&id=p8#p8' },
+            { word: 'LIGHT', vol: 'nt', ref: 'Matthew 5:16', verse: 'Let your ?? so shine before men, that they may see your good works, and glorify your Father which is in heaven.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/matt/5?lang=eng&id=p16#p16' },
+            { word: 'PEACE', vol: 'nt', ref: 'John 14:27', verse: '?? I leave with you, my ?? I give unto you: not as the world giveth, give I unto you.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/john/14?lang=eng&id=p27#p27' },
+            { word: 'ABIDE', vol: 'nt', ref: 'John 15:5', verse: '?? in me, and I in you. As the branch cannot bear fruit of itself, except it ?? in the vine.', link: 'https://www.churchofjesuschrist.org/study/scriptures/nt/john/15?lang=eng&id=p5#p5' },
+
+            // Old Testament
+            { word: 'HEART', vol: 'ot', ref: 'Proverbs 3:5', verse: 'Trust in the Lord with all thine ??; and lean not unto thine own understanding.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/prov/3?lang=eng&id=p5#p5' },
+            { word: 'PATHS', vol: 'ot', ref: 'Proverbs 3:6', verse: 'In all thy ways acknowledge him, and he shall direct thy ??.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/prov/3?lang=eng&id=p6#p6' },
+            { word: 'STILL', vol: 'ot', ref: 'Psalm 46:10', verse: 'Be ??, and know that I am God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/ps/46?lang=eng&id=p10#p10' },
+            { word: 'GLORY', vol: 'ot', ref: 'Isaiah 6:3', verse: 'Holy, holy, holy, is the Lord of hosts: the whole earth is full of his ??.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/isa/6?lang=eng&id=p3#p3' },
+            { word: 'TRUST', vol: 'ot', ref: 'Psalm 118:8', verse: 'It is better to ?? in the Lord than to put confidence in man.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/ps/118?lang=eng&id=p8#p8' },
+            { word: 'GREAT', vol: 'ot', ref: 'Psalm 145:3', verse: '?? is the Lord, and ??ly to be praised; and his ??ness is unsearchable.', link: 'https://www.churchofjesuschrist.org/study/scriptures/ot/ps/145?lang=eng&id=p3#p3' },
+
+            // Book of Mormon
+            { word: 'AFTER', vol: 'bofm', ref: '2 Nephi 25:23', verse: 'For we know that it is by grace that we are saved, ?? all we can do.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/25?lang=eng&id=p23#p23' },
+            { word: 'FEAST', vol: 'bofm', ref: '2 Nephi 32:3', verse: '?? upon the words of Christ; for behold, the words of Christ will tell you all things what ye should do.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/32?lang=eng&id=p3#p3' },
+            { word: 'WORDS', vol: 'bofm', ref: '2 Nephi 32:3', verse: 'Feast upon the ?? of Christ; for behold, the ?? of Christ will tell you all things what ye should do.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/32?lang=eng&id=p3#p3' },
+            { word: 'PLANT', vol: 'bofm', ref: 'Alma 32:28', verse: 'Now, we will compare the word unto a seed. Now, if ye give place, that a seed may be ??ed in your heart.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/alma/32?lang=eng&id=p28#p28' },
+            { word: 'TRIAL', vol: 'bofm', ref: 'Ether 12:6', verse: 'Faith is things which are hoped for and not seen; wherefore, dispute not because ye see not, for ye receive no witness until after the ?? of your faith.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/ether/12?lang=eng&id=p6#p6' },
+            { word: 'CHEER', vol: 'bofm', ref: '3 Nephi 1:13', verse: 'Lift up your head and be of good ??; for behold, the time is at hand.', link: 'https://www.churchofjesuschrist.org/study/scriptures/bofm/3-ne/1?lang=eng&id=p13#p13' },
+
+            // Doctrine and Covenants
+            { word: 'STAND', vol: 'dc', ref: 'D&C 87:8', verse: 'Wherefore, ?? ye in holy places, and be not moved, until the day of the Lord come.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/87?lang=eng&id=p8#p8' },
+            { word: 'WORTH', vol: 'dc', ref: 'D&C 18:10', verse: 'Remember the ?? of souls is great in the sight of God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/18?lang=eng&id=p10#p10' },
+            { word: 'SOULS', vol: 'dc', ref: 'D&C 18:10', verse: 'Remember the worth of ?? is great in the sight of God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/18?lang=eng&id=p10#p10' },
+            { word: 'LEARN', vol: 'dc', ref: 'D&C 88:118', verse: 'Seek ?? ing, even by study and also by faith.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/88?lang=eng&id=p118#p118' },
+            { word: 'BOUND', vol: 'dc', ref: 'D&C 82:10', verse: 'I, the Lord, am ?? when ye do what I say; but when ye do not what I say, ye have no promise.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/82?lang=eng&id=p10#p10' },
+            { word: 'HOUSE', vol: 'dc', ref: 'D&C 88:119', verse: 'Establish a ??, even a ?? of prayer, a ?? of fasting, a ?? of faith, a ?? of learning, a ?? of glory, a ?? of order, a ?? of God.', link: 'https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/88?lang=eng&id=p119#p119' }
+        ];
+
+        // ============ State ============
+        let target = null;
+        let guesses = [];
+        let currentGuess = '';
+        let gameState = 'playing';
+        let letterStatus = {};
+        let activeVolume = 'all';
+
+        const gridEl = document.getElementById('grid');
+        const keyboardEl = document.getElementById('keyboard');
+        const messageEl = document.getElementById('message');
+        const resultEl = document.getElementById('result');
+
+        // ============ Setup ============
+        function pickTarget() {
+            const filtered = activeVolume === 'all'
+                ? POOL
+                : POOL.filter(e => e.vol === activeVolume);
+            return filtered[Math.floor(Math.random() * filtered.length)];
+        }
+
+        function newGame() {
+            target = pickTarget();
+            guesses = [];
+            currentGuess = '';
+            gameState = 'playing';
+            letterStatus = {};
+            messageEl.textContent = '';
+            resultEl.hidden = true;
+            renderGrid();
+            renderKeyboard();
+        }
+
+        // ============ Rendering ============
+        function renderGrid() {
+            gridEl.innerHTML = '';
+            for (let r = 0; r < 6; r++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.dataset.row = r;
+                let letters;
+                if (r < guesses.length) {
+                    letters = guesses[r].split('');
+                } else if (r === guesses.length && gameState === 'playing') {
+                    letters = currentGuess.padEnd(5, ' ').split('');
+                } else {
+                    letters = ['', '', '', '', ''];
+                }
+                for (let c = 0; c < 5; c++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    const letter = letters[c];
+                    if (letter && letter !== ' ') {
+                        tile.textContent = letter;
+                        if (r === guesses.length) tile.classList.add('filled');
+                    }
+                    if (r < guesses.length) {
+                        const status = gradeLetter(guesses[r], c);
+                        tile.classList.add(status);
+                    }
+                    row.appendChild(tile);
+                }
+                gridEl.appendChild(row);
+            }
+        }
+
+        function gradeLetter(guess, col) {
+            const g = guess[col];
+            if (g === target.word[col]) return 'correct';
+            if (target.word.includes(g)) {
+                // Yellow only if there's an extra in target not already matched green
+                const targetCount = target.word.split('').filter((l, i) => l === g).length;
+                const correctCount = guess.split('').filter((l, i) => l === g && target.word[i] === l).length;
+                const earlierPresent = guess.slice(0, col).split('').filter((l, i) => l === g && target.word[i] !== l).length;
+                if (earlierPresent + correctCount < targetCount) return 'present';
+            }
+            return 'absent';
+        }
+
+        function renderKeyboard() {
+            keyboardEl.innerHTML = '';
+            const rows = ['QWERTYUIOP', 'ASDFGHJKL', '!ZXCVBNM<'];
+            for (const r of rows) {
+                const row = document.createElement('div');
+                row.className = 'kb-row';
+                for (const ch of r) {
+                    const key = document.createElement('button');
+                    key.className = 'key';
+                    if (ch === '!') {
+                        key.textContent = 'Enter';
+                        key.classList.add('wide');
+                        key.dataset.key = 'Enter';
+                    } else if (ch === '<') {
+                        key.textContent = '⌫';
+                        key.classList.add('wide');
+                        key.dataset.key = 'Backspace';
+                    } else {
+                        key.textContent = ch;
+                        key.dataset.key = ch;
+                        if (letterStatus[ch]) key.classList.add(letterStatus[ch]);
+                    }
+                    row.appendChild(key);
+                }
+                keyboardEl.appendChild(row);
+            }
+        }
+
+        // ============ Input handling ============
+        function handleKey(k) {
+            if (gameState !== 'playing') return;
+            if (k === 'Enter') return submitGuess();
+            if (k === 'Backspace') {
+                currentGuess = currentGuess.slice(0, -1);
+                renderGrid();
+                return;
+            }
+            if (/^[A-Z]$/.test(k) && currentGuess.length < 5) {
+                currentGuess += k;
+                renderGrid();
+            }
+        }
+
+        function flash(msg) {
+            messageEl.textContent = msg;
+            setTimeout(() => { if (messageEl.textContent === msg) messageEl.textContent = ''; }, 1800);
+        }
+        function shakeRow(r) {
+            const row = gridEl.querySelector(`[data-row="${r}"]`);
+            if (!row) return;
+            row.classList.remove('shake');
+            void row.offsetWidth;
+            row.classList.add('shake');
+        }
+
+        function submitGuess() {
+            if (currentGuess.length !== 5) {
+                flash('Need five letters.');
+                shakeRow(guesses.length);
+                return;
+            }
+            // Update letter status for keyboard
+            for (let i = 0; i < 5; i++) {
+                const g = currentGuess[i];
+                let status = 'absent';
+                if (g === target.word[i]) status = 'correct';
+                else if (target.word.includes(g)) status = 'present';
+                // Don't downgrade an existing status
+                const prev = letterStatus[g];
+                const order = { absent: 0, present: 1, correct: 2 };
+                if (!prev || order[status] > order[prev]) letterStatus[g] = status;
+            }
+            guesses.push(currentGuess);
+            const won = currentGuess === target.word;
+            currentGuess = '';
+            renderGrid();
+            renderKeyboard();
+            if (won) {
+                gameState = 'won';
+                showResult(true);
+            } else if (guesses.length >= 6) {
+                gameState = 'lost';
+                showResult(false);
+            }
+        }
+
+        function showResult(won) {
+            const verseHtml = target.verse.replace(
+                /\?\?/g,
+                `<span class="word-found">${target.word.toLowerCase()}</span>`
+            );
+            const verdict = won ? `Solved in ${guesses.length} ${guesses.length === 1 ? 'try' : 'tries'}` : 'Out of guesses';
+            resultEl.innerHTML = `
+                <div class="verdict">${verdict}</div>
+                <div class="word">${target.word}</div>
+                <div class="ref"><a href="${target.link}" target="_blank" rel="noopener">${target.ref}</a></div>
+                <blockquote>"${verseHtml}"</blockquote>
+                <button class="play-again" id="play-again">Play again</button>
+            `;
+            resultEl.hidden = false;
+            resultEl.querySelector('#play-again').addEventListener('click', newGame);
+        }
+
+        // ============ Event wiring ============
+        document.addEventListener('keydown', (e) => {
+            if (e.target.matches('button, a')) return;
+            if (e.key === 'Enter') { handleKey('Enter'); e.preventDefault(); return; }
+            if (e.key === 'Backspace') { handleKey('Backspace'); e.preventDefault(); return; }
+            if (/^[a-zA-Z]$/.test(e.key)) handleKey(e.key.toUpperCase());
+        });
+
+        keyboardEl.addEventListener('click', (e) => {
+            const key = e.target.closest('.key');
+            if (!key) return;
+            handleKey(key.dataset.key);
+        });
+
+        document.getElementById('volume-picker').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            document.querySelectorAll('#volume-picker button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeVolume = btn.dataset.vol;
+            newGame();
+        });
+
+        // ============ Boot ============
+        newGame();
+    })();
+    </script>
+</body>
+</html>
