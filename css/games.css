@@ -1,7 +1,6 @@
 /* Shared base aesthetic for the games suite — Hasui paper / fixed bg */
 :root {
     --paper: #f3ead4;
-    --paper-soft: #eadfc1;
     --paper-card: #fbf5e6;
     --paper-deep: #ede0bf;
     --ink: #1f1a16;
@@ -11,7 +10,6 @@
     --sky-mid: #e8c2ac;
     --sky-low: #c5cdce;
     --seal: #8d3530;
-    --seal-soft: rgba(141, 53, 48, 0.85);
     --gold: #b89968;
     --indigo: #2f4a55;
     --moss: #5d6f4c;

@@ -56,6 +56,8 @@
             .bg, .score-strip, .controls, footer, .message, .result, .btn { display: none !important; }
             .board { box-shadow: none; }
             body, html { background: white !important; }
+            .cell.marked { background-color: white !important; color: black !important; }
+            .cell.free { background-color: #ddd !important; color: black !important; }
         }
         @media (max-width: 540px) {
             .cell { font-size: 0.6rem; padding: 2px; }
@@ -138,9 +140,11 @@
             return null;
         }
 
+        let won = false;
         function newCard() {
             const picked = shuffle(REFS).slice(0, 24);
             board.innerHTML = '';
+            won = false;
             for (let i = 0; i < 25; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
@@ -152,10 +156,13 @@
                     cell.textContent = r;
                     cell.addEventListener('click', () => {
                         cell.classList.toggle('marked');
-                        const win = checkWin();
-                        if (win) {
-                            message.textContent = `✓ Bingo — ${win}!`;
-                        } else {
+                        const w = checkWin();
+                        if (w && !won) {
+                            won = true;
+                            message.textContent = `✓ Bingo — ${w}!`;
+                        } else if (!w) {
+                            // Allow un-winning if a marked cell gets unmarked
+                            won = false;
                             message.textContent = '';
                         }
                     });

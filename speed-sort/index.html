@@ -175,8 +175,15 @@
 
         bestEl.textContent = best;
 
+        let lastRef = null;
         function pick() {
-            return REFS[Math.floor(Math.random() * REFS.length)];
+            let r;
+            for (let i = 0; i < 8; i++) {
+                r = REFS[Math.floor(Math.random() * REFS.length)];
+                if (!lastRef || r.ref !== lastRef.ref) break;
+            }
+            lastRef = r;
+            return r;
         }
 
         function next() {
@@ -185,6 +192,7 @@
         }
 
         function start() {
+            if (timer) { clearInterval(timer); timer = null; }
             playing = true;
             score = 0;
             time = 30;

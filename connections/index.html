@@ -273,7 +273,7 @@
                 const counts = {};
                 sels.forEach(s => counts[s.group] = (counts[s.group] || 0) + 1);
                 const max = Math.max(...Object.values(counts));
-                flash(max === 3 ? '✗ One away.' : '✗ Try again.');
+                flash(max === 3 ? '✗ Three from one group — one off.' : '✗ Try again.');
             }
             render();
         }

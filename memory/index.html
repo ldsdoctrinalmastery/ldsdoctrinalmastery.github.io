@@ -61,8 +61,14 @@
         }
         @media (max-width: 540px) {
             .grid { grid-template-columns: repeat(4, 1fr); gap: 5px; }
-            .tile { font-size: 0.7rem; padding: 4px; }
-            .tile.ref { font-size: 0.66rem; }
+            .tile { font-size: 0.62rem; padding: 3px; line-height: 1.15; overflow: hidden; }
+            .tile.ref { font-size: 0.6rem; letter-spacing: 0.02em; }
+            .tile.face-down { font-size: 1rem; }
+        }
+        @media (max-width: 400px) {
+            .grid { gap: 4px; }
+            .tile { font-size: 0.55rem; padding: 2px; }
+            .tile.ref { font-size: 0.56rem; }
         }
     </style>
 </head>

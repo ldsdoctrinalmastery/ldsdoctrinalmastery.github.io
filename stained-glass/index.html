@@ -237,7 +237,10 @@
         document.getElementById('text').addEventListener('input', () => {
             // Live regenerate as user types (debounced)
             clearTimeout(window._glassTimer);
-            window._glassTimer = setTimeout(() => generate(document.getElementById('text').value), 250);
+            const val = document.getElementById('text').value;
+            // Skip live regen for very long input — wait for explicit Generate click
+            const delay = val.length > 2000 ? 800 : 250;
+            window._glassTimer = setTimeout(() => generate(val), delay);
         });
 
         // Boot with a sample

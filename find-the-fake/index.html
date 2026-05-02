@@ -215,11 +215,13 @@
             return arr;
         }
 
+        let locked = false;
         function nextRound() {
             if (pool.length === 0) pool = shuffle(ROUNDS.slice());
             const round = pool.pop();
             const items = shuffle(round.items.slice());
             candEl.innerHTML = '';
+            locked = false;
             items.forEach(it => {
                 const el = document.createElement('div');
                 el.className = 'cand';
@@ -227,7 +229,8 @@
                 el.dataset.ref = it.ref;
                 el.textContent = `"${it.text}"`;
                 el.addEventListener('click', () => {
-                    if (nextBtn.hidden === false) return;
+                    if (locked) return;
+                    locked = true;
                     items.forEach((it2, i) => {
                         const c = candEl.children[i];
                         c.classList.add(it2.real ? 'real' : 'fake');
