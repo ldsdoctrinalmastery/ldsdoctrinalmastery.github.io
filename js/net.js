@@ -19,7 +19,9 @@
 
 const APP_ID = 'scripture-battle-royale-2026';
 const MAX_PEERS = 24;
-const STRATEGY_TIMEOUT = 10_000; // ms before falling back to next strategy
+const STRATEGY_TIMEOUT = 25_000; // ms before falling back to next strategy.
+                                 // Real-world MQTT broker + Trystero topic-subscribe + peer-announce
+                                 // + WebRTC SDP-exchange can legitimately take 5–15 s; budget 25.
 const STRATEGIES = ['mqtt', 'nostr', 'torrent'];
 
 const TURN_OVERRIDE = window.TURN_CONFIG || null; // optional: { urls, username, credential }
@@ -35,8 +37,10 @@ if (TURN_OVERRIDE) ICE_SERVERS.push(TURN_OVERRIDE);
 const strategyCache = {};
 async function loadStrategy(name) {
     if (strategyCache[name]) return strategyCache[name];
-    // Bundles built with esbuild from trystero@0.22.0 — see /js/vendor/.
+    const t0 = performance.now();
+    console.log(`[net] loading bundle: trystero-${name}.min.js`);
     const mod = await import(`/js/vendor/trystero-${name}.min.js`);
+    console.log(`[net] bundle loaded: ${name} in ${(performance.now() - t0).toFixed(0)}ms; exports:`, Object.keys(mod));
     strategyCache[name] = mod;
     return mod;
 }
@@ -135,6 +139,8 @@ class NetManager {
             this._fallbackTimer = null;
         }
 
+        console.log(`[net] === attempting strategy ${strategyIdx + 1}/${STRATEGIES.length}: ${strategyName} === room=${this.roomCode} self=${this.localPlayerId}`);
+
         let mod;
         try {
             mod = await loadStrategy(strategyName);
@@ -147,9 +153,30 @@ class NetManager {
 
         try {
             this.room = mod.joinRoom(config, this.roomCode);
+            console.log(`[net] joinRoom() returned for ${strategyName}; topic=${this.roomCode}`);
         } catch (err) {
             console.warn(`[net] joinRoom failed on ${strategyName}:`, err);
             return this._connect(playerName, playerColor, strategyIdx + 1);
+        }
+
+        // Probe the underlying signaling sockets so we can see if the broker
+        // handshake is even completing. getRelaySockets exists for mqtt/nostr/torrent.
+        if (typeof mod.getRelaySockets === 'function') {
+            const probeAt = [500, 2000, 5000, 10000, 20000];
+            probeAt.forEach(ms => setTimeout(() => {
+                if (this.strategy !== strategyName) return; // moved on
+                try {
+                    const sockets = mod.getRelaySockets() || {};
+                    const states = Object.entries(sockets).map(([url, s]) => {
+                        const rs = s && typeof s.readyState === 'number' ? s.readyState : '?';
+                        const label = ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'][rs] || rs;
+                        return `${url}=${label}`;
+                    });
+                    console.log(`[net] [${strategyName}] @${ms}ms relay sockets:`, states.length ? states : '(none yet)');
+                } catch (e) {
+                    console.log(`[net] [${strategyName}] @${ms}ms relay probe error:`, e);
+                }
+            }, ms));
         }
 
         this._wireActions();
@@ -178,7 +205,18 @@ class NetManager {
         this._fallbackTimer = setTimeout(() => {
             const peerCount = this.connectedPlayers.size - 1;
             if (peerCount > 0) return; // we found someone — stay
-            console.log(`[net] ${strategyName} found nobody in ${STRATEGY_TIMEOUT}ms, falling back…`);
+            // Snapshot socket state at fallback time for postmortem
+            let socketSummary = '(no probe)';
+            try {
+                if (typeof mod.getRelaySockets === 'function') {
+                    const sockets = mod.getRelaySockets() || {};
+                    socketSummary = Object.entries(sockets).map(([u, s]) => {
+                        const rs = s && typeof s.readyState === 'number' ? s.readyState : '?';
+                        return `${u}=${['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'][rs] || rs}`;
+                    }).join(', ') || '(none open)';
+                }
+            } catch (_) {}
+            console.warn(`[net] ⏱  ${strategyName} found nobody in ${STRATEGY_TIMEOUT}ms; sockets: ${socketSummary} — falling back`);
             this._connect(playerName, playerColor, strategyIdx + 1);
         }, STRATEGY_TIMEOUT);
     }
@@ -218,7 +256,7 @@ class NetManager {
 
     _wirePresence(playerName, playerColor) {
         this.room.onPeerJoin(peerId => {
-            console.log('[net] peer joined:', peerId);
+            console.log(`[net] ✅ peer joined via ${this.strategy}:`, peerId);
 
             // Cap room size — host rejects new joins past MAX_PEERS
             if (this.connectedPlayers.size >= MAX_PEERS) {
