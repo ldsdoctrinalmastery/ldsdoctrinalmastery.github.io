@@ -264,10 +264,13 @@ class NetManager {
                 this._updatePlayerList();
                 break;
             case 'roster':
-                this.connectedPlayers.clear();
+                // Merge the roster — don't clear, or we'd drop our own self entry
+                // (the sender's snapshot was taken before we joined).
                 data.players.forEach(p => {
+                    const existing = this.connectedPlayers.get(p.id) || {};
                     this.connectedPlayers.set(p.id, {
-                        name: p.name, color: p.color, isHost: !!p.isHost, ready: !!p.ready
+                        name: p.name, color: p.color, isHost: !!p.isHost, ready: !!p.ready,
+                        peerId: existing.peerId   // preserve peerId if we already learned it
                     });
                 });
                 this._recomputeCoordinator();
