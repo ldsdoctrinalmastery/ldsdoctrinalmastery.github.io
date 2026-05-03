@@ -21,7 +21,6 @@ const APP_ID = 'scripture-battle-royale-2026';
 const MAX_PEERS = 24;
 const STRATEGY_TIMEOUT = 10_000; // ms before falling back to next strategy
 const STRATEGIES = ['mqtt', 'nostr', 'torrent'];
-const TRYSTERO_VERSION = '0.22.0';
 
 const TURN_OVERRIDE = window.TURN_CONFIG || null; // optional: { urls, username, credential }
 
@@ -31,12 +30,13 @@ const ICE_SERVERS = [
 ];
 if (TURN_OVERRIDE) ICE_SERVERS.push(TURN_OVERRIDE);
 
-// ----- Strategy loader (dynamic, with fallback) ---------------------------
+// ----- Strategy loader (dynamic, from local /js/vendor/) -------------------
 
 const strategyCache = {};
 async function loadStrategy(name) {
     if (strategyCache[name]) return strategyCache[name];
-    const mod = await import(`https://esm.sh/trystero@${TRYSTERO_VERSION}/${name}`);
+    // Bundles built with esbuild from trystero@0.22.0 — see /js/vendor/.
+    const mod = await import(`/js/vendor/trystero-${name}.min.js`);
     strategyCache[name] = mod;
     return mod;
 }
