@@ -210,56 +210,26 @@
     <script src="/js/config.js"></script>
     <script src="/js/scriptures.js"></script>
     <script src="/js/gameState.js"></script>
-    <script src="/js/multiplayer.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/battle.js"></script>
     <script src="/js/game.js"></script>
     <script src="/js/main.js"></script>
-   
-    <!-- Load Trystero for P2P multiplayer -->
+
+    <!-- Multiplayer transport (Trystero v0.22 with strategy fallback) -->
+    <script type="module" src="/js/net.js"></script>
     <script type="module">
-        // Modern browsers - load Trystero as ES module with specific version
-        async function loadTrystero() {
-            try {
-                // Try specific version first
-                const {joinRoom} = await import('/trystero-torrent.min.js');
-                window.trysteroTorrent = {joinRoom};
-                window.trysteroLoaded = true;
-                console.log('Trystero v0.18.0 loaded successfully');
-                return true;
-            } catch (e1) {
-                console.warn('Failed to load Trystero v0.18.0, trying latest...', e1);
-                try {
-                    // Try latest version
-                    const {joinRoom} = await import('/trystero-torrent.min.js');
-                    window.trysteroTorrent = {joinRoom};
-                    window.trysteroLoaded = true;
-                    console.log('Trystero latest loaded successfully');
-                    return true;
-                } catch (e2) {
-                    console.error('Failed to load Trystero:', e2);
-                    window.trysteroLoadFailed = true;
-                    return false;
-                }
-            }
+        // After net.js has loaded and exposed window.multiplayer, kick the app
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => window.initializeApp && window.initializeApp());
+        } else {
+            window.initializeApp && window.initializeApp();
         }
-       
-        // Load and initialize
-        loadTrystero().then(() => {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => window.initializeApp());
-            } else {
-                window.initializeApp();
-            }
-        });
     </script>
-   
-    <!-- Fallback for older browsers -->
+
+    <!-- Fallback for older browsers (no ES modules → multiplayer unavailable) -->
     <script nomodule>
         console.warn('Browser does not support ES modules. Multiplayer will not be available.');
         window.trysteroLoadFailed = true;
-       
-        // Initialize when ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 if (window.initializeApp) window.initializeApp();
